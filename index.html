@@ -135,6 +135,16 @@
         .dettaglio p { margin: 8px 0; font-size: 1.05rem; border-bottom: 1px dashed #ddd; padding-bottom: 5px; }
         .dettaglio span { font-weight: bold; color: #333; }
         
+        .box-proiezione {
+            margin-top: 15px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #bce8f1;
+            text-align: left;
+        }
+        .box-proiezione h4 { margin-top: 0; color: #31708f; }
+
         .noticine {
             font-size: 0.85rem;
             color: #666;
@@ -164,11 +174,11 @@
         <div class="card">
             <h3>⚡ Energia Elettrica (Power)</h3>
             <div class="input-row">
-                <label>Num. POD Residenziali (50€):</label>
+                <label>Num. POD Residenziali (Prod. Mensile):</label>
                 <input type="number" id="p-res" value="0" min="0">
             </div>
             <div class="input-row">
-                <label>Num. POD Residenziali R+ (70€):</label>
+                <label>Num. POD Residenziali R+ (Prod. Mensile):</label>
                 <input type="number" id="p-res-r" value="0" min="0">
             </div>
             
@@ -188,11 +198,11 @@
         <div class="card">
             <h3>🔥 Gas Naturale</h3>
             <div class="input-row">
-                <label>Num. PDR Residenziali (50€):</label>
+                <label>Num. PDR Residenziali (Prod. Mensile):</label>
                 <input type="number" id="g-res" value="0" min="0">
             </div>
             <div class="input-row">
-                <label>Num. PDR Residenziali R+ (70€):</label>
+                <label>Num. PDR Residenziali R+ (Prod. Mensile):</label>
                 <input type="number" id="g-res-r" value="0" min="0">
             </div>
             
@@ -262,7 +272,7 @@
     <button class="btn-calcola" onclick="calcolaProvvigioni()">Calcola Guadagno</button>
 
     <div class="risultati" id="risultati-box">
-        <h2>Totale Stimato: <span id="totale-guadagno">0,00</span> €</h2>
+        <h2>Totale Stimato Mese: <span id="totale-guadagno">0,00</span> €</h2>
         <div class="dettaglio">
             <p>Guadagno diretto gettoni EE/Gas: <span id="tot-diretta">0,00</span> €</p>
             <p>Di cui Bonus RID WEB Business: <span id="tot-rid-web">0,00</span> €</p>
@@ -270,55 +280,49 @@
             <p>Di cui Vendita Prodotti: <span id="tot-prodotti">0,00</span> €</p>
             <p>Di cui Segnalazioni Verisure: <span id="tot-verisure">0,00</span> €</p>
             
+            <div class="box-proiezione">
+                <h4>🔄 Rendita Ricorrente Trimestrale (In Fornitura)</h4>
+                <p>Mantenendo questa produzione <strong>costante ogni mese</strong>, l'estratto conto trimestrale delle competenze maturerà:</p>
+                <ul>
+                    <li><strong>Nel 1° Trimestre di calendario:</strong> <span id="ric-trim1">0,00</span> € totali</li>
+                    <li><strong>Nel 2° Trimestre di calendario:</strong> <span id="ric-trim2">0,00</span> € totali</li>
+                    <li><strong>A regime, dopo 12 mesi (4° Trimestre):</strong> <span id="ric-trim12">0,00</span> € totali</li>
+                </ul>
+                <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">*Il calcolo applica la scomposizione frazionata pro-rata in base ai mesi di fornitura attiva dei clienti nel trimestre di liquidazione.</p>
+            </div>
+
             <div class="coordinator-only" style="margin-top: 15px; background: #eef7ff; padding: 10px; border-radius: 4px;">
                 <p><strong>Riepilogo Squadra (Rete):</strong></p>
                 <p>Totale Contratti Rete (POD + PDR): <span id="tot-pezzi-rete">0</span></p>
                 <p>Volume Annuo Rete Stimato: <span id="volume-calcolato">0.00</span> GWh</p>
                 <p>Contributo Fisso Mensile Raggiunto: <span id="tot-contributo">0,00</span> €</p>
-                <p style="font-size: 0.85rem; color: #555;"><i>I conteggi analitici delle provvigioni indirette verranno sbloccati nei primi step.</i></p>
+                <p style="font-size: 0.85rem; color: #555;"><i>I conteggi analitici delle provvigioni indirette verranno sbloccati nei prossimi step.</i></p>
             </div>
         </div>
     </div>
 
     <div class="noticine">
         <p><strong>Nota bene:</strong> I calcoli mostrano esclusivamente il Gettone d'ingresso diretto, i bonus e i prodotti, secondo le direttive e le tabelle del mandato 2026.</p>
-        <p><i>Si ricorda che, come da piano provvigionale 2026, per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni (6 mesi) dalla data di inizio fornitura.</i></p>
+        <p><i>Si ricorda che, come da piano provvigionale 2026, per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni (6 mesi) dalla data di inizio fornitura[cite: 179].</i></p>
     </div>
 </div>
 
 <script>
-    // Database importi fissi Sky e percentuali prodotti
     const tabelle = {
         sky: {
-            "TRIPLE_PLAY": 95,
-            "SKY_WIFI_RID": 40,
-            "SKY_WIFI_PREPAGATA": 30,
-            "BUSINESS_BAR": 125,
-            "HOTEL_FINO_A_3_CAMERE": 100,
-            "HOTEL_ANNUALE": 30,
-            "HOTEL_STAGIONALE": 36
+            "TRIPLE_PLAY": 95, "SKY_WIFI_RID": 40, "SKY_WIFI_PREPAGATA": 30,
+            "BUSINESS_BAR": 125, "HOTEL_FINO_A_3_CAMERE": 100, "HOTEL_ANNUALE": 30, "HOTEL_STAGIONALE": 36
         },
         prodotti: {
-            "FOTOVOLTAICO": 0.05,
-            "LED_LISTINO_4": 0.20,
-            "LED_LISTINO_3": 0.15,
-            "LED_LISTINO_2": 0.10,
-            "LED_LISTINO_1": 0.07,
-            "CLIMA": 0.08,
-            "COLONNINE_LISTINO_3": 0.10,
-            "COLONNINE_LISTINO_2": 0.085,
-            "COLONNINE_LISTINO_1": 0.07,
-            "EBIKE": 0.07
+            "FOTOVOLTAICO": 0.05, "LED_LISTINO_4": 0.20, "LED_LISTINO_3": 0.15, "LED_LISTINO_2": 0.10, "LED_LISTINO_1": 0.07,
+            "CLIMA": 0.08, "COLONNINE_LISTINO_3": 0.10, "COLONNINE_LISTINO_2": 0.085, "COLONNINE_LISTINO_1": 0.07, "EBIKE": 0.07
         }
     };
 
     function cambiaRuolo() {
         const ruolo = document.getElementById('ruolo').value;
         const elementiCoordinator = document.querySelectorAll('.coordinator-only');
-        
-        elementiCoordinator.forEach(el => {
-            el.style.display = (ruolo === 'coordinator') ? 'block' : 'none';
-        });
+        elementiCoordinator.forEach(el => el.style.display = (ruolo === 'coordinator') ? 'block' : 'none');
         document.getElementById('risultati-box').style.display = 'none';
     }
 
@@ -337,12 +341,10 @@
         const container = document.getElementById('sky-container');
         const riga = document.createElement('div');
         riga.className = 'business-item';
-        
         let opzioni = '';
         for (const [key, value] of Object.entries(tabelle.sky)) {
             opzioni += `<option value="${key}">${key.replaceAll('_', ' ')} (${value}€)</option>`;
         }
-        
         riga.innerHTML = `
             <select class="tipo-sky" style="flex: 2;">${opzioni}</select>
             <input type="number" class="qta-sky" placeholder="Q.tà / Camere" min="1" value="1" style="flex: 1.5;">
@@ -355,13 +357,11 @@
         const container = document.getElementById('prodotti-container');
         const riga = document.createElement('div');
         riga.className = 'business-item';
-        
         let opzioni = '';
         for (const [key, value] of Object.entries(tabelle.prodotti)) {
             const percPercentuale = (value * 100).toFixed(1).replace('.0', '');
             opzioni += `<option value="${key}">${key.replaceAll('_', ' ')} (${percPercentuale}%)</option>`;
         }
-        
         riga.innerHTML = `
             <select class="tipo-prodotto" style="flex: 2;">${opzioni}</select>
             <input type="number" class="valore-prodotto" placeholder="Valore in €" min="0" style="flex: 1.5;">
@@ -371,47 +371,48 @@
     }
 
     function getGettoneLuceBusiness(kwh) {
-        if (kwh <= 0) return 0;
-        if (kwh <= 5000) return 50;
-        if (kwh <= 10000) return 65;
-        if (kwh <= 25000) return 85;
-        if (kwh <= 50000) return 135;
-        if (kwh <= 100000) return 185;
-        if (kwh <= 300000) return 225;
-        if (kwh <= 500000) return 275;
-        if (kwh <= 700000) return 300;
-        return 350; 
+        if (kwh <= 0) return 0; if (kwh <= 5000) return 50; if (kwh <= 10000) return 65;
+        if (kwh <= 25000) return 85; if (kwh <= 50000) return 135; if (kwh <= 100000) return 185;
+        if (kwh <= 300000) return 225; if (kwh <= 500000) return 275; if (kwh <= 700000) return 300; return 350; 
+    }
+
+    function getRicorrenteLuceBusiness(kwh) {
+        if (kwh <= 0) return 0; if (kwh <= 5000) return 10; if (kwh <= 10000) return 12.5;
+        if (kwh <= 25000) return 15; if (kwh <= 50000) return 16.5; if (kwh <= 100000) return 18.5;
+        if (kwh <= 300000) return 22.5; if (kwh <= 500000) return 30; if (kwh <= 700000) return 40; return 75; 
     }
 
     function getGettoneGasBusiness(smc) {
-        if (smc <= 0) return 0;
-        if (smc <= 1500) return 40;
-        if (smc <= 5000) return 55;
-        if (smc <= 10000) return 75;
-        if (smc <= 20000) return 125;
-        if (smc <= 30000) return 185;
-        if (smc <= 100000) return 225;
-        if (smc <= 200000) return 275;
-        if (smc <= 300000) return 300;
-        if (smc <= 400000) return 350;
-        return 500; 
+        if (smc <= 0) return 0; if (smc <= 1500) return 40; if (smc <= 5000) return 55;
+        if (smc <= 10000) return 75; if (smc <= 20000) return 125; if (smc <= 30000) return 185;
+        if (smc <= 100000) return 225; if (smc <= 200000) return 275; if (smc <= 300000) return 300;
+        if (smc <= 400000) return 350; return 500; 
+    }
+
+    function getRicorrenteGasBusiness(smc) {
+        if (smc <= 0) return 0; if (smc <= 1500) return 5; if (smc <= 5000) return 10;
+        if (smc <= 10000) return 12.5; if (smc <= 20000) return 15; if (smc <= 30000) return 18.5;
+        if (smc <= 100000) return 22.5; if (smc <= 200000) return 30; if (smc <= 300000) return 40;
+        if (smc <= 400000) return 75; return 125; 
     }
 
     function calcolaProvvigioni() {
         const ruolo = document.getElementById('ruolo').value;
-        
         let totGettoneDiretto = 0;
+        let totRicorrenteUnMese = 0; // Il valore che un solo mese di produzione genera
         
         // 1. LUCE DIRETTA
         const pRes = parseInt(document.getElementById('p-res').value) || 0;
         const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
         
         totGettoneDiretto += (pRes * 50) + (pResR * 70);
+        totRicorrenteUnMese += (pRes * 4) + (pResR * 4);
         
         const inputsLuceBus = document.querySelectorAll('#p-bus-container .consumo-business');
         inputsLuceBus.forEach(input => {
             const kwh = parseFloat(input.value) || 0;
             totGettoneDiretto += getGettoneLuceBusiness(kwh);
+            totRicorrenteUnMese += getRicorrenteLuceBusiness(kwh);
         });
         
         // 2. GAS DIRETTO
@@ -419,25 +420,26 @@
         const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
         
         totGettoneDiretto += (gRes * 50) + (gResR * 70);
+        totRicorrenteUnMese += (gRes * 4) + (gResR * 4);
         
         const inputsGasBus = document.querySelectorAll('#g-bus-container .consumo-business');
         inputsGasBus.forEach(input => {
             const smc = parseFloat(input.value) || 0;
             totGettoneDiretto += getGettoneGasBusiness(smc);
+            totRicorrenteUnMese += getRicorrenteGasBusiness(smc);
         });
         
         // 3. BONUS RID WEB SU CLIENTI BUSINESS (13€ l'uno)
         const cBus = parseInt(document.getElementById('c-bus').value) || 0;
         const totRidWeb = cBus * 13;
         
-        // 4. SKY DINAMICO (Somma righe)
+        // 4. SKY DINAMICO
         let totSkyDiretta = 0;
         const righeSky = document.querySelectorAll('#sky-container .business-item');
         righeSky.forEach(riga => {
             const tipo = riga.querySelector('.tipo-sky').value;
             const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
-            const valoreFisso = tabelle.sky[tipo] || 0;
-            totSkyDiretta += (qta * valoreFisso);
+            totSkyDiretta += (qta * (tabelle.sky[tipo] || 0));
         });
         
         // 5. PRODOTTI (Percentuale su valore)
@@ -446,38 +448,39 @@
         righeProdotti.forEach(riga => {
             const tipo = riga.querySelector('.tipo-prodotto').value;
             const valore = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
-            const perc = tabelle.prodotti[tipo] || 0;
-            totProdotti += (valore * perc);
+            totProdotti += (valore * (tabelle.prodotti[tipo] || 0));
         });
 
-        // 6. VERISURE (Fisso 75€)
+        // 6. VERISURE
         const verisureQta = parseInt(document.getElementById('verisure-qta').value) || 0;
         const totVerisure = verisureQta * 75;
         
-        // TOTALE DIRETTA
+        // TOTALE DIRETTA MENSILE
         const totDiretta = totGettoneDiretto + totRidWeb + totSkyDiretta + totProdotti + totVerisure;
         
-        // 7. CALCOLO RETE (Solo Coordinator)
-        let totPezziRete = 0;
-        let volumeGwhRete = 0;
-        
+        // 7. PROIEZIONI RICORRENTE TRIMESTRALE (Formula Pro-Rata Corretta)
+        // Se si produce un valore mensile X costante:
+        // Trimestre 1 = 1 + 2/3 + 1/3 = 2X
+        const renditaTrim1 = totRicorrenteUnMese * 2; 
+        // Trimestre 2 = 3 mesi pieni + 2X del nuovo trimestre = 5X
+        const renditaTrim2 = totRicorrenteUnMese * 5;
+        // Trimestre 4 (Dopo 12 mesi) = 9 mesi pieni + 2X dell'ultimo trimestre = 11X
+        const renditaTrim12 = totRicorrenteUnMese * 11;
+
+        // 8. CALCOLO RETE (Solo Coordinator)
+        let totPezziRete = 0; let volumeGwhRete = 0;
         if (ruolo === 'coordinator') {
             const pInd = parseInt(document.getElementById('p-ind').value) || 0;
             const gInd = parseInt(document.getElementById('g-ind').value) || 0;
-            
-            // Somma pezzi rete
             totPezziRete = pInd + gInd;
-            
-            // Calcolo volumi forfettari per le soglie (media 3000 kwh e 1000 smc)
             let kwhLuceRete = pInd * 3000;
             let smcGasRete = gInd * 1000;
             let gasInKwh = smcGasRete * 4;
             let kwhManuali = parseFloat(document.getElementById('gwh-manuali').value) * 1000000 || 0;
-            
             volumeGwhRete = (kwhLuceRete + gasInKwh + kwhManuali) / 1000000;
         }
         
-        // 8. CONTRIBUTO FISSO SOGLIE GWH
+        // 9. CONTRIBUTO FISSO SOGLIE GWH
         let contributo = 0;
         if (ruolo === 'coordinator') {
             if (volumeGwhRete >= 1 && volumeGwhRete < 1.5) contributo = 500;
@@ -495,6 +498,11 @@
         document.getElementById('tot-prodotti').innerText = totProdotti.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-verisure').innerText = totVerisure.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
+        // Aggiorna box Ricorrente (Progressione Reale)
+        document.getElementById('ric-trim1').innerText = renditaTrim1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('ric-trim2').innerText = renditaTrim2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('ric-trim12').innerText = renditaTrim12.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
         document.getElementById('tot-pezzi-rete').innerText = totPezziRete;
         document.getElementById('tot-contributo').innerText = contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('volume-calcolato').innerText = volumeGwhRete.toFixed(2);
@@ -502,7 +510,6 @@
         document.getElementById('risultati-box').style.display = 'block';
         document.getElementById('risultati-box').scrollIntoView({ behavior: 'smooth' });
     }
-
     cambiaRuolo();
 </script>
 
