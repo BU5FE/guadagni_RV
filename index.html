@@ -192,6 +192,8 @@
 
     
 
+
+
     <button class="btn-calcola" style="margin-top: 20px;" onclick="calcolaProvvigioni()">Calcola Guadagno</button> 
         
         <div class="risultati" id="risultati-box"> 
@@ -207,8 +209,9 @@
                     <p style="font-size: 0.9rem;">• Gettoni Indiretti Verisure: <span id="ind-veri">0,00</span> €</p> 
                     <p style="font-size: 0.9rem;">• Contributo Fisso Rete Raggiunto: <span id="tot-contributo">0,00</span> €</p> 
                     <hr style="border: 0; border-top: 1px solid #ffeeba; margin: 10px 0;">
-                    <p style="font-size: 1rem; color: #d97706;"><strong>• Ricorrente Mensile Generato (Pers. + Rete): <span id="ric-ind-ee-gas">0,00</span> €</strong></p>
-                    <p style="font-size: 0.85rem; color: #555;">Volume Totale Mese (Pers. + Rete): <span id="volume-calcolato">0.000</span> GWh</p> 
+                    <p style="font-size: 1rem; color: #d97706;"><strong>• Ricorrente Mensile Erogato (Pers. + Rete): <span id="ric-ind-ee-gas">0,00</span> €</strong></p>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: -5px;"><i>(Calcolato su base annua di <span id="ric-ind-annuale">0,00</span> € e diviso per 12)</i></p>
+                    <p style="font-size: 0.85rem; color: #555; margin-top: 5px;">Volume Totale Mese (Pers. + Rete): <span id="volume-calcolato">0.000</span> GWh</p> 
                 </div> 
 
                 <div class="box-proiezione coordinator-only" style="background: #e0f2fe; border: 1px solid #bae6fd; margin-bottom: 15px;">
@@ -544,10 +547,12 @@
                 indVeri = (verisureIndirettaPezzi + verisureDirettoPezzi) * 8; 
             } 
 
-            // RICORRENTE MENSILE (0,0005€/kWh e 0,0035€/Smc)
-            let ricIndEeGasCumulato = (volumeKwhLuceTotale * 0.0005) + (volumeSmcGasTotale * 0.0035);
+            // RICORRENTE ANNUALE (calcolato sui volumi inseriti)
+            let ricIndEeGasAnnuale = (volumeKwhLuceTotale * 0.0005) + (volumeSmcGasTotale * 0.0035);
+            // Diviso 12 per ottenere l'erogato mensile
+            let ricIndEeGasMensile = ricIndEeGasAnnuale / 12;
 
-            globale_totIndiretta = indEeGasGettoni + ricIndEeGasCumulato + indSky + indProd + indVeri; 
+            globale_totIndiretta = indEeGasGettoni + ricIndEeGasMensile + indSky + indProd + indVeri; 
 
             // Volume per scaglioni
             let volumeTotaleInKwh = volumeKwhLuceTotale + (volumeSmcGasTotale * 4); 
@@ -594,16 +599,20 @@
 
             if (ruolo === 'coordinator') {
                 document.getElementById('ind-ee-gas').innerText = indEeGasGettoni.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-ind-ee-gas').innerText = ricIndEeGasCumulato.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Mostriamo il valore mensile erogato e tra parentesi l'annuale generato
+                document.getElementById('ric-ind-ee-gas').innerText = ricIndEeGasMensile.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-ind-annuale').innerText = ricIndEeGasAnnuale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
                 document.getElementById('ind-sky').innerText = indSky.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ind-prod').innerText = indProd.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ind-veri').innerText = indVeri.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
                 
-                // LOGICA PROSPETTIVA RICORRENTE RETE 
-                let ric6Mesi = ricIndEeGasCumulato * 6;
-                let ric12Mesi = ricIndEeGasCumulato * 12;
+                // LOGICA PROSPETTIVA RICORRENTE RETE (accumuliamo il valore MENSILE reale)
+                let ric6Mesi = ricIndEeGasMensile * 6;
+                let ric12Mesi = ricIndEeGasMensile * 12;
                 document.getElementById('ric-6mesi').innerText = ric6Mesi.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-12mesi').innerText = ric12Mesi.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             }
