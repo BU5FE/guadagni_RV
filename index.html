@@ -3,291 +3,506 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulatore Coordinator 2026 - Futur Energy</title>
+    <title>Simulatore Coordinator Futur Energy 2026 - Versione Integrale</title>
     <style>
+        /* CSS PROFESSIONALE E DETTAGLIATO */
         :root {
             --primary: #004a99;
-            --secondary: #27ae60;
+            --secondary: #2ecc71;
             --accent: #f39c12;
-            --danger: #e74c3c;
-            --light: #f8f9fa;
             --dark: #2c3e50;
+            --light: #f4f7f6;
+            --white: #ffffff;
+            --border: #dcdde1;
         }
+
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #e9ecef;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
             color: var(--dark);
-            margin: 0; padding: 20px;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
+            background: var(--white);
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
-        h1 { color: var(--primary); text-align: center; font-size: 2.2rem; border-bottom: 4px solid var(--primary); pb: 10px; margin-bottom: 40px; }
-        h2 { color: white; background: var(--primary); padding: 12px 20px; border-radius: 8px; margin-top: 40px; font-size: 1.3rem; display: flex; align-items: center; }
-        h3 { color: var(--primary); border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 15px; }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-
-        .section { background: var(--light); padding: 20px; border-radius: 10px; border: 1px solid #dee2e6; }
-        .input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .input-group label { font-weight: 600; font-size: 0.95rem; flex: 1; }
-        .input-group input { width: 90px; padding: 8px; border: 1px solid #ced4da; border-radius: 5px; text-align: center; font-weight: bold; }
-
-        .btn-calc {
-            display: block; width: 100%; background: var(--secondary); color: white;
-            font-size: 1.5rem; font-weight: bold; padding: 20px; border: none;
-            border-radius: 10px; cursor: pointer; margin: 40px 0;
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3); transition: all 0.3s;
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 40px;
+            padding-bottom: 20px;
         }
-        .btn-calc:hover { background: #219150; transform: translateY(-2px); }
 
-        /* Risultati */
-        #results { display: none; margin-top: 20px; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        header h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+        }
 
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; padding: 20px; border-radius: 10px; text-align: center; border-top: 5px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .stat-card label { display: block; font-size: 0.8rem; color: #6c757d; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
-        .stat-card span { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
-        .stat-card.bonus { border-top-color: var(--accent); background: #fffdf5; }
-        .stat-card.bonus span { color: #d35400; }
+        header p {
+            color: #7f8c8d;
+            font-weight: bold;
+        }
 
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; margin-top: 20px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f1f4f8; color: var(--primary); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; }
-        .row-total { background: #f8f9fa; font-weight: bold; font-size: 1.1rem; }
-        .final-total-box { background: var(--primary); color: white; padding: 25px; border-radius: 10px; text-align: center; margin-top: 30px; }
-        .final-total-box h4 { margin: 0; font-size: 1.2rem; opacity: 0.9; }
-        .final-total-box .price { font-size: 2.5rem; font-weight: 900; }
+        h2 {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 50px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        h3 {
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 25px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-container { grid-template-columns: 1fr; }
+        }
+
+        .input-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+
+        .input-card:hover {
+            border-color: var(--primary);
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+
+        .form-group input {
+            width: 100px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Pulsante Calcola */
+        .btn-main {
+            display: block;
+            width: 100%;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 25px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 50px;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-main:hover {
+            background: #27ae60;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Area Risultati */
+        #result-area {
+            display: none;
+            margin-top: 50px;
+            padding: 30px;
+            background: #fff;
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-box {
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            background: #f1f4f8;
+            border-top: 6px solid var(--primary);
+        }
+
+        .stat-box.bonus { border-top-color: var(--accent); background: #fff9e6; }
+
+        .stat-box label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .stat-box .value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* Tabelle Dettaglio */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .row-subtotal { background: #f8f9fa; font-weight: bold; }
+        .row-total-final { 
+            background: var(--dark); 
+            color: white; 
+            font-size: 1.5rem; 
+            font-weight: bold;
+        }
+
+        .highlight-bonus { color: #d35400; font-weight: 800; }
+
+        .footer-note {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #95a5a6;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Simulatore Mandato Coordinator 2026</h1>
+    <header>
+        <h1>Simulatore Mandato Coordinator 2026</h1>
+        <p>Futur Energy - Calcolo Compensi, Overriding e Bonus Target</p>
+    </header>
 
-    <h2>⚡ POWER - Energia Elettrica</h2>
-    <div class="grid">
-        <div class="section">
-            <h3>Produzione Diretta</h3>
-            <div class="input-group"><label>Luce Residenziale (POD)</label><input type="number" id="p_d_res" value="0"></div>
-            <div class="input-row" style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">(RID/WEB non previsti su Residenziale)</div>
-            <div class="input-group"><label>Luce Residenziale R+ (POD)</label><input type="number" id="p_d_resr" value="0"></div>
-            <div class="input-group"><label>Luce Business (Pezzi)</label><input type="number" id="p_d_bus_pz" value="0"></div>
-            <div class="input-group"><label>Volume Business Totale (kWh)</label><input type="number" id="p_d_bus_vol" value="0"></div>
+    <h2>⚡ SEZIONE POWER (ENERGIA ELETTRICA)</h2>
+    <div class="grid-container">
+        <div class="input-card">
+            <h3>Produzione Diretta (Personale)</h3>
+            <div class="form-group">
+                <label>Residenziale (POD)</label>
+                <input type="number" id="ee_dir_res" value="0">
+            </div>
+            <div class="form-group">
+                <label>Residenziale R+ (POD)</label>
+                <input type="number" id="ee_dir_resr" value="0">
+            </div>
+            <div class="form-group">
+                <label>Business (Pezzi)</label>
+                <input type="number" id="ee_dir_bus_pz" value="0">
+            </div>
+            <div class="form-group">
+                <label>Volume Business Totale (kWh)</label>
+                <input type="number" id="ee_dir_bus_vol" value="0">
+            </div>
         </div>
-        <div class="section">
+        <div class="input-card">
             <h3>Produzione Indiretta (Rete)</h3>
-            <div class="input-group"><label>Luce Residenziale (POD)</label><input type="number" id="p_i_res" value="0"></div>
-            <div class="input-group"><label>Luce Residenziale R+ (POD)</label><input type="number" id="p_i_resr" value="0"></div>
-            <div class="input-group"><label>Luce Business (Pezzi)</label><input type="number" id="p_i_bus_pz" value="0"></div>
-            <div class="input-group"><label>Volume Business Totale (kWh)</label><input type="number" id="p_i_bus_vol" value="0"></div>
+            <div class="form-group">
+                <label>Residenziale (POD)</label>
+                <input type="number" id="ee_ind_res" value="0">
+            </div>
+            <div class="form-group">
+                <label>Residenziale R+ (POD)</label>
+                <input type="number" id="ee_ind_resr" value="0">
+            </div>
+            <div class="form-group">
+                <label>Business (Pezzi)</label>
+                <input type="number" id="ee_ind_bus_pz" value="0">
+            </div>
+            <div class="form-group">
+                <label>Volume Business Totale (kWh)</label>
+                <input type="number" id="ee_ind_bus_vol" value="0">
+            </div>
         </div>
     </div>
 
-    <h2>🔥 GAS - Gas Naturale</h2>
-    <div class="grid">
-        <div class="section">
-            <h3>Produzione Diretta</h3>
-            <div class="input-group"><label>Gas Residenziale (PDR)</label><input type="number" id="g_d_res" value="0"></div>
-            <div class="input-group"><label>Gas Residenziale R+ (PDR)</label><input type="number" id="g_d_resr" value="0"></div>
-            <div class="input-group"><label>Gas Business (Pezzi)</label><input type="number" id="g_d_bus_pz" value="0"></div>
-            <div class="input-group"><label>Volume Business Totale (Smc)</label><input type="number" id="g_d_bus_vol" value="0"></div>
+    <h2>🔥 SEZIONE GAS (GAS NATURALE)</h2>
+    <div class="grid-container">
+        <div class="input-card">
+            <h3>Produzione Diretta (Personale)</h3>
+            <div class="form-group">
+                <label>Residenziale (PDR)</label>
+                <input type="number" id="gas_dir_res" value="0">
+            </div>
+            <div class="form-group">
+                <label>Residenziale R+ (PDR)</label>
+                <input type="number" id="gas_dir_resr" value="0">
+            </div>
+            <div class="form-group">
+                <label>Business (Pezzi)</label>
+                <input type="number" id="gas_dir_bus_pz" value="0">
+            </div>
+            <div class="form-group">
+                <label>Volume Business Totale (Smc)</label>
+                <input type="number" id="gas_dir_bus_vol" value="0">
+            </div>
         </div>
-        <div class="section">
+        <div class="input-card">
             <h3>Produzione Indiretta (Rete)</h3>
-            <div class="input-group"><label>Gas Residenziale (PDR)</label><input type="number" id="g_i_res" value="0"></div>
-            <div class="input-group"><label>Gas Residenziale R+ (PDR)</label><input type="number" id="g_i_resr" value="0"></div>
-            <div class="input-group"><label>Gas Business (Pezzi)</label><input type="number" id="g_i_bus_pz" value="0"></div>
-            <div class="input-group"><label>Volume Business Totale (Smc)</label><input type="number" id="g_i_bus_vol" value="0"></div>
+            <div class="form-group">
+                <label>Residenziale (PDR)</label>
+                <input type="number" id="gas_ind_res" value="0">
+            </div>
+            <div class="form-group">
+                <label>Residenziale R+ (PDR)</label>
+                <input type="number" id="gas_ind_resr" value="0">
+            </div>
+            <div class="form-group">
+                <label>Business (Pezzi)</label>
+                <input type="number" id="gas_ind_bus_pz" value="0">
+            </div>
+            <div class="form-group">
+                <label>Volume Business Totale (Smc)</label>
+                <input type="number" id="gas_ind_bus_vol" value="0">
+            </div>
         </div>
     </div>
 
-    <h2>🛠️ PRODOTTI & SKY</h2>
-    <div class="grid">
-        <div class="section">
-            <h3>Fatturato Prodotti (€)</h3>
-            <div class="input-group"><label>Fotovoltaico (€)</label><input type="number" id="f_fv" value="0"></div>
-            <div class="input-group"><label>Climatizzazione (€)</label><input type="number" id="f_cli" value="0"></div>
-            <div class="input-group"><label>LED / Colonnine / Altro (€)</label><input type="number" id="f_alt" value="0"></div>
+    <h2>🛠️ PRODOTTI, SKY & EXTRA</h2>
+    <div class="grid-container">
+        <div class="input-card">
+            <h3>Vendite Dirette</h3>
+            <div class="form-group"><label>Sky Wifi RID (Pezzi)</label><input type="number" id="sky_dir" value="0"></div>
+            <div class="form-group"><label>Verisure (Pezzi)</label><input type="number" id="ver_dir" value="0"></div>
+            <div class="form-group"><label>Fotovoltaico (€ Fatturato)</label><input type="number" id="fv_dir" value="0"></div>
+            <div class="form-group"><label>Clima (€ Fatturato)</label><input type="number" id="cli_dir" value="0"></div>
+            <div class="form-group"><label>LED Listini 1-4 (€)</label><input type="number" id="led_dir" value="0"></div>
+            <div class="form-group"><label>Colonnine / E-Bike (€)</label><input type="number" id="col_dir" value="0"></div>
         </div>
-        <div class="section">
-            <h3>Servizi Fissi (Pezzi)</h3>
-            <div class="input-group"><label>Sky Wifi (Diretti)</label><input type="number" id="s_sky_d" value="0"></div>
-            <div class="input-group"><label>Verisure (Diretti)</label><input type="number" id="s_ver_d" value="0"></div>
-            <div class="input-group"><label>Sky Wifi (Rete Indiretta)</label><input type="number" id="s_sky_i" value="0"></div>
+        <div class="input-card">
+            <h3>Vendite Indirette (Rete)</h3>
+            <div class="form-group"><label>Sky Wifi RID (Pezzi)</label><input type="number" id="sky_ind" value="0"></div>
+            <div class="form-group"><label>Verisure (Pezzi)</label><input type="number" id="ver_ind" value="0"></div>
+            <div class="form-group"><label>Fotovoltaico (€ Rete)</label><input type="number" id="fv_ind" value="0"></div>
+            <div class="form-group"><label>Clima (€ Rete)</label><input type="number" id="cli_ind" value="0"></div>
+            <div class="form-group"><label>LED Rete (€)</label><input type="number" id="led_ind" value="0"></div>
         </div>
     </div>
 
-    <button class="btn-calc" onclick="eseguiSimulazione()">CALCOLA COMPENSI TOTALI</button>
+    <button class="btn-main" onclick="calcolaCompensi()">Calcola Proiezione Compensi</button>
 
-    <div id="results">
-        <div class="dashboard">
-            <div class="stat-card"><label>Volume Totale</label><span id="out_gwh">0.00</span><small> GWh</small></div>
-            <div class="stat-card"><label>Gettone Diretto</label><span id="out_get_dir">0 €</span></div>
-            <div class="stat-card"><label>Overriding Rete</label><span id="out_over">0 €</span></div>
-            <div class="stat-card bonus"><label>Bonus Coordinator</label><span id="out_bonus">0 €</span></div>
+    <div id="result-area">
+        <div class="summary-stats">
+            <div class="stat-box"><label>Volume Standard (GWh)</label><div class="value" id="out_gwh">0.000</div></div>
+            <div class="stat-box"><label>Totale Gettoni Diretti</label><div class="value" id="out_get_dir">0 €</div></div>
+            <div class="stat-box"><label>Totale Overriding Rete</label><div class="value" id="out_over">0 €</div></div>
+            <div class="stat-box bonus"><label>Contributo Coordinator</label><div class="value" id="out_bonus">0 €</div></div>
         </div>
 
         <table>
             <thead>
-                <tr><th>Dettaglio Voce</th><th>Luce</th><th>Gas</th><th>Extra/Prod</th><th>Parziale</th></tr>
+                <tr><th>Dettaglio</th><th>Luce (EE)</th><th>Gas (GN)</th><th>Extra/Prod</th><th>Totale Parziale</th></tr>
             </thead>
-            <tbody>
-                <tr><td>Gettoni (€)</td><td id="res_p_get">0 €</td><td id="res_g_get">0 €</td><td id="res_x_get">0 €</td><td id="tot_get">0 €</td></tr>
-                <tr><td>Bonus Business (RID/WEB)</td><td id="res_p_acc">0 €</td><td id="res_g_acc">0 €</td><td>-</td><td id="tot_acc">0 €</td></tr>
-                <tr><td>Ricorrenti (Diretta + Rete)</td><td id="res_p_ric">0 €</td><td id="res_g_ric">0 €</td><td>-</td><td id="tot_ric">0 €</td></tr>
-                <tr><td>Overriding Rete</td><td id="res_p_over">0 €</td><td id="res_g_over">0 €</td><td id="res_x_over">0 €</td><td id="tot_over">0 €</td></tr>
-            </tbody>
+            <tbody id="table-body">
+                </tbody>
+            <tfoot>
+                <tr class="row-total-final">
+                    <td colspan="4">COMPENSO TOTALE ESTIMATO (MESE)</td>
+                    <td id="out_finale">0,00 €</td>
+                </tr>
+            </tfoot>
         </table>
 
-        <div class="final-total-box">
-            <h4>COMPENSO TOTALE STIMATO</h4>
-            <div class="price" id="res_finale">0,00 €</div>
-        </div>
+        <p class="footer-note">Note: Il calcolo del volume GWh segue la regola 1 Smc = 4 kWh. I compensi residenziali non includono RID/WEB come da mandato.</p>
     </div>
 </div>
 
 <script>
-    // Configurazione Tabelle Mandato (Pag. 1 e 2)
-    const TAB_P = [
-        {lim: 5000, get: 50, ric: 10, rid: 10, web: 3, over: 8},
-        {lim: 10000, get: 65, ric: 12.5, rid: 10, web: 3, over: 10},
-        {lim: 25000, get: 85, ric: 15, rid: 10, web: 3, over: 12},
-        {lim: 50000, get: 135, ric: 16.5, rid: 10, web: 3, over: 15},
-        {lim: 100000, get: 185, ric: 18.5, rid: 10, web: 3, over: 20},
-        {lim: 300000, get: 225, ric: 22.5, rid: 10, web: 3, over: 25},
-        {lim: 500000, get: 275, ric: 30, rid: 10, web: 3, over: 35},
-        {lim: 700000, get: 300, ric: 40, rid: 10, web: 3, over: 40},
-        {lim: Infinity, get: 350, ric: 75, rid: 10, web: 3, over: 50}
+    // --- TABELLE MANDATO (PAG 1-2-3-4-6) ---
+    const TIERS_EE = [
+        {limit: 5000, get: 50, ric: 10, rid: 10, web: 3, over: 8},
+        {limit: 10000, get: 65, ric: 12.5, rid: 10, web: 3, over: 10},
+        {limit: 25000, get: 85, ric: 15, rid: 10, web: 3, over: 12},
+        {limit: 50000, get: 135, ric: 16.5, rid: 10, web: 3, over: 15},
+        {limit: 100000, get: 185, ric: 18.5, rid: 10, web: 3, over: 20},
+        {limit: 300000, get: 225, ric: 22.5, rid: 10, web: 3, over: 25},
+        {limit: 500000, get: 275, ric: 30, rid: 10, web: 3, over: 35},
+        {limit: 700000, get: 300, ric: 40, rid: 10, web: 3, over: 40},
+        {limit: Infinity, get: 350, ric: 75, rid: 10, web: 3, over: 50}
     ];
 
-    const TAB_G = [
-        {lim: 1500, get: 40, ric: 5, rid: 10, web: 3, over: 8},
-        {lim: 5000, get: 55, ric: 10, rid: 10, web: 3, over: 9},
-        {lim: 10000, get: 75, ric: 12.5, rid: 10, web: 3, over: 10},
-        {lim: 20000, get: 125, ric: 15, rid: 10, web: 3, over: 15},
-        {lim: 30000, get: 185, ric: 18.5, rid: 10, web: 3, over: 20},
-        {lim: 100000, get: 225, ric: 22.5, rid: 10, web: 3, over: 25},
-        {lim: 200000, get: 275, ric: 30, rid: 10, web: 3, over: 35},
-        {lim: 300000, get: 300, ric: 40, rid: 10, web: 3, over: 40},
-        {lim: 400000, get: 350, ric: 75, rid: 10, web: 3, over: 50},
-        {lim: Infinity, get: 500, ric: 125, rid: 10, web: 3, over: 60}
+    const TIERS_GAS = [
+        {limit: 1500, get: 40, ric: 5, rid: 10, web: 3, over: 8},
+        {limit: 5000, get: 55, ric: 10, rid: 10, web: 3, over: 9},
+        {limit: 10000, get: 75, ric: 12.5, rid: 10, web: 3, over: 10},
+        {limit: 20000, get: 125, ric: 15, rid: 10, web: 3, over: 15},
+        {limit: 30000, get: 185, ric: 18.5, rid: 10, web: 3, over: 20},
+        {limit: 100000, get: 225, ric: 22.5, rid: 10, web: 3, over: 25},
+        {limit: 200000, get: 275, ric: 30, rid: 10, web: 3, over: 35},
+        {limit: 300000, get: 300, ric: 40, rid: 10, web: 3, over: 40},
+        {limit: 400000, get: 350, ric: 75, rid: 10, web: 3, over: 50},
+        {limit: Infinity, get: 500, ric: 125, rid: 10, web: 3, over: 60}
     ];
 
-    function fmt(n) { return n.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " €"; }
-    function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+    function getFascia(consumo, tabella) {
+        return tabella.find(f => consumo <= f.limit);
+    }
 
-    function eseguiSimulazione() {
-        // --- INPUT POWER ---
-        const pdRes = getVal('p_d_res');
-        const pdResR = getVal('p_d_resr');
-        const pdBusPz = getVal('p_d_bus_pz');
-        const pdBusVol = getVal('p_d_bus_vol');
-        const piRes = getVal('p_i_res');
-        const piResR = getVal('p_i_resr');
-        const piBusPz = getVal('p_i_bus_pz');
-        const piBusVol = getVal('p_i_bus_vol');
+    function f(val) {
+        return val.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " €";
+    }
 
-        // --- INPUT GAS ---
-        const gdRes = getVal('g_d_res');
-        const gdResR = getVal('g_d_resr');
-        const gdBusPz = getVal('g_d_bus_pz');
-        const gdBusVol = getVal('g_d_bus_vol');
-        const giRes = getVal('g_i_res');
-        const giResR = getVal('g_i_resr');
-        const giBusPz = getVal('g_i_bus_pz');
-        const giBusVol = getVal('g_i_bus_vol');
+    function calcolaCompensi() {
+        // --- RECUPERO DATI ---
+        const eeDRes = +document.getElementById('ee_dir_res').value;
+        const eeDResR = +document.getElementById('ee_dir_resr').value;
+        const eeDBusPz = +document.getElementById('ee_dir_bus_pz').value;
+        const eeDBusVol = +document.getElementById('ee_dir_bus_vol').value;
 
-        // --- CALCOLO GWh (Regola 1 Smc = 4 kWh) ---
-        // Stime Residenziale: 2000 kWh / 1000 Smc per pezzo
-        let volP = pdBusVol + piBusVol + ((pdRes + pdResR + piRes + piResR) * 2000);
-        let volG = gdBusVol + giBusVol + ((gdRes + gdResR + giRes + giResR) * 1000);
-        let gwhTot = (volP + (volG * 4)) / 1000000;
+        const eeIRes = +document.getElementById('ee_ind_res').value;
+        const eeIResR = +document.getElementById('ee_ind_resr').value;
+        const eeIBusPz = +document.getElementById('ee_ind_bus_pz').value;
+        const eeIBusVol = +document.getElementById('ee_ind_bus_vol').value;
 
-        // --- CALCOLO LUCE ---
-        let pGet = (pdRes * 50) + (pdResR * 70);
-        let pAcc = 0;
-        let pRic = (pdRes + pdResR) * 4; // Ricorrente Trimestrale Res
-        let pOver = (piRes * 6) + (piResR * 10);
+        const gasDRes = +document.getElementById('gas_dir_res').value;
+        const gasDResR = +document.getElementById('gas_dir_resr').value;
+        const gasDBusPz = +document.getElementById('gas_dir_bus_pz').value;
+        const gasDBusVol = +document.getElementById('gas_dir_bus_vol').value;
 
-        if(pdBusPz > 0) {
-            let f = TAB_P.find(x => (pdBusVol/pdBusPz) <= x.lim) || TAB_P[TAB_P.length-1];
-            pGet += pdBusPz * f.get;
-            pAcc += pdBusPz * (f.rid + f.web);
-            pRic += pdBusPz * f.ric;
+        const gasIRes = +document.getElementById('gas_ind_res').value;
+        const gasIResR = +document.getElementById('gas_ind_resr').value;
+        const gasIBusPz = +document.getElementById('gas_ind_bus_pz').value;
+        const gasIBusVol = +document.getElementById('gas_ind_bus_vol').value;
+
+        // --- CALCOLO GWh (PAG 6) ---
+        // Stime medie: 2000 kWh per Luce Res, 1000 Smc per Gas Res.
+        let volLuceTot = eeDBusVol + eeIBusVol + ((eeDRes + eeDResR + eeIRes + eeIResR) * 2000);
+        let volGasTot = gasDBusVol + gasIBusVol + ((gasDRes + gasDResR + gasIRes + gasIResR) * 1000);
+        let gwhTotal = (volLuceTot + (volGasTot * 4)) / 1000000;
+
+        // --- CALCOLO LUCE (EE) ---
+        let eeGetDir = (eeDRes * 50) + (eeDResR * 70);
+        let eeAccDir = 0;
+        let eeRic = (eeDRes + eeDResR) * 4; // Ric Trimestrale residenziale
+        let eeOver = (eeIRes * 6) + (eeIResR * 10);
+
+        if (eeDBusPz > 0) {
+            let fascia = getFascia(eeDBusVol/eeDBusPz, TIERS_EE);
+            eeGetDir += eeDBusPz * fascia.get;
+            eeAccDir += eeDBusPz * (fascia.rid + fascia.web);
+            eeRic += eeDBusPz * fascia.ric;
         }
-        if(piBusPz > 0) {
-            let f = TAB_P.find(x => (piBusVol/piBusPz) <= x.lim) || TAB_P[TAB_P.length-1];
-            pOver += piBusPz * f.over;
+        if (eeIBusPz > 0) {
+            let fascia = getFascia(eeIBusVol/eeIBusPz, TIERS_EE);
+            eeOver += eeIBusPz * fascia.over;
         }
-        pRic += volP * 0.0005; // Ricorrente Mensile Indiretta 0.5€/MWh
+        eeRic += volLuceTot * 0.0005; // Ricorrente mensile indiretta (0.50€/MWh)
 
         // --- CALCOLO GAS ---
-        let gGet = (gdRes * 50) + (gdResR * 70);
-        let gAcc = 0;
-        let gRic = (gdRes + gdResR) * 4;
-        let gOver = (giRes * 6) + (giResR * 10);
+        let gasGetDir = (gasDRes * 50) + (gasDResR * 70);
+        let gasAccDir = 0;
+        let gasRic = (gasDRes + gasDResR) * 4; 
+        let gasOver = (gasIRes * 6) + (gasIResR * 10);
 
-        if(gdBusPz > 0) {
-            let f = TAB_G.find(x => (gdBusVol/gdBusPz) <= x.lim) || TAB_G[TAB_G.length-1];
-            gGet += gdBusPz * f.get;
-            gAcc += gdBusPz * (f.rid + f.web);
-            gRic += gdBusPz * f.ric;
+        if (gasDBusPz > 0) {
+            let fascia = getFascia(gasDBusVol/gasDBusPz, TIERS_GAS);
+            gasGetDir += gasDBusPz * fascia.get;
+            gasAccDir += gasDBusPz * (fascia.rid + fascia.web);
+            gasRic += gasDBusPz * fascia.ric;
         }
-        if(giBusPz > 0) {
-            let f = TAB_G.find(x => (giBusVol/giBusPz) <= x.lim) || TAB_G[TAB_G.length-1];
-            gOver += giBusPz * f.over;
+        if (gasIBusPz > 0) {
+            let fascia = getFascia(gasIBusVol/gasIBusPz, TIERS_GAS);
+            gasOver += gasIBusPz * fascia.over;
         }
-        gRic += volG * 0.0035; // Ricorrente Mensile Indiretta
+        gasRic += volGasTot * 0.0035; // Ricorrente mensile indiretta
 
-        // --- CALCOLO EXTRA & PRODOTTI (Pag. 3 e 4) ---
-        let xGet = (getVal('s_sky_d') * 40) + (getVal('s_ver_d') * 75) + (getVal('f_fv') * 0.05) + (getVal('f_cli') * 0.08) + (getVal('f_alt') * 0.07);
-        let xOver = (getVal('s_sky_i') * 4) + (getVal('f_fv') * 0.015) + (getVal('f_cli') * 0.02);
+        // --- CALCOLO EXTRA/PRODOTTI ---
+        let extraGet = (+document.getElementById('sky_dir').value * 40) + 
+                       (+document.getElementById('ver_dir').value * 75) +
+                       (+document.getElementById('fv_dir').value * 0.05) +
+                       (+document.getElementById('cli_dir').value * 0.08) +
+                       (+document.getElementById('led_dir').value * 0.07) +
+                       (+document.getElementById('col_dir').value * 0.08);
 
-        // --- BONUS COORDINATOR (Soglie 800 - 4000) ---
+        let extraOver = (+document.getElementById('sky_ind').value * 4) +
+                        (+document.getElementById('ver_ind').value * 8) +
+                        (+document.getElementById('fv_ind').value * 0.015) +
+                        (+document.getElementById('cli_ind').value * 0.02) +
+                        (+document.getElementById('led_ind').value * 0.02);
+
+        // --- BONUS COORDINATOR (TARGET AGGIORNATI) ---
         let bonus = 0;
-        if(gwhTot >= 4.0) bonus = 4000;
-        else if(gwhTot >= 3.0) bonus = 2500;
-        else if(gwhTot >= 2.0) bonus = 2000;
-        else if(gwhTot >= 1.5) bonus = 1500;
-        else if(gwhTot >= 1.0) bonus = 800;
+        if (gwhTotal >= 4.0) bonus = 4000;
+        else if (gwhTotal >= 3.0) bonus = 2500;
+        else if (gwhTotal >= 2.0) bonus = 2000;
+        else if (gwhTotal >= 1.5) bonus = 1500;
+        else if (gwhTotal >= 1.0) bonus = 800;
 
-        // --- OUTPUT UI ---
-        document.getElementById('out_gwh').innerText = gwhTot.toFixed(3);
-        document.getElementById('out_get_dir').innerText = fmt(pGet + gGet + xGet);
-        document.getElementById('out_over').innerText = fmt(pOver + gOver + xOver);
-        document.getElementById('out_bonus').innerText = fmt(bonus);
+        // --- RENDER RISULTATI ---
+        document.getElementById('out_gwh').innerText = gwhTotal.toFixed(3);
+        document.getElementById('out_get_dir').innerText = f(eeGetDir + gasGetDir + extraGet);
+        document.getElementById('out_over').innerText = f(eeOver + gasOver + extraOver);
+        document.getElementById('out_bonus').innerText = f(bonus);
 
-        document.getElementById('res_p_get').innerText = fmt(pGet);
-        document.getElementById('res_g_get').innerText = fmt(gGet);
-        document.getElementById('res_x_get').innerText = fmt(xGet);
-        document.getElementById('tot_get').innerText = fmt(pGet + gGet + xGet);
+        const html = `
+            <tr><td>Gettoni Diretti</td><td>${f(eeGetDir)}</td><td>${f(gasGetDir)}</td><td>${f(extraGet)}</td><td>${f(eeGetDir+gasGetDir+extraGet)}</td></tr>
+            <tr><td>Bonus Accessori (RID/WEB)</td><td>${f(eeAccDir)}</td><td>${f(gasAccDir)}</td><td>-</td><td>${f(eeAccDir+gasAccDir)}</td></tr>
+            <tr><td>Ricorrenti (Mese/Trim)</td><td>${f(eeRic)}</td><td>${f(gasRic)}</td><td>-</td><td>${f(eeRic+gasRic)}</td></tr>
+            <tr><td>Overriding Rete</td><td>${f(eeOver)}</td><td>${f(gasOver)}</td><td>${f(extraOver)}</td><td>${f(eeOver+gasOver+extraOver)}</td></tr>
+            <tr class="row-subtotal"><td>Bonus Target Coordinator</td><td colspan="3">-</td><td class="highlight-bonus">${f(bonus)}</td></tr>
+        `;
+        document.getElementById('table-body').innerHTML = html;
+        
+        let totaleFinale = eeGetDir + gasGetDir + extraGet + eeAccDir + gasAccDir + eeRic + gasRic + eeOver + gasOver + extraOver + bonus;
+        document.getElementById('out_finale').innerText = f(totaleFinale);
 
-        document.getElementById('res_p_acc').innerText = fmt(pAcc);
-        document.getElementById('res_g_acc').innerText = fmt(gAcc);
-        document.getElementById('tot_acc').innerText = fmt(pAcc + gAcc);
-
-        document.getElementById('res_p_ric').innerText = fmt(pRic);
-        document.getElementById('res_g_ric').innerText = fmt(gRic);
-        document.getElementById('tot_ric').innerText = fmt(pRic + gRic);
-
-        document.getElementById('res_p_over').innerText = fmt(pOver);
-        document.getElementById('res_g_over').innerText = fmt(gOver);
-        document.getElementById('res_x_over').innerText = fmt(xOver);
-        document.getElementById('tot_over').innerText = fmt(pOver + gOver + xOver);
-
-        let finale = pGet + gGet + xGet + pAcc + gAcc + pRic + gRic + pOver + gOver + xOver + bonus;
-        document.getElementById('res_finale').innerText = fmt(finale);
-
-        document.getElementById('results').style.display = 'block';
-        window.scrollTo({ top: document.getElementById('results').offsetTop, behavior: 'smooth' });
+        document.getElementById('result-area').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('result-area').offsetTop, behavior: 'smooth' });
     }
 </script>
 
