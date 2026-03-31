@@ -210,7 +210,7 @@
         </div>
 
         <div class="card" style="border-left-color: #28a745;">
-            <h3>👥 Anagrafiche Clienti & Bonus</h3>
+            <h3>👥 Anagrafiche Clienti EE/Gas & Bonus</h3>
             <div class="input-row">
                 <label>Numero Clienti Residenziali:</label>
                 <input type="number" id="c-res" value="0" min="0">
@@ -221,23 +221,13 @@
             </div>
         </div>
 
-        <div class="card">
-            <h3>📺 Sky</h3>
-            <div class="input-row">
-                <label>Tipo Offerta:</label>
-                <select id="sky-tipo">
-                    <option value="TRIPLE_PLAY">Triple Play (95€)</option>
-                    <option value="SKY_WIFI_RID">Sky Wifi RID (40€)</option>
-                    <option value="SKY_WIFI_PREPAGATA">Sky Wifi Prepagata (30€)</option>
-                    <option value="BUSINESS_BAR">Business Bar (125€)</option>
-                    <option value="HOTEL_FINO_A_3_CAMERE">Hotel fino a 3 camere (100€)</option>
-                    <option value="HOTEL_ANNUALE">Hotel Annuale (30€ a cam.)</option>
-                    <option value="HOTEL_STAGIONALE">Hotel Stagionale (36€ a cam.)</option>
-                </select>
-            </div>
-            <div class="input-row">
-                <label>Contratti/Camere Personali:</label>
-                <input type="number" id="sky-qta" value="0" min="0">
+        <div class="card" style="border-left-color: #00bcd4;">
+            <h3>📺 Contratti Sky</h3>
+            <div style="background: #e1f5fe; padding: 10px; border-radius: 4px;">
+                <label>Aggiungi Contratti Sky:</label>
+                <div id="sky-container" class="business-list" style="max-height: 150px;">
+                    </div>
+                <button class="btn-add" onclick="aggiungiRigaSky()">+ Aggiungi Vendita Sky</button>
             </div>
         </div>
 
@@ -276,6 +266,7 @@
         <div class="dettaglio">
             <p>Guadagno Diretto (Gettoni): <span id="tot-diretta">0,00</span> €</p>
             <p>Di cui Bonus RID WEB Business: <span id="tot-rid-web">0,00</span> €</p>
+            <p>Di cui Contratti Sky: <span id="tot-sky">0,00</span> €</p>
             <p>Di cui Vendita Prodotti: <span id="tot-prodotti">0,00</span> €</p>
             <p>Di cui Segnalazioni Verisure: <span id="tot-verisure">0,00</span> €</p>
             
@@ -284,7 +275,7 @@
                 <p>Totale Contratti Rete (POD + PDR): <span id="tot-pezzi-rete">0</span></p>
                 <p>Volume Annuo Rete Stimato: <span id="volume-calcolato">0.00</span> GWh</p>
                 <p>Contributo Fisso Mensile Raggiunto: <span id="tot-contributo">0,00</span> €</p>
-                <p style="font-size: 0.85rem; color: #555;"><i>I conteggi analitici delle provvigioni indirette verranno sbloccati nei prossimi step.</i></p>
+                <p style="font-size: 0.85rem; color: #555;"><i>I conteggi analitici delle provvigioni indirette verranno sbloccati nei primi step.</i></p>
             </div>
         </div>
     </div>
@@ -295,7 +286,7 @@
 </div>
 
 <script>
-    // Database percentuali prodotti e importi fissi Sky
+    // Database importi fissi Sky e percentuali prodotti
     const tabelle = {
         sky: {
             "TRIPLE_PLAY": 95,
@@ -336,6 +327,24 @@
         riga.className = 'business-item';
         riga.innerHTML = `
             <input type="number" class="consumo-business" placeholder="${placeholderText}" min="0">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        `;
+        container.appendChild(riga);
+    }
+
+    function aggiungiRigaSky() {
+        const container = document.getElementById('sky-container');
+        const riga = document.createElement('div');
+        riga.className = 'business-item';
+        
+        let opzioni = '';
+        for (const [key, value] of Object.entries(tabelle.sky)) {
+            opzioni += `<option value="${key}">${key.replaceAll('_', ' ')} (${value}€)</option>`;
+        }
+        
+        riga.innerHTML = `
+            <select class="tipo-sky" style="flex: 2;">${opzioni}</select>
+            <input type="number" class="qta-sky" placeholder="Q.tà / Camere" min="1" value="1" style="flex: 1.5;">
             <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
         `;
         container.appendChild(riga);
@@ -420,10 +429,15 @@
         const cBus = parseInt(document.getElementById('c-bus').value) || 0;
         const totRidWeb = cBus * 13;
         
-        // 4. SKY (Solo Diretta)
-        const sQta = parseInt(document.getElementById('sky-qta').value) || 0;
-        const sTipo = document.getElementById('sky-tipo').value;
-        const totSkyDiretta = sQta * (tabelle.sky[sTipo] || 0);
+        // 4. SKY DINAMICO (Somma righe)
+        let totSkyDiretta = 0;
+        const righeSky = document.querySelectorAll('#sky-container .business-item');
+        righeSky.forEach(riga => {
+            const tipo = riga.querySelector('.tipo-sky').value;
+            const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
+            const valoreFisso = tabelle.sky[tipo] || 0;
+            totSkyDiretta += (qta * valoreFisso);
+        });
         
         // 5. PRODOTTI (Percentuale su valore)
         let totProdotti = 0;
@@ -476,6 +490,7 @@
         document.getElementById('totale-guadagno').innerText = totaleComplessivo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-diretta').innerText = totGettoneDiretto.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-rid-web').innerText = totRidWeb.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('tot-sky').innerText = totSkyDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-prodotti').innerText = totProdotti.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-verisure').innerText = totVerisure.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
