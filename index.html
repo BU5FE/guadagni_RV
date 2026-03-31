@@ -33,7 +33,7 @@
         }
         .form-group { margin-bottom: 20px; text-align: center; }
         label { font-weight: 600; display: block; margin-bottom: 5px; }
-        select, input {
+        select, input[type="number"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -65,7 +65,7 @@
         }
         .card h3 { margin-top: 0; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
         .input-row { margin-bottom: 12px; }
-        .coordinator-only { display: none; background-color: #eef7ff; padding: 5px; border-radius: 4px; }
+        .coordinator-only { display: none; }
         .account-only { display: block; }
         
         .business-list {
@@ -155,6 +155,8 @@
             text-align: left;
         }
         .box-gare h4 { margin-top: 0; color: #b94a48; }
+        .box-gare label { display: inline; font-weight: normal; cursor: pointer; }
+        .box-gare input[type="checkbox"] { transform: scale(1.2); margin-right: 5px; cursor: pointer; }
 
         .noticine {
             font-size: 0.85rem;
@@ -185,53 +187,75 @@
         <div class="card">
             <h3>⚡ Energia Elettrica (Power)</h3>
             <div class="input-row">
-                <label>Num. POD Residenziali (Prod. Mensile):</label>
+                <label>Num. POD Residenziali (Diretta):</label>
                 <input type="number" id="p-res" value="0" min="0">
             </div>
             <div class="input-row">
-                <label>Num. POD Residenziali R+ (Prod. Mensile):</label>
+                <label>Num. POD Residenziali R+ (Diretta):</label>
                 <input type="number" id="p-res-r" value="0" min="0">
             </div>
             
             <div style="background: #eef7ff; padding: 10px; border-radius: 4px; margin-top: 10px;">
-                <label>🏢 POD Business (Gettone su Consumo):</label>
-                <div id="p-bus-container" class="business-list">
-                    </div>
+                <label>🏢 POD Business Diretti (Su Consumo):</label>
+                <div id="p-bus-container" class="business-list"></div>
                 <button class="btn-add" onclick="aggiungiRigaBusiness('p-bus-container', 'kWh consumo annuo')">+ Aggiungi POD Business</button>
             </div>
 
-            <div class="input-row coordinator-only" style="margin-top: 15px;">
-                <label>POD Rete (Indiretta Totali):</label>
-                <input type="number" id="p-ind" value="0" min="0">
+            <div class="coordinator-only" style="background-color: #fff9db; padding: 10px; border-radius: 4px; margin-top: 15px; border: 1px solid #ffeeba;">
+                <h4>👥 Produzione Indiretta Squadra</h4>
+                <div class="input-row">
+                    <label>POD Residenziali Rete:</label>
+                    <input type="number" id="p-ind-res" value="0" min="0">
+                </div>
+                <div class="input-row">
+                    <label>POD Residenziali R+ Rete:</label>
+                    <input type="number" id="p-ind-resr" value="0" min="0">
+                </div>
+                <div>
+                    <label>POD Business Rete (Su Consumo):</label>
+                    <div id="p-bus-ind-container" class="business-list"></div>
+                    <button class="btn-add" style="background-color: #e67e22;" onclick="aggiungiRigaBusiness('p-bus-ind-container', 'kWh consumo annuo')">+ Aggiungi POD Business Rete</button>
+                </div>
             </div>
         </div>
 
         <div class="card">
             <h3>🔥 Gas Naturale</h3>
             <div class="input-row">
-                <label>Num. PDR Residenziali (Prod. Mensile):</label>
+                <label>Num. PDR Residenziali (Diretta):</label>
                 <input type="number" id="g-res" value="0" min="0">
             </div>
             <div class="input-row">
-                <label>Num. PDR Residenziali R+ (Prod. Mensile):</label>
+                <label>Num. PDR Residenziali R+ (Diretta):</label>
                 <input type="number" id="g-res-r" value="0" min="0">
             </div>
             
             <div style="background: #fff3e0; padding: 10px; border-radius: 4px; margin-top: 10px;">
-                <label>🏢 PDR Business (Gettone su Consumo):</label>
-                <div id="g-bus-container" class="business-list">
-                    </div>
+                <label>🏢 PDR Business Diretti (Su Consumo):</label>
+                <div id="g-bus-container" class="business-list"></div>
                 <button class="btn-add" onclick="aggiungiRigaBusiness('g-bus-container', 'Smc consumo annuo')">+ Aggiungi PDR Business</button>
             </div>
 
-            <div class="input-row coordinator-only" style="margin-top: 15px;">
-                <label>PDR Rete (Indiretta Totali):</label>
-                <input type="number" id="g-ind" value="0" min="0">
+            <div class="coordinator-only" style="background-color: #fff9db; padding: 10px; border-radius: 4px; margin-top: 15px; border: 1px solid #ffeeba;">
+                <h4>👥 Produzione Indiretta Squadra</h4>
+                <div class="input-row">
+                    <label>PDR Residenziali Rete:</label>
+                    <input type="number" id="g-ind-res" value="0" min="0">
+                </div>
+                <div class="input-row">
+                    <label>PDR Residenziali R+ Rete:</label>
+                    <input type="number" id="g-ind-resr" value="0" min="0">
+                </div>
+                <div>
+                    <label>PDR Business Rete (Su Consumo):</label>
+                    <div id="g-bus-ind-container" class="business-list"></div>
+                    <button class="btn-add" style="background-color: #e67e22;" onclick="aggiungiRigaBusiness('g-bus-ind-container', 'Smc consumo annuo')">+ Aggiungi PDR Business Rete</button>
+                </div>
             </div>
         </div>
 
         <div class="card" style="border-left-color: #28a745;">
-            <h3>👥 Anagrafiche Clienti EE/Gas & Bonus</h3>
+            <h3>👥 Anagrafiche Clienti & Bonus</h3>
             <div class="input-row">
                 <label>Numero Clienti Residenziali:</label>
                 <input type="number" id="c-res" value="0" min="0">
@@ -245,34 +269,48 @@
         <div class="card" style="border-left-color: #00bcd4;">
             <h3>📺 Contratti Sky</h3>
             <div style="background: #e1f5fe; padding: 10px; border-radius: 4px;">
-                <label>Aggiungi Contratti Sky:</label>
-                <div id="sky-container" class="business-list" style="max-height: 150px;">
-                    </div>
-                <button class="btn-add" onclick="aggiungiRigaSky()">+ Aggiungi Vendita Sky</button>
+                <label>Aggiungi Contratti Sky (Diretti):</label>
+                <div id="sky-container" class="business-list" style="max-height: 120px;"></div>
+                <button class="btn-add" onclick="aggiungiRigaSky('sky-container')">+ Aggiungi Vendita Sky</button>
+            </div>
+            
+            <div class="coordinator-only" style="background-color: #fff9db; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                <label>Aggiungi Contratti Sky (Rete):</label>
+                <div id="sky-ind-container" class="business-list" style="max-height: 120px;"></div>
+                <button class="btn-add" style="background-color: #e67e22;" onclick="aggiungiRigaSky('sky-ind-container')">+ Aggiungi Vendita Sky Rete</button>
             </div>
         </div>
 
         <div class="card" style="border-left-color: #17a2b8;">
             <h3>🛠️ Prodotti & Efficientamento</h3>
             <div style="background: #e3f2fd; padding: 10px; border-radius: 4px;">
-                <label>Seleziona Prodotto:</label>
-                <div id="prodotti-container" class="business-list" style="max-height: 150px;">
-                    </div>
-                <button class="btn-add" onclick="aggiungiRigaProdotto()">+ Aggiungi Vendita Prodotto</button>
+                <label>Seleziona Prodotto (Diretto):</label>
+                <div id="prodotti-container" class="business-list" style="max-height: 120px;"></div>
+                <button class="btn-add" onclick="aggiungiRigaProdotto('prodotti-container')">+ Aggiungi Vendita Prodotto</button>
+            </div>
+
+            <div class="coordinator-only" style="background-color: #fff9db; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                <label>Seleziona Prodotto (Rete):</label>
+                <div id="prodotti-ind-container" class="business-list" style="max-height: 120px;"></div>
+                <button class="btn-add" style="background-color: #e67e22;" onclick="aggiungiRigaProdotto('prodotti-ind-container')">+ Aggiungi Vendita Prodotto Rete</button>
             </div>
         </div>
 
         <div class="card" style="border-left-color: #6f42c1;">
             <h3>🛡️ Segnalazioni Verisure</h3>
             <div class="input-row">
-                <label>Numero Segnalazioni Chiuse (75€):</label>
+                <label>Numero Segnalazioni Chiuse Dirette (75€):</label>
                 <input type="number" id="verisure-qta" value="0" min="0">
+            </div>
+            <div class="input-row coordinator-only">
+                <label>Numero Segnalazioni Chiuse da Rete (8€):</label>
+                <input type="number" id="verisure-ind-qta" value="0" min="0">
             </div>
         </div>
     </div>
 
     <div class="card coordinator-only" style="margin-top: 20px; border-left-color: #ff9800;">
-        <h3>📊 Riepilogo Volumi Rete (Solo Coordinator)</h3>
+        <h3>📊 Riepilogo Volumi Rete (Per Contributo)</h3>
         <p style="font-size: 0.85rem; color: #666;">I contributi vengono calcolati sul volume della rete (1 Smc = 4 kWh).</p>
         <div class="input-row">
             <label>Ulteriori GWh Luce Rete (Inseriti manualmente):</label>
@@ -285,25 +323,16 @@
     <div class="risultati" id="risultati-box">
         <h2>Totale Stimato Mese: <span id="totale-guadagno">0,00</span> €</h2>
         <div class="dettaglio">
-            <p>Guadagno diretto gettoni EE/Gas: <span id="tot-diretta">0,00</span> €</p>
+            <p>Guadagno diretto totale (Senza bonus gare): <span id="tot-diretta">0,00</span> €</p>
             
-            <div class="account-only">
-                <p>Bonus Gara Standard: <span id="tot-gara-std">0,00</span> €</p>
-                <p>Bonus Gara "Sales Academy": <span id="tot-gara-academy">0,00</span> €</p>
-            </div>
-
-            <p>Di cui Bonus RID WEB Business: <span id="tot-rid-web">0,00</span> €</p>
-            <p>Di cui Contratti Sky: <span id="tot-sky">0,00</span> €</p>
-            <p>Di cui Vendita Prodotti: <span id="tot-prodotti">0,00</span> €</p>
-            <p>Di cui Segnalazioni Verisure: <span id="tot-verisure">0,00</span> €</p>
-            
-            <div class="box-proiezione">
-                <h4>🔄 Rendita Ricorrente Trimestrale</h4>
-                <p>Mantenendo questa produzione <strong>costante ogni mese di un trimestre</strong>, l'estratto conto maturerà:</p>
-                <ul>
-                    <li><strong>Nel primo trimestre di produzione:</strong> <span id="ric-trim1">0,00</span> € (Matura solo 1/3 del Mese 1)</li>
-                    <li><strong>A regime, nei trimestri successivi:</strong> <span id="ric-trim2">0,00</span> € (Trimestre precedente pieno + 1/3 del nuovo)</li>
-                </ul>
+            <div class="coordinator-only" style="background: #fffbe6; padding: 10px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #ffeeba;">
+                <p><strong>Guadagno Indiretto (Squadra): <span id="tot-indiretta">0,00</span> €</strong></p>
+                <p style="font-size: 0.9rem;">• Gettoni Indiretti EE/Gas: <span id="ind-ee-gas">0,00</span> €</p>
+                <p style="font-size: 0.9rem;">• Gettoni Indiretti Sky: <span id="ind-sky">0,00</span> €</p>
+                <p style="font-size: 0.9rem;">• Provvigioni Indirette Prodotti: <span id="ind-prod">0,00</span> €</p>
+                <p style="font-size: 0.9rem;">• Gettoni Indiretti Verisure: <span id="ind-veri">0,00</span> €</p>
+                <p style="font-size: 0.9rem;">• Contributo Fisso Rete Raggiunto: <span id="tot-contributo">0,00</span> €</p>
+                <p style="font-size: 0.85rem; color: #555;">Volume Totale Annuo Squadra Calcolato: <span id="volume-calcolato">0.00</span> GWh</p>
             </div>
 
             <div class="box-gare account-only">
@@ -311,40 +340,69 @@
                 
                 <p>• <strong>Gara "Sales Academy" (Valida per i primi 3 mesi):</strong> <br>
                 Punti accumulati: <span id="punti-academy" style="font-weight: bold; color: #0056b3;">0</span> 
-                <span id="label-academy" style="font-weight: bold; color: #666;"> (Nessun premio)</span></p>
+                <span id="label-academy" style="font-weight: bold; color: #666;"> (Nessun premio)</span><br>
+                <input type="checkbox" id="usa-gara-academy" onchange="gestisciCheckboxAcademy()"> 
+                <label for="usa-gara-academy">Somma premio Academy al totale del mese (<span id="valore-academy-box">0,00</span> €)</label>
+                </p>
                 
                 <p>• <strong>Gara Standard:</strong> <br>
                 Contratti EE/Gas totali: <span id="pezzi-totali" style="font-weight: bold; color: #0056b3;">0</span>. 
-                <span id="label-acceleratore" style="font-weight: bold; color: #b94a48;">Nessun bonus raggiunto (Soglia minima 8 pezzi).</span></p>
+                <span id="label-acceleratore" style="font-weight: bold; color: #b94a48;">Nessun bonus raggiunto (Soglia minima 8 pezzi).</span><br>
+                <input type="checkbox" id="usa-gara-std" onchange="gestisciCheckboxStd()"> 
+                <label for="usa-gara-std">Somma bonus Gara Standard al totale del mese (<span id="valore-gara-box">0,00</span> €)</label>
+                </p>
             </div>
 
-            <div class="coordinator-only" style="margin-top: 15px; background: #eef7ff; padding: 10px; border-radius: 4px;">
-                <p><strong>Riepilogo Squadra (Rete):</strong></p>
-                <p>Totale Contratti Rete (POD + PDR): <span id="tot-pezzi-rete">0</span></p>
-                <p>Volume Annuo Rete Stimato: <span id="volume-calcolato">0.00</span> GWh</p>
-                <p>Contributo Fisso Mensile Raggiunto: <span id="tot-contributo">0,00</span> €</p>
-                <p style="font-size: 0.85rem; color: #555;"><i>I conteggi analitici delle provvigioni indirette verranno sbloccati nei prossimi step.</i></p>
+            <p style="margin-top: 15px;">Maturazione Ricorrente Mensile Stimata: <span id="tot-ric-stimata">0,00</span> €</p>
+
+            <div class="box-proiezione">
+                <h4>🔄 Rendita Ricorrente Trimestrale (Solo Produzione Diretta)</h4>
+                <p>Mantenendo questa produzione <strong>costante ogni mese di un trimestre</strong>, l'estratto conto maturerà:</p>
+                <ul>
+                    <li><strong>Nel primo trimestre di produzione:</strong> <span id="ric-trim1">0,00</span> €</li>
+                    <li><strong>A regime, nei trimestri successivi:</strong> <span id="ric-trim2">0,00</span> €</li>
+                </ul>
             </div>
         </div>
     </div>
 
     <div class="noticine">
-        <p><strong>Nota bene:</strong> I calcoli mostrano esclusivamente il Gettone d'ingresso diretto, i bonus e i prodotti, secondo le direttive e le tabelle del mandato 2026.</p>
-        <p><i>Si ricorda che, come da piano provvigionale 2026, per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni (6 mesi) dalla data di inizio fornitura.</i></p>
+        <p><strong>Nota bene:</strong> I calcoli si basano sui parametri del mandato "Coordinator 2026".</p>
+        <p><i>Si ricorda che per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni dalla data inizio fornitura.</i></p>
     </div>
 </div>
 
 <script>
     const tabelle = {
         sky: {
-            "TRIPLE_PLAY": 95, "SKY_WIFI_RID": 40, "SKY_WIFI_PREPAGATA": 30,
-            "BUSINESS_BAR": 125, "HOTEL_FINO_A_3_CAMERE": 100, "HOTEL_ANNUALE": 30, "HOTEL_STAGIONALE": 36
+            "TRIPLE_PLAY": {diretta: 95, indiretta: 9.5},
+            "SKY_WIFI_RID": {diretta: 40, indiretta: 4},
+            "SKY_WIFI_PREPAGATA": {diretta: 30, indiretta: 3},
+            "BUSINESS_BAR": {diretta: 125, indiretta: 12.5},
+            "HOTEL_FINO_A_3_CAMERE": {diretta: 100, indiretta: 10},
+            "HOTEL_ANNUALE": {diretta: 30, indiretta: 3},
+            "HOTEL_STAGIONALE": {diretta: 36, indiretta: 3.6}
         },
         prodotti: {
-            "FOTOVOLTAICO": 0.05, "LED_LISTINO_4": 0.20, "LED_LISTINO_3": 0.15, "LED_LISTINO_2": 0.10, "LED_LISTINO_1": 0.07,
-            "CLIMA": 0.08, "COLONNINE_LISTINO_3": 0.10, "COLONNINE_LISTINO_2": 0.085, "COLONNINE_LISTINO_1": 0.07, "EBIKE": 0.07
+            "FOTOVOLTAICO": {diretta: 0.05, indiretta: 0.015},
+            "LED_LISTINO_4": {diretta: 0.20, indiretta: 0.03},
+            "LED_LISTINO_3": {diretta: 0.15, indiretta: 0.03},
+            "LED_LISTINO_2": {diretta: 0.10, indiretta: 0.025},
+            "LED_LISTINO_1": {diretta: 0.07, indiretta: 0.02},
+            "CLIMA": {diretta: 0.08, indiretta: 0.02},
+            "COLONNINE_LISTINO_3": {diretta: 0.10, indiretta: 0.025},
+            "COLONNINE_LISTINO_2": {diretta: 0.085, indiretta: 0.02},
+            "COLONNINE_LISTINO_1": {diretta: 0.07, indiretta: 0.015},
+            "EBIKE": {diretta: 0.07, indiretta: 0.02}
         }
     };
+
+    // Variabili globali
+    let globale_totDiretta_Base = 0;
+    let globale_totIndiretta = 0;
+    let globale_contributo = 0;
+    let globale_bonusGaraStd = 0;
+    let globale_bonusGaraAcademy = 0;
 
     function cambiaRuolo() {
         const ruolo = document.getElementById('ruolo').value;
@@ -368,238 +426,275 @@
         container.appendChild(riga);
     }
 
-    function aggiungiRigaSky() {
-        const container = document.getElementById('sky-container');
+    function aggiungiRigaSky(containerId) {
+        const container = document.getElementById(containerId);
         const riga = document.createElement('div');
         riga.className = 'business-item';
         let opzioni = '';
-        for (const [key, value] of Object.entries(tabelle.sky)) {
-            opzioni += `<option value="${key}">${key.replaceAll('_', ' ')} (${value}€)</option>`;
+        for (const [key, val] of Object.entries(tabelle.sky)) {
+            opzioni += `<option value="${key}">${key.replaceAll('_', ' ')}</option>`;
         }
         riga.innerHTML = `
             <select class="tipo-sky" style="flex: 2;">${opzioni}</select>
-            <input type="number" class="qta-sky" placeholder="Q.tà / Camere" min="1" value="1" style="flex: 1.5;">
+            <input type="number" class="qta-sky" placeholder="Q.tà" min="1" value="1" style="flex: 1;">
             <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
         `;
         container.appendChild(riga);
     }
 
-    function aggiungiRigaProdotto() {
-        const container = document.getElementById('prodotti-container');
+    function aggiungiRigaProdotto(containerId) {
+        const container = document.getElementById(containerId);
         const riga = document.createElement('div');
         riga.className = 'business-item';
         let opzioni = '';
-        for (const [key, value] of Object.entries(tabelle.prodotti)) {
-            const percPercentuale = (value * 100).toFixed(1).replace('.0', '');
-            opzioni += `<option value="${key}">${key.replaceAll('_', ' ')} (${percPercentuale}%)</option>`;
+        for (const [key, val] of Object.entries(tabelle.prodotti)) {
+            opzioni += `<option value="${key}">${key.replaceAll('_', ' ')}</option>`;
         }
         riga.innerHTML = `
             <select class="tipo-prodotto" style="flex: 2;">${opzioni}</select>
-            <input type="number" class="valore-prodotto" placeholder="Valore in €" min="0" style="flex: 1.5;">
+            <input type="number" class="valore-prodotto" placeholder="Valore €" min="0" style="flex: 1.5;">
             <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
         `;
         container.appendChild(riga);
     }
 
-    function getGettoneLuceBusiness(kwh) {
-        if (kwh <= 0) return 0; if (kwh <= 5000) return 50; if (kwh <= 10000) return 65;
-        if (kwh <= 25000) return 85; if (kwh <= 50000) return 135; if (kwh <= 100000) return 185;
-        if (kwh <= 300000) return 225; if (kwh <= 500000) return 275; if (kwh <= 700000) return 300; return 350; 
+    function getLuceGettone(kwh, tipo) {
+        if (tipo === 'diretta') {
+            if (kwh <= 5000) return 50; if (kwh <= 10000) return 65; if (kwh <= 25000) return 85;
+            if (kwh <= 50000) return 135; if (kwh <= 100000) return 185; if (kwh <= 300000) return 225;
+            if (kwh <= 500000) return 275; if (kwh <= 700000) return 300; return 350;
+        } else {
+            if (kwh <= 5000) return 8; if (kwh <= 10000) return 10; if (kwh <= 25000) return 12;
+            if (kwh <= 50000) return 15; if (kwh <= 100000) return 20; if (kwh <= 300000) return 25;
+            if (kwh <= 500000) return 35; if (kwh <= 700000) return 40; return 50;
+        }
     }
 
-    function getRicorrenteLuceBusiness(kwh) {
-        if (kwh <= 0) return 0; if (kwh <= 5000) return 10; if (kwh <= 10000) return 12.5;
-        if (kwh <= 25000) return 15; if (kwh <= 50000) return 16.5; if (kwh <= 100000) return 18.5;
-        if (kwh <= 300000) return 22.5; if (kwh <= 500000) return 30; if (kwh <= 700000) return 40; return 75; 
-    }
-
-    function getGettoneGasBusiness(smc) {
-        if (smc <= 0) return 0; if (smc <= 1500) return 40; if (smc <= 5000) return 55;
-        if (smc <= 10000) return 75; if (smc <= 20000) return 125; if (smc <= 30000) return 185;
-        if (smc <= 100000) return 225; if (smc <= 200000) return 275; if (smc <= 300000) return 300;
-        if (smc <= 400000) return 350; return 500; 
-    }
-
-    function getRicorrenteGasBusiness(smc) {
-        if (smc <= 0) return 0; if (smc <= 1500) return 5; if (smc <= 5000) return 10;
-        if (smc <= 10000) return 12.5; if (smc <= 20000) return 15; if (smc <= 30000) return 18.5;
-        if (smc <= 100000) return 22.5; if (smc <= 200000) return 30; if (smc <= 300000) return 40;
-        if (smc <= 400000) return 75; return 125; 
+    function getGasGettone(smc, tipo) {
+        if (tipo === 'diretta') {
+            if (smc <= 1500) return 40; if (smc <= 5000) return 55; if (smc <= 10000) return 75;
+            if (smc <= 20000) return 125; if (smc <= 30000) return 185; if (smc <= 100000) return 225;
+            if (smc <= 200000) return 275; if (smc <= 300000) return 300; if (smc <= 400000) return 350; return 500;
+        } else {
+            if (smc <= 1500) return 8; if (smc <= 5000) return 9; if (smc <= 10000) return 10;
+            if (smc <= 20000) return 15; if (smc <= 30000) return 20; if (smc <= 100000) return 25;
+            if (smc <= 200000) return 35; if (smc <= 300000) return 40; if (smc <= 400000) return 50; return 60;
+        }
     }
 
     function calcolaProvvigioni() {
         const ruolo = document.getElementById('ruolo').value;
-        let totGettoneDiretto = 0;
-        let totRicorrenteUnMese = 0; 
         
-        // Conteggi per Gare (Sales Account)
-        let pezziLuceRes = 0;
-        let pezziGasRes = 0;
-        let pezziLuceBus = 0;
-        let pezziGasBus = 0;
+        globale_totDiretta_Base = 0;
+        globale_totIndiretta = 0;
+        globale_contributo = 0;
+        globale_bonusGaraStd = 0;
+        globale_bonusGaraAcademy = 0;
+        
+        let ricMese = 0;
+        let volumeGwh = 0;
+
+        // Reset delle checkbox quando si ricalcola
+        document.getElementById('usa-gara-academy').checked = false;
+        document.getElementById('usa-gara-std').checked = false;
 
         // 1. LUCE DIRETTA
-        pezziLuceRes = (parseInt(document.getElementById('p-res').value) || 0) + (parseInt(document.getElementById('p-res-r').value) || 0);
-        
         const pRes = parseInt(document.getElementById('p-res').value) || 0;
         const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
+        globale_totDiretta_Base += (pRes * 50) + (pResR * 70);
+        ricMese += (pRes * 4) + (pResR * 4);
         
-        totGettoneDiretto += (pRes * 50) + (pResR * 70);
-        totRicorrenteUnMese += (pRes * 4) + (pResR * 4);
-        
-        const inputsLuceBus = document.querySelectorAll('#p-bus-container .consumo-business');
-        pezziLuceBus = inputsLuceBus.length;
-        inputsLuceBus.forEach(input => {
-            const kwh = parseFloat(input.value) || 0;
-            totGettoneDiretto += getGettoneLuceBusiness(kwh);
-            totRicorrenteUnMese += getRicorrenteLuceBusiness(kwh);
+        const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business');
+        let pezziLuceBus = bLuceInputs.length;
+        bLuceInputs.forEach(input => {
+            const val = parseFloat(input.value) || 0;
+            globale_totDiretta_Base += getLuceGettone(val, 'diretta');
         });
-        
+
         // 2. GAS DIRETTO
-        pezziGasRes = (parseInt(document.getElementById('g-res').value) || 0) + (parseInt(document.getElementById('g-res-r').value) || 0);
-        
         const gRes = parseInt(document.getElementById('g-res').value) || 0;
         const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
+        globale_totDiretta_Base += (gRes * 50) + (gResR * 70);
+        ricMese += (gRes * 4) + (gResR * 4);
         
-        totGettoneDiretto += (gRes * 50) + (gResR * 70);
-        totRicorrenteUnMese += (gRes * 4) + (gResR * 4);
-        
-        const inputsGasBus = document.querySelectorAll('#g-bus-container .consumo-business');
-        pezziGasBus = inputsGasBus.length;
-        inputsGasBus.forEach(input => {
-            const smc = parseFloat(input.value) || 0;
-            totGettoneDiretto += getGettoneGasBusiness(smc);
-            totRicorrenteUnMese += getRicorrenteGasBusiness(smc);
+        const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business');
+        let pezziGasBus = bGasInputs.length;
+        bGasInputs.forEach(input => {
+            const val = parseFloat(input.value) || 0;
+            globale_totDiretta_Base += getGasGettone(val, 'diretta');
         });
-        
-        // 3. BONUS RID WEB SU CLIENTI BUSINESS (13€ l'uno)
-        const cBus = parseInt(document.getElementById('c-bus').value) || 0;
-        const totRidWeb = cBus * 13;
-        
-        // 4. SKY DINAMICO
-        let totSkyDiretta = 0;
-        const righeSky = document.querySelectorAll('#sky-container .business-item');
-        righeSky.forEach(riga => {
+
+        // 3. SKY DIRETTO
+        document.querySelectorAll('#sky-container .business-item').forEach(riga => {
             const tipo = riga.querySelector('.tipo-sky').value;
             const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
-            totSkyDiretta += (qta * (tabelle.sky[tipo] || 0));
+            globale_totDiretta_Base += (qta * tabelle.sky[tipo].diretta);
         });
-        
-        // 5. PRODOTTI (Percentuale su valore)
-        let totProdotti = 0;
-        const righeProdotti = document.querySelectorAll('#prodotti-container .business-item');
-        righeProdotti.forEach(riga => {
+
+        // 4. PRODOTTI DIRETTI
+        document.querySelectorAll('#prodotti-container .business-item').forEach(riga => {
             const tipo = riga.querySelector('.tipo-prodotto').value;
-            const valore = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
-            totProdotti += (valore * (tabelle.prodotti[tipo] || 0));
+            const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
+            globale_totDiretta_Base += (val * tabelle.prodotti[tipo].diretta);
         });
 
-        // 6. VERISURE
-        const verisureQta = parseInt(document.getElementById('verisure-qta').value) || 0;
-        const totVerisure = verisureQta * 75;
+        // 5. BONUS RID WEB & VERISURE DIRETTA
+        globale_totDiretta_Base += (parseInt(document.getElementById('c-bus').value) || 0) * 13;
+        globale_totDiretta_Base += (parseInt(document.getElementById('verisure-qta').value) || 0) * 75;
 
-        // --- CALCOLO GARE (Solo per Sales Account) ---
-        let bonusGaraStd = 0;
-        let bonusGaraAcademy = 0;
+        // --- CALCOLI RETE (SOLO COORDINATOR) ---
+        let indEeGas = 0, indSky = 0, indProd = 0, indVeri = 0;
         
-        const pezziTotali = pezziLuceRes + pezziGasRes + pezziLuceBus + pezziGasBus;
-        
-        // Punti Academy: 1 punto per business, 0.5 per residenziale
-        const puntiAcademy = (pezziLuceBus + pezziGasBus) + ((pezziLuceRes + pezziGasRes) * 0.5);
+        if (ruolo === 'coordinator') {
+            const piRes = parseInt(document.getElementById('p-ind-res').value) || 0;
+            const piResR = parseInt(document.getElementById('p-ind-resr').value) || 0;
+            indEeGas += (piRes * 6) + (piResR * 10);
+            volumeGwh += (piRes * 3000 + piResR * 3000) / 1000000;
+
+            document.querySelectorAll('#p-bus-ind-container .consumo-business').forEach(input => {
+                const val = parseFloat(input.value) || 0;
+                indEeGas += getLuceGettone(val, 'indiretta');
+                volumeGwh += val / 1000000;
+            });
+
+            const giRes = parseInt(document.getElementById('g-ind-res').value) || 0;
+            const giResR = parseInt(document.getElementById('g-ind-resr').value) || 0;
+            indEeGas += (giRes * 6) + (giResR * 10);
+            volumeGwh += ((giRes * 1000 + giResR * 1000) * 4) / 1000000;
+
+            document.querySelectorAll('#g-bus-ind-container .consumo-business').forEach(input => {
+                const val = parseFloat(input.value) || 0;
+                indEeGas += getGasGettone(val, 'indiretta');
+                volumeGwh += (val * 4) / 1000000;
+            });
+
+            document.querySelectorAll('#sky-ind-container .business-item').forEach(riga => {
+                const tipo = riga.querySelector('.tipo-sky').value;
+                const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
+                indSky += (qta * tabelle.sky[tipo].indiretta);
+            });
+
+            document.querySelectorAll('#prodotti-ind-container .business-item').forEach(riga => {
+                const tipo = riga.querySelector('.tipo-prodotto').value;
+                const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
+                indProd += (val * tabelle.prodotti[tipo].indiretta);
+            });
+
+            indVeri = (parseInt(document.getElementById('verisure-ind-qta').value) || 0) * 8;
+            
+            volumeGwh += parseFloat(document.getElementById('gwh-manuali').value) || 0;
+        }
+
+        globale_totIndiretta = indEeGas + indSky + indProd + indVeri;
+
+        // Contributo Fisso Soglie GWh
+        if (ruolo === 'coordinator') {
+            if (volumeGwh >= 1 && volumeGwh < 1.5) globale_contributo = 500;
+            else if (volumeGwh >= 1.5 && volumeGwh < 2) globale_contributo = 750;
+            else if (volumeGwh >= 2 && volumeGwh < 3) globale_contributo = 1000;
+            else if (volumeGwh >= 3) globale_contributo = 1000; 
+        }
+
+        // Gare per SALES ACCOUNT
+        let pezziTotali = pRes + pResR + pezziLuceBus + gRes + gResR + pezziGasBus;
+        let puntiAcademy = (pezziLuceBus + pezziGasBus) + ((pRes + pResR + gRes + gResR) * 0.5);
 
         if (ruolo === 'account') {
             // Logica Gara Standard
             const labelAcceleratore = document.getElementById('label-acceleratore');
             if (pezziTotali >= 8 && pezziTotali <= 14) {
-                bonusGaraStd = totGettoneDiretto * 0.25;
-                labelAcceleratore.innerText = "Complimenti! Hai raggiunto il livello 1: +25% di Bonus.";
+                globale_bonusGaraStd = globale_totDiretta_Base * 0.25;
+                labelAcceleratore.innerText = "Ottimo! Livello 1: +25% di Bonus.";
                 labelAcceleratore.style.color = "#155724";
             } else if (pezziTotali >= 15) {
-                bonusGaraStd = totGettoneDiretto * 0.30;
-                labelAcceleratore.innerText = "Super! Hai sbloccato il livello massimo: +30% di Bonus.";
+                globale_bonusGaraStd = globale_totDiretta_Base * 0.30;
+                labelAcceleratore.innerText = "Super! Livello massimo: +30% di Bonus.";
                 labelAcceleratore.style.color = "#155724";
             } else {
-                bonusGaraStd = 0;
+                globale_bonusGaraStd = 0;
                 labelAcceleratore.innerText = "Nessun bonus raggiunto (Soglia minima 8 pezzi).";
                 labelAcceleratore.style.color = "#b94a48";
             }
 
             // Logica Gara Academy
             const labelAcademy = document.getElementById('label-academy');
-            if (puntiAcademy >= 25) {
-                bonusGaraAcademy = 1000;
-                labelAcademy.innerText = " (Premio raggiunto: 1.000,00 €)";
-                labelAcademy.style.color = "#155724";
-            } else if (puntiAcademy >= 18) {
-                bonusGaraAcademy = 800;
-                labelAcademy.innerText = " (Premio raggiunto: 800,00 €)";
-                labelAcademy.style.color = "#155724";
-            } else if (puntiAcademy >= 10) {
-                bonusGaraAcademy = 500;
-                labelAcademy.innerText = " (Premio raggiunto: 500,00 €)";
-                labelAcademy.style.color = "#155724";
-            } else {
-                bonusGaraAcademy = 0;
-                labelAcademy.innerText = " (Nessun premio)";
-                labelAcademy.style.color = "#666";
-            }
+            if (puntiAcademy >= 25) { globale_bonusGaraAcademy = 1000; labelAcademy.innerText = " (Premio raggiunto: 1000€)"; labelAcademy.style.color = "#155724"; }
+            else if (puntiAcademy >= 18) { globale_bonusGaraAcademy = 800; labelAcademy.innerText = " (Premio raggiunto: 800€)"; labelAcademy.style.color = "#155724"; }
+            else if (puntiAcademy >= 10) { globale_bonusGaraAcademy = 500; labelAcademy.innerText = " (Premio raggiunto: 500€)"; labelAcademy.style.color = "#155724"; }
+            else { globale_bonusGaraAcademy = 0; labelAcademy.innerText = " (Nessun premio)"; labelAcademy.style.color = "#666"; }
 
             document.getElementById('pezzi-totali').innerText = pezziTotali;
             document.getElementById('punti-academy').innerText = puntiAcademy;
             
-            document.getElementById('tot-gara-std').innerText = bonusGaraStd.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('tot-gara-academy').innerText = bonusGaraAcademy.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            // Aggiorniamo i testi nelle checkbox
+            document.getElementById('valore-academy-box').innerText = globale_bonusGaraAcademy.toLocaleString('it-IT', {minimumFractionDigits: 2});
+            document.getElementById('valore-gara-box').innerText = globale_bonusGaraStd.toLocaleString('it-IT', {minimumFractionDigits: 2});
+            
+            // Abilitazione o disabilitazione automatica delle spunte se il premio è 0
+            document.getElementById('usa-gara-academy').disabled = (globale_bonusGaraAcademy === 0);
+            document.getElementById('usa-gara-std').disabled = (globale_bonusGaraStd === 0);
         }
-        
-        // TOTALE DIRETTA MENSILE
-        const totDiretta = totGettoneDiretto + totRidWeb + totSkyDiretta + totProdotti + totVerisure + bonusGaraStd + bonusGaraAcademy;
-        
-        // 7. PROIEZIONI RICORRENTE TRIMESTRALE
-        const renditaTrim1 = totRicorrenteUnMese * (1 / 3); 
-        const renditaTrim2 = totRicorrenteUnMese * (3 + (1 / 3));
 
-        // 8. CALCOLO RETE (Solo Coordinator)
-        let totPezziRete = 0; let volumeGwhRete = 0;
-        if (ruolo === 'coordinator') {
-            const pInd = parseInt(document.getElementById('p-ind').value) || 0;
-            const gInd = parseInt(document.getElementById('g-ind').value) || 0;
-            totPezziRete = pInd + gInd;
-            let kwhLuceRete = pInd * 3000;
-            let smcGasRete = gInd * 1000;
-            let gasInKwh = smcGasRete * 4;
-            let kwhManuali = parseFloat(document.getElementById('gwh-manuali').value) * 1000000 || 0;
-            volumeGwhRete = (kwhLuceRete + gasInKwh + kwhManuali) / 1000000;
-        }
-        
-        // 9. CONTRIBUTO FISSO SOGLIE GWH
-        let contributo = 0;
-        if (ruolo === 'coordinator') {
-            if (volumeGwhRete >= 1 && volumeGwhRete < 1.5) contributo = 500;
-            else if (volumeGwhRete >= 1.5 && volumeGwhRete < 2) contributo = 750;
-            else if (volumeGwhRete >= 2) contributo = 1000;
-        }
-        
-        const totaleComplessivo = totDiretta + contributo;
-        
-        // Mostra i risultati
-        document.getElementById('totale-guadagno').innerText = totaleComplessivo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('tot-diretta').innerText = totGettoneDiretto.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('tot-rid-web').innerText = totRidWeb.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('tot-sky').innerText = totSkyDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('tot-prodotti').innerText = totProdotti.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('tot-verisure').innerText = totVerisure.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        
-        // Aggiorna box Ricorrente
-        document.getElementById('ric-trim1').innerText = renditaTrim1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('ric-trim2').innerText = renditaTrim2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        // Popolamento altri campi fissi
+        document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toLocaleString('it-IT', {minimumFractionDigits: 2});
+        document.getElementById('tot-indiretta').innerText = globale_totIndiretta.toLocaleString('it-IT', {minimumFractionDigits: 2});
+        document.getElementById('ind-ee-gas').innerText = indEeGas.toLocaleString('it-IT', {minimumFractionDigits: 2});
+        document.getElementById('ind-sky').innerText = indSky.toLocaleString('it-IT', {minimumFractionDigits: 2});
+        document.getElementById('ind-prod').innerText = indProd.toLocaleString('it-IT', {minimumFractionDigits: 2});
+        document.getElementById('ind-veri').innerText = indVeri.toLocaleString('it-IT', {minimumFractionDigits: 2});
+        document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2});
+        document.getElementById('volume-calcolato').innerText = volumeGwh.toFixed(2);
+        document.getElementById('tot-ric-stimata').innerText = ricMese.toLocaleString('it-IT', {minimumFractionDigits: 2});
+        document.getElementById('ric-trim1').innerText = (ricMese * (1/3)).toLocaleString('it-IT', {minimumFractionDigits: 2});
+        document.getElementById('ric-trim2').innerText = (ricMese * (3 + 1/3)).toLocaleString('it-IT', {minimumFractionDigits: 2});
 
-        document.getElementById('tot-pezzi-rete').innerText = totPezziRete;
-        document.getElementById('tot-contributo').innerText = contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('volume-calcolato').innerText = volumeGwhRete.toFixed(2);
-        
+        // Esegue il conteggio finale
+        riconteggiaTotale();
+
         document.getElementById('risultati-box').style.display = 'block';
         document.getElementById('risultati-box').scrollIntoView({ behavior: 'smooth' });
     }
+    
+    // Funzione dedicata a quando si clicca sulla spunta Academy
+    function gestisciCheckboxAcademy() {
+        const checkAcademy = document.getElementById('usa-gara-academy');
+        const checkStd = document.getElementById('usa-gara-std');
+        
+        // Se si attiva l'Academy, disattiva la Standard
+        if (checkAcademy.checked) {
+            checkStd.checked = false;
+        }
+        riconteggiaTotale();
+    }
+
+    // Funzione dedicata a quando si clicca sulla spunta Gara Standard
+    function gestisciCheckboxStd() {
+        const checkAcademy = document.getElementById('usa-gara-academy');
+        const checkStd = document.getElementById('usa-gara-std');
+        
+        // Se si attiva la Standard, disattiva l'Academy
+        if (checkStd.checked) {
+            checkAcademy.checked = false;
+        }
+        riconteggiaTotale();
+    }
+
+    // Calcola il guadagno finale in base alle scelte fatte
+    function riconteggiaTotale() {
+        const ruolo = document.getElementById('ruolo').value;
+        let finale = globale_totDiretta_Base + globale_totIndiretta + globale_contributo;
+
+        if (ruolo === 'account') {
+            const aggiungiAcademy = document.getElementById('usa-gara-academy').checked;
+            const aggiungiStd = document.getElementById('usa-gara-std').checked;
+
+            if (aggiungiAcademy) finale += globale_bonusGaraAcademy;
+            if (aggiungiStd) finale += globale_bonusGaraStd;
+        }
+
+        document.getElementById('totale-guadagno').innerText = finale.toLocaleString('it-IT', {minimumFractionDigits: 2});
+    }
+
     cambiaRuolo();
 </script>
 
