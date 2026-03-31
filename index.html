@@ -67,7 +67,6 @@
         .input-row { margin-bottom: 12px; }
         .coordinator-only { display: none; background-color: #eef7ff; padding: 5px; border-radius: 4px; }
         
-        /* Stili per la lista dinamica Business */
         .business-list {
             margin-top: 10px;
             max-height: 200px;
@@ -166,7 +165,7 @@
         <div class="card">
             <h3>⚡ Energia Elettrica (Power)</h3>
             <div class="input-row">
-                <label>Num. POD Residenziali (66€):</label>
+                <label>Num. POD Residenziali (50€):</label>
                 <input type="number" id="p-res" value="0" min="0">
             </div>
             <div class="input-row">
@@ -190,7 +189,7 @@
         <div class="card">
             <h3>🔥 Gas Naturale</h3>
             <div class="input-row">
-                <label>Num. PDR Residenziali (64€):</label>
+                <label>Num. PDR Residenziali (50€):</label>
                 <input type="number" id="g-res" value="0" min="0">
             </div>
             <div class="input-row">
@@ -250,7 +249,7 @@
 
     <div class="card coordinator-only" style="margin-top: 20px; border-left-color: #ff9800;">
         <h3>📊 Contributi su Volumi Rete (Solo Coordinator)</h3>
-        <p style="font-size: 0.85rem; color: #666;">I contributi vengono calcolati sul volume della rete (1 Smc = 4 kWh). Se hai altri dati inseriscili qui sotto.</p>
+        <p style="font-size: 0.85rem; color: #666;">I contributi vengono calcolati sul volume della rete (1 Smc = 4 kWh).</p>
         <div class="input-row">
             <label>Ulteriori GWh Luce Rete:</label>
             <input type="number" id="gwh-manuali" value="0" step="0.01" min="0">
@@ -271,7 +270,7 @@
     </div>
 
     <div class="noticine">
-        <p><strong>Nota bene:</strong> I calcoli dei POD/PDR Business inseriti singolarmente applicano il valore provvigionale corretto in base alla rispettiva fascia di consumo.</p>
+        <p><strong>Nota bene:</strong> I contratti residenziali standard pagano 50€, i residenziali R+ pagano 70€. Il bonus RID WEB si attiva solo sui Clienti Business.</p>
     </div>
 </div>
 
@@ -298,7 +297,6 @@
         document.getElementById('risultati-box').style.display = 'none';
     }
 
-    // Funzione per aggiungere un campo consumo dinamico
     function aggiungiRigaBusiness(containerId, placeholderText) {
         const container = document.getElementById(containerId);
         const riga = document.createElement('div');
@@ -344,9 +342,8 @@
         const pRes = parseInt(document.getElementById('p-res').value) || 0;
         const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
         
-        let totLuceDiretta = (pRes * 66) + (pResR * 70);
+        let totLuceDiretta = (pRes * 50) + (pResR * 70); // Corretto a 50
         
-        // Calcolo dinamico POD Business
         const inputsLuceBus = document.querySelectorAll('#p-bus-container .consumo-business');
         inputsLuceBus.forEach(input => {
             const kwh = parseFloat(input.value) || 0;
@@ -357,9 +354,8 @@
         const gRes = parseInt(document.getElementById('g-res').value) || 0;
         const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
         
-        let totGasDiretta = (gRes * 64) + (gResR * 70);
+        let totGasDiretta = (gRes * 50) + (gResR * 70); // Corretto a 50
         
-        // Calcolo dinamico PDR Business
         const inputsGasBus = document.querySelectorAll('#g-bus-container .consumo-business');
         inputsGasBus.forEach(input => {
             const smc = parseFloat(input.value) || 0;
