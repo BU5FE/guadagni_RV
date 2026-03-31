@@ -227,10 +227,10 @@
                 <label>Tipo Offerta:</label>
                 <select id="sky-tipo">
                     <option value="TRIPLE_PLAY">Triple Play (95€)</option>
-                    <option value="WIFI_RID">Sky Wifi RID (40€)</option>
-                    <option value="WIFI_PREP">Sky Wifi Prepagata (30€)</option>
+                    <option value="SKY_WIFI_RID">Sky Wifi RID (40€)</option>
+                    <option value="SKY_WIFI_PREPAGATA">Sky Wifi Prepagata (30€)</option>
                     <option value="BUSINESS_BAR">Business Bar (125€)</option>
-                    <option value="HOTEL_FINO_3">Hotel fino a 3 camere (100€)</option>
+                    <option value="HOTEL_FINO_A_3_CAMERE">Hotel fino a 3 camere (100€)</option>
                     <option value="HOTEL_ANNUALE">Hotel Annuale (30€ a cam.)</option>
                     <option value="HOTEL_STAGIONALE">Hotel Stagionale (36€ a cam.)</option>
                 </select>
@@ -239,9 +239,23 @@
                 <label>Contratti/Camere Personali:</label>
                 <input type="number" id="sky-qta" value="0" min="0">
             </div>
-            <div class="input-row coordinator-only">
-                <label>Contratti/Camere Rete:</label>
-                <input type="number" id="sky-qta-ind" value="0" min="0">
+        </div>
+
+        <div class="card" style="border-left-color: #17a2b8;">
+            <h3>🛠️ Prodotti & Efficientamento</h3>
+            <div style="background: #e3f2fd; padding: 10px; border-radius: 4px;">
+                <label>Seleziona Prodotto:</label>
+                <div id="prodotti-container" class="business-list" style="max-height: 150px;">
+                    </div>
+                <button class="btn-add" onclick="aggiungiRigaProdotto()">+ Aggiungi Vendita Prodotto</button>
+            </div>
+        </div>
+
+        <div class="card" style="border-left-color: #6f42c1;">
+            <h3>🛡️ Segnalazioni Verisure</h3>
+            <div class="input-row">
+                <label>Numero Segnalazioni Chiuse (75€):</label>
+                <input type="number" id="verisure-qta" value="0" min="0">
             </div>
         </div>
     </div>
@@ -262,6 +276,8 @@
         <div class="dettaglio">
             <p>Guadagno Diretto (Gettoni): <span id="tot-diretta">0,00</span> €</p>
             <p>Di cui Bonus RID WEB Business: <span id="tot-rid-web">0,00</span> €</p>
+            <p>Di cui Vendita Prodotti: <span id="tot-prodotti">0,00</span> €</p>
+            <p>Di cui Segnalazioni Verisure: <span id="tot-verisure">0,00</span> €</p>
             
             <div class="coordinator-only" style="margin-top: 15px; background: #eef7ff; padding: 10px; border-radius: 4px;">
                 <p><strong>Riepilogo Squadra (Rete):</strong></p>
@@ -274,20 +290,33 @@
     </div>
 
     <div class="noticine">
-        <p><strong>Nota bene:</strong> I calcoli mostrano ora esclusivamente il Gettone d'ingresso e i bonus per la produzione diretta, rispettando rigorosamente le tabelle del mandato 2026.</p>
+        <p><strong>Nota bene:</strong> I calcoli mostrano esclusivamente il Gettone d'ingresso diretto, i bonus e i prodotti, secondo le direttive e le tabelle del mandato 2026.</p>
     </div>
 </div>
 
 <script>
+    // Database percentuali prodotti e importi fissi Sky
     const tabelle = {
         sky: {
-            "TRIPLE_PLAY": { diretta: 95, indiretta: 9.50 },
-            "WIFI_RID": { diretta: 40, indiretta: 4 },
-            "WIFI_PREP": { diretta: 30, indiretta: 3 },
-            "BUSINESS_BAR": { diretta: 125, indiretta: 12.50 },
-            "HOTEL_FINO_3": { diretta: 100, indiretta: 10 },
-            "HOTEL_ANNUALE": { diretta: 30, indiretta: 3 },
-            "HOTEL_STAGIONALE": { diretta: 36, indiretta: 3.60 }
+            "TRIPLE_PLAY": 95,
+            "SKY_WIFI_RID": 40,
+            "SKY_WIFI_PREPAGATA": 30,
+            "BUSINESS_BAR": 125,
+            "HOTEL_FINO_A_3_CAMERE": 100,
+            "HOTEL_ANNUALE": 30,
+            "HOTEL_STAGIONALE": 36
+        },
+        prodotti: {
+            "FOTOVOLTAICO": 0.05,
+            "LED_LISTINO_4": 0.20,
+            "LED_LISTINO_3": 0.15,
+            "LED_LISTINO_2": 0.10,
+            "LED_LISTINO_1": 0.07,
+            "CLIMA": 0.08,
+            "COLONNINE_LISTINO_3": 0.10,
+            "COLONNINE_LISTINO_2": 0.085,
+            "COLONNINE_LISTINO_1": 0.07,
+            "EBIKE": 0.07
         }
     };
 
@@ -312,7 +341,25 @@
         container.appendChild(riga);
     }
 
-    // LUCE BUSINESS: Restituisce SOLO Gettone
+    function aggiungiRigaProdotto() {
+        const container = document.getElementById('prodotti-container');
+        const riga = document.createElement('div');
+        riga.className = 'business-item';
+        
+        let opzioni = '';
+        for (const [key, value] of Object.entries(tabelle.prodotti)) {
+            const percPercentuale = (value * 100).toFixed(1).replace('.0', '');
+            opzioni += `<option value="${key}">${key.replaceAll('_', ' ')} (${percPercentuale}%)</option>`;
+        }
+        
+        riga.innerHTML = `
+            <select class="tipo-prodotto" style="flex: 2;">${opzioni}</select>
+            <input type="number" class="valore-prodotto" placeholder="Valore in €" min="0" style="flex: 1.5;">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        `;
+        container.appendChild(riga);
+    }
+
     function getGettoneLuceBusiness(kwh) {
         if (kwh <= 0) return 0;
         if (kwh <= 5000) return 50;
@@ -326,7 +373,6 @@
         return 350; 
     }
 
-    // GAS BUSINESS: Restituisce SOLO Gettone
     function getGettoneGasBusiness(smc) {
         if (smc <= 0) return 0;
         if (smc <= 1500) return 40;
@@ -374,15 +420,29 @@
         const cBus = parseInt(document.getElementById('c-bus').value) || 0;
         const totRidWeb = cBus * 13;
         
-        // 4. SKY
+        // 4. SKY (Solo Diretta)
         const sQta = parseInt(document.getElementById('sky-qta').value) || 0;
         const sTipo = document.getElementById('sky-tipo').value;
-        const totSkyDiretta = sQta * tabelle.sky[sTipo].diretta;
+        const totSkyDiretta = sQta * (tabelle.sky[sTipo] || 0);
+        
+        // 5. PRODOTTI (Percentuale su valore)
+        let totProdotti = 0;
+        const righeProdotti = document.querySelectorAll('#prodotti-container .business-item');
+        righeProdotti.forEach(riga => {
+            const tipo = riga.querySelector('.tipo-prodotto').value;
+            const valore = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
+            const perc = tabelle.prodotti[tipo] || 0;
+            totProdotti += (valore * perc);
+        });
+
+        // 6. VERISURE (Fisso 75€)
+        const verisureQta = parseInt(document.getElementById('verisure-qta').value) || 0;
+        const totVerisure = verisureQta * 75;
         
         // TOTALE DIRETTA
-        const totDiretta = totGettoneDiretto + totRidWeb + totSkyDiretta;
+        const totDiretta = totGettoneDiretto + totRidWeb + totSkyDiretta + totProdotti + totVerisure;
         
-        // 5. CALCOLO RETE (Solo Coordinator)
+        // 7. CALCOLO RETE (Solo Coordinator)
         let totPezziRete = 0;
         let volumeGwhRete = 0;
         
@@ -402,7 +462,7 @@
             volumeGwhRete = (kwhLuceRete + gasInKwh + kwhManuali) / 1000000;
         }
         
-        // 6. CONTRIBUTO FISSO SOGLIE GWH
+        // 8. CONTRIBUTO FISSO SOGLIE GWH
         let contributo = 0;
         if (ruolo === 'coordinator') {
             if (volumeGwhRete >= 1 && volumeGwhRete < 1.5) contributo = 500;
@@ -416,6 +476,8 @@
         document.getElementById('totale-guadagno').innerText = totaleComplessivo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-diretta').innerText = totGettoneDiretto.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-rid-web').innerText = totRidWeb.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('tot-prodotti').innerText = totProdotti.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('tot-verisure').innerText = totVerisure.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
         document.getElementById('tot-pezzi-rete').innerText = totPezziRete;
         document.getElementById('tot-contributo').innerText = contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
