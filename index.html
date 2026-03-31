@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulatore Provvigioni 2026 - Futur Energy</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        header {
+            text-align: center;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        header h1 { color: #0056b3; margin-bottom: 5px; }
+        .form-group { margin-bottom: 20px; text-align: center; }
+        label { font-weight: 600; display: block; margin-bottom: 5px; }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        .select-ruolo {
+            width: auto;
+            min-width: 250px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: 2px solid #0056b3;
+        }
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 650px) {
+            .grid-inputs { grid-template-columns: 1fr 1fr; }
+        }
+        .card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #0056b3;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .card h3 { margin-top: 0; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .input-row { margin-bottom: 12px; }
+        .coordinator-only { display: none; background-color: #eef7ff; padding: 5px; border-radius: 4px; }
+        
+        .btn-calcola {
+            display: block;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 25px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-calcola:hover { background-color: #218838; }
+        
+        .risultati {
+            display: none;
+            margin-top: 30px;
+            background: #e9f7ef;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #c3e6cb;
+            text-align: center;
+        }
+        .risultati h2 { color: #155724; margin-bottom: 15px; }
+        .dettaglio p { margin: 8px 0; font-size: 1.05rem; border-bottom: 1px dashed #ddd; padding-bottom: 5px; }
+        .dettaglio span { font-weight: bold; color: #333; }
+        
+        .noticine {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Futur Energy Italiana</h1>
+        <p>Simulatore Provvigioni Sales 2026</p>
+    </header>
+
+    <div class="form-group">
+        <label for="ruolo">🎯 Seleziona il tuo Ruolo:</label>
+        <select id="ruolo" class="select-ruolo" onchange="cambiaRuolo()">
+            <option value="account">Sales Account</option>
+            <option value="coordinator">Sales Coordinator</option>
+        </select>
+    </div>
+
+    <div class="grid-inputs">
+        <div class="card">
+            <h3>⚡ Energia Elettrica (Power)</h3>
+            <div class="input-row">
+                <label>Fascia Consumo:</label>
+                <select id="power-fascia">
+                    <option value="RESIDENZIALE">Residenziale</option>
+                    <option value="RESIDENZIALE_R">Residenziale R+</option>
+                    <option value="B_1_5000">Business 1 > 5.000 kW</option>
+                    <option value="B_5001_10000">Business 5.001 > 10.000 kW</option>
+                    <option value="B_10001_25000">Business 10.001 > 25.000 kW</option>
+                    <option value="B_25001_50000">Business 25.001 > 50.000 kW</option>
+                    <option value="B_50001_100000">Business 50.001 > 100.000 kW</option>
+                    <option value="B_100001_300000">Business 100.001 > 300.000 kW</option>
+                    <option value="B_300001_500000">Business 300.001 > 500.000 kW</option>
+                    <option value="B_500001_700000">Business 500.001 > 700.000 kW</option>
+                    <option value="B_700001_999999">Business 700.001 > 999.999 kW</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <label>Contratti Personali (Diretta):</label>
+                <input type="number" id="power-qta" value="0" min="0">
+            </div>
+            <div class="input-row coordinator-only">
+                <label>Contratti Rete (Indiretta):</label>
+                <input type="number" id="power-qta-ind" value="0" min="0">
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🔥 Gas Naturale</h3>
+            <div class="input-row">
+                <label>Fascia Consumo:</label>
+                <select id="gas-fascia">
+                    <option value="RESIDENZIALE">Residenziale</option>
+                    <option value="RESIDENZIALE_R">Residenziale R+</option>
+                    <option value="B_1_1500">Business 1 > 1.500 M³</option>
+                    <option value="B_1501_5000">Business 1.501 > 5.000 M³</option>
+                    <option value="B_5001_10000">Business 5.001 > 10.000 M³</option>
+                    <option value="B_10001_20000">Business 10.001 > 20.000 M³</option>
+                    <option value="B_20001_30000">Business 20.001 > 30.000 M³</option>
+                    <option value="B_30001_100000">Business 30.001 > 100.000 M³</option>
+                    <option value="B_100001_200000">Business 100.001 > 200.000 M³</option>
+                    <option value="B_200001_300000">Business 200.001 > 300.000 M³</option>
+                    <option value="B_300001_400000">Business 300.001 > 400.000 M³</option>
+                    <option value="B_MAGGIORE_400001">Business > 400.001 M³</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <label>Contratti Personali (Diretta):</label>
+                <input type="number" id="gas-qta" value="0" min="0">
+            </div>
+            <div class="input-row coordinator-only">
+                <label>Contratti Rete (Indiretta):</label>
+                <input type="number" id="gas-qta-ind" value="0" min="0">
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📺 Sky</h3>
+            <div class="input-row">
+                <label>Tipo Offerta:</label>
+                <select id="sky-tipo">
+                    <option value="TRIPLE_PLAY">Triple Play</option>
+                    <option value="WIFI_RID">Sky Wifi RID</option>
+                    <option value="WIFI_PREP">Sky Wifi Prepagata</option>
+                    <option value="BUSINESS_BAR">Business Bar</option>
+                    <option value="HOTEL_FINO_3">Hotel fino a 3 camere</option>
+                    <option value="HOTEL_ANNUALE">Hotel Annuale (per camera)</option>
+                    <option value="HOTEL_STAGIONALE">Hotel Stagionale (per camera)</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <label>Contratti/Camere Personali:</label>
+                <input type="number" id="sky-qta" value="0" min="0">
+            </div>
+            <div class="input-row coordinator-only">
+                <label>Contratti/Camere Rete:</label>
+                <input type="number" id="sky-qta-ind" value="0" min="0">
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🛍️ Prodotti ed Efficientamento</h3>
+            <div class="input-row">
+                <label>Seleziona Prodotto:</label>
+                <select id="prod-tipo">
+                    <option value="FOTOVOLTAICO">Fotovoltaico</option>
+                    <option value="LED_4">LED Listino 4</option>
+                    <option value="LED_3">LED Listino 3</option>
+                    <option value="LED_2">LED Listino 2</option>
+                    <option value="LED_1">LED Listino 1</option>
+                    <option value="CLIMA">Clima</option>
+                    <option value="COLONNINE_3">Colonnine Listino 3</option>
+                    <option value="COLONNINE_2">Colonnine Listino 2</option>
+                    <option value="COLONNINE_1">Colonnine Listino 1</option>
+                    <option value="EBIKE">EBike</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <label>Fatturato Personale Venduto (€):</label>
+                <input type="number" id="prod-fatturato" value="0" min="0">
+            </div>
+            <div class="input-row coordinator-only">
+                <label>Fatturato Rete Venduto (€):</label>
+                <input type="number" id="prod-fatturato-ind" value="0" min="0">
+            </div>
+        </div>
+    </div>
+
+    <div class="card coordinator-only" style="margin-top: 20px; border-left-color: #ff9800;">
+        <h3>📊 Contributi su Volumi Rete (Solo Coordinator)</h3>
+        <p style="font-size: 0.85rem; color: #666;">I contributi vengono calcolati sommando i GWh di Luce inseriti sopra. Per il Gas inserito come indiretta, il sistema lo convertirà automaticamente in valore energetico equivalente per il raggiungimento delle soglie (1 Smc = 4 kWh).</p>
+        <div class="input-row">
+            <label>Ulteriori GWh Luce Rete (se non calcolati sopra):</label>
+            <input type="number" id="gwh-manuali" value="0" step="0.01" min="0">
+        </div>
+    </div>
+
+    <button class="btn-calcola" onclick="calcolaProvvigioni()">Calcola Guadagno</button>
+
+    <div class="risultati" id="risultati-box">
+        <h2>Totale Stimato: <span id="totale-guadagno">0,00</span> €</h2>
+        <div class="dettaglio">
+            <p>Guadagno Diretto (Vendite Tue): <span id="tot-diretta">0,00</span> €</p>
+            <p class="coordinator-only">Guadagno Indiretto (Dalla Rete): <span id="tot-indiretta">0,00</span> €</p>
+            <p class="coordinator-only">Contributo Fisso Mensile Raggiunto: <span id="tot-contributo">0,00</span> €</p>
+            <p class="coordinator-only" style="font-size:0.85rem; color:#555;">Volume Totale Rete Calcolato: <span id="volume-calcolato">0.00</span> GWh</p>
+        </div>
+    </div>
+
+    <div class="noticine">
+        <p><strong>Nota bene:</strong> I calcoli mostrati sono puramente indicativi e basati sui valori delle tabelle provvigionali 2026 fornite. Sono esclusi eventuali storni entro 6 mesi, decurtazioni per segnalazioni/referral e l'applicazione di penali.</p>
+    </div>
+</div>
+
+<script>
+    // Database completo e fedele estratto dai PDF ufficiali
+    const tabelle = {
+        power: {
+            "RESIDENZIALE": { diretta: 66, indiretta: 6, kwh_medio: 2700 },
+            "RESIDENZIALE_R": { diretta: 86, indiretta: 10, kwh_medio: 2700 },
+            "B_1_5000": { diretta: 103, indiretta: 8, kwh_medio: 3500 },
+            "B_5001_10000": { diretta: 128, indiretta: 10, kwh_medio: 7500 },
+            "B_10001_25000": { diretta: 158, indiretta: 12, kwh_medio: 17500 },
+            "B_25001_50000": { diretta: 214, indiretta: 15, kwh_medio: 37500 },
+            "B_50001_100000": { diretta: 272, indiretta: 20, kwh_medio: 75000 },
+            "B_100001_300000": { diretta: 328, indiretta: 25, kwh_medio: 200000 },
+            "B_300001_500000": { diretta: 408, indiretta: 35, kwh_medio: 400000 },
+            "B_500001_700000": { diretta: 473, indiretta: 40, kwh_medio: 600000 },
+            "B_700001_999999": { diretta: 663, indiretta: 50, kwh_medio: 850000 }
+        },
+        gas: {
+            "RESIDENZIALE": { diretta: 64, indiretta: 6, smc_medio: 1000 },
+            "RESIDENZIALE_R": { diretta: 86, indiretta: 10, smc_medio: 1000 },
+            "B_1_1500": { diretta: 73, indiretta: 8, smc_medio: 1000 },
+            "B_1501_5000": { diretta: 108, indiretta: 9, smc_medio: 3250 },
+            "B_5001_10000": { diretta: 138, indiretta: 10, smc_medio: 7500 },
+            "B_10001_20000": { diretta: 198, indiretta: 15, smc_medio: 15000 },
+            "B_20001_30000": { diretta: 272, indiretta: 20, smc_medio: 25000 },
+            "B_30001_100000": { diretta: 328, indiretta: 25, smc_medio: 65000 },
+            "B_100001_200000": { diretta: 408, indiretta: 35, smc_medio: 150000 },
+            "B_200001_300000": { diretta: 473, indiretta: 40, smc_medio: 250000 },
+            "B_300001_400000": { diretta: 663, indiretta: 50, smc_medio: 350000 },
+            "B_MAGGIORE_400001": { diretta: 1013, indiretta: 60, smc_medio: 500000 }
+        },
+        sky: {
+            "TRIPLE_PLAY": { diretta: 95, indiretta: 9.50 },
+            "WIFI_RID": { diretta: 40, indiretta: 4 },
+            "WIFI_PREP": { diretta: 30, indiretta: 3 },
+            "BUSINESS_BAR": { diretta: 125, indiretta: 12.50 },
+            "HOTEL_FINO_3": { diretta: 100, indiretta: 10 },
+            "HOTEL_ANNUALE": { diretta: 30, indiretta: 3 },
+            "HOTEL_STAGIONALE": { diretta: 36, indiretta: 3.60 }
+        },
+        prodotti: {
+            "FOTOVOLTAICO": { diretta: 0.05, indiretta: 0.015 },
+            "LED_4": { diretta: 0.20, indiretta: 0.03 },
+            "LED_3": { diretta: 0.15, indiretta: 0.03 },
+            "LED_2": { diretta: 0.10, indiretta: 0.025 },
+            "LED_1": { diretta: 0.07, indiretta: 0.02 },
+            "CLIMA": { diretta: 0.08, indiretta: 0.02 },
+            "COLONNINE_3": { diretta: 0.10, indiretta: 0.025 },
+            "COLONNINE_2": { diretta: 0.085, indiretta: 0.02 },
+            "COLONNINE_1": { diretta: 0.07, indiretta: 0.015 },
+            "EBIKE": { diretta: 0.07, indiretta: 0.02 }
+        }
+    };
+
+    function cambiaRuolo() {
+        const ruolo = document.getElementById('ruolo').value;
+        const elementiCoordinator = document.querySelectorAll('.coordinator-only');
+        
+        elementiCoordinator.forEach(el => {
+            el.style.display = (ruolo === 'coordinator') ? 'block' : 'none';
+        });
+        document.getElementById('risultati-box').style.display = 'none';
+    }
+
+    function calcolaProvvigioni() {
+        const ruolo = document.getElementById('ruolo').value;
+        
+        // Quantità Diretta
+        const pQta = parseInt(document.getElementById('power-qta').value) || 0;
+        const gQta = parseInt(document.getElementById('gas-qta').value) || 0;
+        const sQta = parseInt(document.getElementById('sky-qta').value) || 0;
+        const prodFatturato = parseFloat(document.getElementById('prod-fatturato').value) || 0;
+        
+        // Quantità Rete (Indiretta)
+        const pQtaInd = parseInt(document.getElementById('power-qta-ind').value) || 0;
+        const gQtaInd = parseInt(document.getElementById('gas-qta-ind').value) || 0;
+        const sQtaInd = parseInt(document.getElementById('sky-qta-ind').value) || 0;
+        const prodFatturatoInd = parseFloat(document.getElementById('prod-fatturato-ind').value) || 0;
+        
+        // Fasce scelte
+        const pFascia = document.getElementById('power-fascia').value;
+        const gFascia = document.getElementById('gas-fascia').value;
+        const sTipo = document.getElementById('sky-tipo').value;
+        const prodTipo = document.getElementById('prod-tipo').value;
+        
+        // 1. Calcolo Diretta
+        let totDiretta = 0;
+        totDiretta += pQta * tabelle.power[pFascia].diretta;
+        totDiretta += gQta * tabelle.gas[gFascia].diretta;
+        totDiretta += sQta * tabelle.sky[sTipo].diretta;
+        totDiretta += prodFatturato * tabelle.prodotti[prodTipo].diretta;
+        
+        // 2. Calcolo Indiretta e calcolo Volumi per Soglie
+        let totIndiretta = 0;
+        let volumeKwhRete = 0;
+        
+        if (ruolo === 'coordinator') {
+            totIndiretta += pQtaInd * tabelle.power[pFascia].indiretta;
+            totIndiretta += gQtaInd * tabelle.gas[gFascia].indiretta;
+            totIndiretta += sQtaInd * tabelle.sky[sTipo].indiretta;
+            totIndiretta += prodFatturatoInd * tabelle.prodotti[prodTipo].indiretta;
+            
+            // Calcolo volume energetico stimato della rete per i bonus (GWh)
+            let kwhLuceRete = pQtaInd * tabelle.power[pFascia].kwh_medio;
+            let smcGasRete = gQtaInd * tabelle.gas[gFascia].smc_medio;
+            
+            // Regola tabellare del PDF: nel canale standard 1 Smc vale 4 kWh
+            let gasInKwh = smcGasRete * 4; 
+            
+            let kwhManuali = parseFloat(document.getElementById('gwh-manuali').value) * 1000000 || 0;
+            
+            volumeKwhRete = kwhLuceRete + gasInKwh + kwhManuali;
+        }
+        
+        let volumeGwhRete = volumeKwhRete / 1000000; // Trasformazione in GigaWattOra
+        
+        // 3. Calcolo Contributo Fisso Mensile (Solo Coordinator)
+        let contributo = 0;
+        if (ruolo === 'coordinator') {
+            if (volumeGwhRete >= 1 && volumeGwhRete < 1.5) contributo = 500;
+            else if (volumeGwhRete >= 1.5 && volumeGwhRete < 2) contributo = 750;
+            else if (volumeGwhRete >= 2) contributo = 1000;
+        }
+        
+        const totaleComplessivo = totDiretta + totIndiretta + contributo;
+        
+        // Mostra i risultati a schermo
+        document.getElementById('totale-guadagno').innerText = totaleComplessivo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('tot-diretta').innerText = totDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('tot-indiretta').innerText = totIndiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('tot-contributo').innerText = contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('volume-calcolato').innerText = volumeGwhRete.toFixed(2);
+        
+        document.getElementById('risultati-box').style.display = 'block';
+        document.getElementById('risultati-box').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    cambiaRuolo();
+</script>
+
+</body>
+</html>
