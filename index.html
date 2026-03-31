@@ -224,6 +224,9 @@
                     <p style="font-size: 0.8rem; color: #0c4a6e; margin-top: 10px; font-style: italic;">
                         * Nota: Questa tabella mostra la crescita della rendita mensile del Coordinator derivante dai consumi della rete sbloccati mese dopo mese.
                     </p>
+                    <p style="font-size: 0.8rem; color: #b91c1c; margin-top: 5px; font-weight: bold;">
+                        * Al netto di switch-out dei clienti a portafoglio non correttamente reintegrati.
+                    </p>
                 </div>
 
                 <div class="box-gare account-only"> 
@@ -600,7 +603,6 @@
             if (ruolo === 'coordinator') {
                 document.getElementById('ind-ee-gas').innerText = indEeGasGettoni.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 
-                // Mostriamo il valore mensile erogato e tra parentesi l'annuale generato
                 document.getElementById('ric-ind-ee-gas').innerText = ricIndEeGasMensile.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-ind-annuale').innerText = ricIndEeGasAnnuale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 
@@ -610,7 +612,6 @@
                 document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
                 
-                // LOGICA PROSPETTIVA RICORRENTE RETE (accumuliamo il valore MENSILE reale)
                 let ric6Mesi = ricIndEeGasMensile * 6;
                 let ric12Mesi = ricIndEeGasMensile * 12;
                 document.getElementById('ric-6mesi').innerText = ric6Mesi.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -620,7 +621,6 @@
             document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-indiretta').innerText = globale_totIndiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
-            // RICORRENTE PERSONALE (Sempre attivo)
             document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
