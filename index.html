@@ -66,6 +66,7 @@
         .card h3 { margin-top: 0; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
         .input-row { margin-bottom: 12px; }
         .coordinator-only { display: none; background-color: #eef7ff; padding: 5px; border-radius: 4px; }
+        .account-only { display: block; }
         
         .business-list {
             margin-top: 10px;
@@ -144,6 +145,16 @@
             text-align: left;
         }
         .box-proiezione h4 { margin-top: 0; color: #31708f; }
+
+        .box-gare {
+            margin-top: 15px;
+            background: #fffdf0;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #fbeed5;
+            text-align: left;
+        }
+        .box-gare h4 { margin-top: 0; color: #b94a48; }
 
         .noticine {
             font-size: 0.85rem;
@@ -275,6 +286,12 @@
         <h2>Totale Stimato Mese: <span id="totale-guadagno">0,00</span> €</h2>
         <div class="dettaglio">
             <p>Guadagno diretto gettoni EE/Gas: <span id="tot-diretta">0,00</span> €</p>
+            
+            <div class="account-only">
+                <p>Bonus Gara Standard: <span id="tot-gara-std">0,00</span> €</p>
+                <p>Bonus Gara "Sales Academy": <span id="tot-gara-academy">0,00</span> €</p>
+            </div>
+
             <p>Di cui Bonus RID WEB Business: <span id="tot-rid-web">0,00</span> €</p>
             <p>Di cui Contratti Sky: <span id="tot-sky">0,00</span> €</p>
             <p>Di cui Vendita Prodotti: <span id="tot-prodotti">0,00</span> €</p>
@@ -287,6 +304,18 @@
                     <li><strong>Nel primo trimestre di produzione:</strong> <span id="ric-trim1">0,00</span> € (Matura solo 1/3 del Mese 1)</li>
                     <li><strong>A regime, nei trimestri successivi:</strong> <span id="ric-trim2">0,00</span> € (Trimestre precedente pieno + 1/3 del nuovo)</li>
                 </ul>
+            </div>
+
+            <div class="box-gare account-only">
+                <h4>🏆 Gare Mensili Sales Account</h4>
+                
+                <p>• <strong>Gara "Sales Academy" (Valida per i primi 3 mesi):</strong> <br>
+                Punti accumulati: <span id="punti-academy" style="font-weight: bold; color: #0056b3;">0</span> 
+                <span id="label-academy" style="font-weight: bold; color: #666;"> (Nessun premio)</span></p>
+                
+                <p>• <strong>Gara Standard:</strong> <br>
+                Contratti EE/Gas totali: <span id="pezzi-totali" style="font-weight: bold; color: #0056b3;">0</span>. 
+                <span id="label-acceleratore" style="font-weight: bold; color: #b94a48;">Nessun bonus raggiunto (Soglia minima 8 pezzi).</span></p>
             </div>
 
             <div class="coordinator-only" style="margin-top: 15px; background: #eef7ff; padding: 10px; border-radius: 4px;">
@@ -320,7 +349,11 @@
     function cambiaRuolo() {
         const ruolo = document.getElementById('ruolo').value;
         const elementiCoordinator = document.querySelectorAll('.coordinator-only');
+        const elementiAccount = document.querySelectorAll('.account-only');
+        
         elementiCoordinator.forEach(el => el.style.display = (ruolo === 'coordinator') ? 'block' : 'none');
+        elementiAccount.forEach(el => el.style.display = (ruolo === 'account') ? 'block' : 'none');
+        
         document.getElementById('risultati-box').style.display = 'none';
     }
 
@@ -397,9 +430,17 @@
     function calcolaProvvigioni() {
         const ruolo = document.getElementById('ruolo').value;
         let totGettoneDiretto = 0;
-        let totRicorrenteUnMese = 0; // Ricorrente generato da UN SOLO mese di produzione
+        let totRicorrenteUnMese = 0; 
         
+        // Conteggi per Gare (Sales Account)
+        let pezziLuceRes = 0;
+        let pezziGasRes = 0;
+        let pezziLuceBus = 0;
+        let pezziGasBus = 0;
+
         // 1. LUCE DIRETTA
+        pezziLuceRes = (parseInt(document.getElementById('p-res').value) || 0) + (parseInt(document.getElementById('p-res-r').value) || 0);
+        
         const pRes = parseInt(document.getElementById('p-res').value) || 0;
         const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
         
@@ -407,6 +448,7 @@
         totRicorrenteUnMese += (pRes * 4) + (pResR * 4);
         
         const inputsLuceBus = document.querySelectorAll('#p-bus-container .consumo-business');
+        pezziLuceBus = inputsLuceBus.length;
         inputsLuceBus.forEach(input => {
             const kwh = parseFloat(input.value) || 0;
             totGettoneDiretto += getGettoneLuceBusiness(kwh);
@@ -414,6 +456,8 @@
         });
         
         // 2. GAS DIRETTO
+        pezziGasRes = (parseInt(document.getElementById('g-res').value) || 0) + (parseInt(document.getElementById('g-res-r').value) || 0);
+        
         const gRes = parseInt(document.getElementById('g-res').value) || 0;
         const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
         
@@ -421,6 +465,7 @@
         totRicorrenteUnMese += (gRes * 4) + (gResR * 4);
         
         const inputsGasBus = document.querySelectorAll('#g-bus-container .consumo-business');
+        pezziGasBus = inputsGasBus.length;
         inputsGasBus.forEach(input => {
             const smc = parseFloat(input.value) || 0;
             totGettoneDiretto += getGettoneGasBusiness(smc);
@@ -452,15 +497,65 @@
         // 6. VERISURE
         const verisureQta = parseInt(document.getElementById('verisure-qta').value) || 0;
         const totVerisure = verisureQta * 75;
+
+        // --- CALCOLO GARE (Solo per Sales Account) ---
+        let bonusGaraStd = 0;
+        let bonusGaraAcademy = 0;
+        
+        const pezziTotali = pezziLuceRes + pezziGasRes + pezziLuceBus + pezziGasBus;
+        
+        // Punti Academy: 1 punto per business, 0.5 per residenziale
+        const puntiAcademy = (pezziLuceBus + pezziGasBus) + ((pezziLuceRes + pezziGasRes) * 0.5);
+
+        if (ruolo === 'account') {
+            // Logica Gara Standard
+            const labelAcceleratore = document.getElementById('label-acceleratore');
+            if (pezziTotali >= 8 && pezziTotali <= 14) {
+                bonusGaraStd = totGettoneDiretto * 0.25;
+                labelAcceleratore.innerText = "Complimenti! Hai raggiunto il livello 1: +25% di Bonus.";
+                labelAcceleratore.style.color = "#155724";
+            } else if (pezziTotali >= 15) {
+                bonusGaraStd = totGettoneDiretto * 0.30;
+                labelAcceleratore.innerText = "Super! Hai sbloccato il livello massimo: +30% di Bonus.";
+                labelAcceleratore.style.color = "#155724";
+            } else {
+                bonusGaraStd = 0;
+                labelAcceleratore.innerText = "Nessun bonus raggiunto (Soglia minima 8 pezzi).";
+                labelAcceleratore.style.color = "#b94a48";
+            }
+
+            // Logica Gara Academy
+            const labelAcademy = document.getElementById('label-academy');
+            if (puntiAcademy >= 25) {
+                bonusGaraAcademy = 1000;
+                labelAcademy.innerText = " (Premio raggiunto: 1.000,00 €)";
+                labelAcademy.style.color = "#155724";
+            } else if (puntiAcademy >= 18) {
+                bonusGaraAcademy = 800;
+                labelAcademy.innerText = " (Premio raggiunto: 800,00 €)";
+                labelAcademy.style.color = "#155724";
+            } else if (puntiAcademy >= 10) {
+                bonusGaraAcademy = 500;
+                labelAcademy.innerText = " (Premio raggiunto: 500,00 €)";
+                labelAcademy.style.color = "#155724";
+            } else {
+                bonusGaraAcademy = 0;
+                labelAcademy.innerText = " (Nessun premio)";
+                labelAcademy.style.color = "#666";
+            }
+
+            document.getElementById('pezzi-totali').innerText = pezziTotali;
+            document.getElementById('punti-academy').innerText = puntiAcademy;
+            
+            document.getElementById('tot-gara-std').innerText = bonusGaraStd.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('tot-gara-academy').innerText = bonusGaraAcademy.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
         
         // TOTALE DIRETTA MENSILE
-        const totDiretta = totGettoneDiretto + totRidWeb + totSkyDiretta + totProdotti + totVerisure;
+        const totDiretta = totGettoneDiretto + totRidWeb + totSkyDiretta + totProdotti + totVerisure + bonusGaraStd + bonusGaraAcademy;
         
-        // 7. PROIEZIONI RICORRENTE TRIMESTRALE (Formula dinamica e realistica)
-        // Nel 1° trimestre in cui si produce: Solo il mese 1 genera 1/3 della sua quota (0.33)
+        // 7. PROIEZIONI RICORRENTE TRIMESTRALE
         const renditaTrim1 = totRicorrenteUnMese * (1 / 3); 
-        
-        // Nei trimestri successivi (A regime): Il trimestre precedente vale 3 mensilità piene + 1/3 del nuovo trimestre
         const renditaTrim2 = totRicorrenteUnMese * (3 + (1 / 3));
 
         // 8. CALCOLO RETE (Solo Coordinator)
