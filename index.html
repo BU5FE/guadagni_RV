@@ -26,7 +26,6 @@
             padding-bottom: 20px;
             margin-bottom: 25px;
         }
-        /* Stile per il logo aziendale */
         .logo-aziendale {
             max-width: 300px;
             height: auto;
@@ -68,6 +67,46 @@
         .input-row { margin-bottom: 12px; }
         .coordinator-only { display: none; background-color: #eef7ff; padding: 5px; border-radius: 4px; }
         
+        /* Stili per la lista dinamica Business */
+        .business-list {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .business-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 8px;
+            background: #fff;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .business-item input { flex: 2; }
+        .btn-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-add {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .btn-add:hover { background: #0056b3; }
+        
         .btn-calcola {
             display: block;
             width: 100%;
@@ -104,6 +143,7 @@
             border-top: 1px solid #eee;
             padding-top: 10px;
         }
+        .info-small { font-size: 0.75rem; color: #777; font-weight: normal; }
     </style>
 </head>
 <body>
@@ -126,57 +166,60 @@
         <div class="card">
             <h3>⚡ Energia Elettrica (Power)</h3>
             <div class="input-row">
-                <label>Fascia Consumo:</label>
-                <select id="power-fascia">
-                    <option value="RESIDENZIALE">Residenziale</option>
-                    <option value="RESIDENZIALE_R">Residenziale R+</option>
-                    <option value="B_1_5000">Business 1 > 5.000 kW</option>
-                    <option value="B_5001_10000">Business 5.001 > 10.000 kW</option>
-                    <option value="B_10001_25000">Business 10.001 > 25.000 kW</option>
-                    <option value="B_25001_50000">Business 25.001 > 50.000 kW</option>
-                    <option value="B_50001_100000">Business 50.001 > 100.000 kW</option>
-                    <option value="B_100001_300000">Business 100.001 > 300.000 kW</option>
-                    <option value="B_300001_500000">Business 300.001 > 500.000 kW</option>
-                    <option value="B_500001_700000">Business 500.001 > 700.000 kW</option>
-                    <option value="B_700001_999999">Business 700.001 > 999.999 kW</option>
-                </select>
+                <label>Num. POD Residenziali (66€):</label>
+                <input type="number" id="p-res" value="0" min="0">
             </div>
             <div class="input-row">
-                <label>Contratti Personali (Diretta):</label>
-                <input type="number" id="power-qta" value="0" min="0">
+                <label>Num. POD Residenziali R+ (70€):</label>
+                <input type="number" id="p-res-r" value="0" min="0">
             </div>
-            <div class="input-row coordinator-only">
-                <label>Contratti Rete (Indiretta):</label>
-                <input type="number" id="power-qta-ind" value="0" min="0">
+            
+            <div style="background: #eef7ff; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                <label>🏢 POD Business (Consumi Diversi):</label>
+                <div id="p-bus-container" class="business-list">
+                    </div>
+                <button class="btn-add" onclick="aggiungiRigaBusiness('p-bus-container', 'kWh consumo annuo')">+ Aggiungi POD Business</button>
+            </div>
+
+            <div class="input-row coordinator-only" style="margin-top: 15px;">
+                <label>POD Rete (Indiretta Totali):</label>
+                <input type="number" id="p-ind" value="0" min="0">
             </div>
         </div>
 
         <div class="card">
             <h3>🔥 Gas Naturale</h3>
             <div class="input-row">
-                <label>Fascia Consumo:</label>
-                <select id="gas-fascia">
-                    <option value="RESIDENZIALE">Residenziale</option>
-                    <option value="RESIDENZIALE_R">Residenziale R+</option>
-                    <option value="B_1_1500">Business 1 > 1.500 M³</option>
-                    <option value="B_1501_5000">Business 1.501 > 5.000 M³</option>
-                    <option value="B_5001_10000">Business 5.001 > 10.000 M³</option>
-                    <option value="B_10001_20000">Business 10.001 > 20.000 M³</option>
-                    <option value="B_20001_30000">Business 20.001 > 30.000 M³</option>
-                    <option value="B_30001_100000">Business 30.001 > 100.000 M³</option>
-                    <option value="B_100001_200000">Business 100.001 > 200.000 M³</option>
-                    <option value="B_200001_300000">Business 200.001 > 300.000 M³</option>
-                    <option value="B_300001_400000">Business 300.001 > 400.000 M³</option>
-                    <option value="B_MAGGIORE_400001">Business > 400.001 M³</option>
-                </select>
+                <label>Num. PDR Residenziali (64€):</label>
+                <input type="number" id="g-res" value="0" min="0">
             </div>
             <div class="input-row">
-                <label>Contratti Personali (Diretta):</label>
-                <input type="number" id="gas-qta" value="0" min="0">
+                <label>Num. PDR Residenziali R+ (70€):</label>
+                <input type="number" id="g-res-r" value="0" min="0">
             </div>
-            <div class="input-row coordinator-only">
-                <label>Contratti Rete (Indiretta):</label>
-                <input type="number" id="gas-qta-ind" value="0" min="0">
+            
+            <div style="background: #fff3e0; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                <label>🏢 PDR Business (Consumi Diversi):</label>
+                <div id="g-bus-container" class="business-list">
+                    </div>
+                <button class="btn-add" onclick="aggiungiRigaBusiness('g-bus-container', 'Smc consumo annuo')">+ Aggiungi PDR Business</button>
+            </div>
+
+            <div class="input-row coordinator-only" style="margin-top: 15px;">
+                <label>PDR Rete (Indiretta Totali):</label>
+                <input type="number" id="g-ind" value="0" min="0">
+            </div>
+        </div>
+
+        <div class="card" style="border-left-color: #28a745;">
+            <h3>👥 Anagrafiche Clienti & Bonus</h3>
+            <div class="input-row">
+                <label>Numero Clienti Residenziali:</label>
+                <input type="number" id="c-res" value="0" min="0">
+            </div>
+            <div class="input-row">
+                <label>Numero Clienti Business (Bonus RID WEB 13€):</label>
+                <input type="number" id="c-bus" value="0" min="0">
             </div>
         </div>
 
@@ -185,13 +228,13 @@
             <div class="input-row">
                 <label>Tipo Offerta:</label>
                 <select id="sky-tipo">
-                    <option value="TRIPLE_PLAY">Triple Play</option>
-                    <option value="WIFI_RID">Sky Wifi RID</option>
-                    <option value="WIFI_PREP">Sky Wifi Prepagata</option>
-                    <option value="BUSINESS_BAR">Business Bar</option>
-                    <option value="HOTEL_FINO_3">Hotel fino a 3 camere</option>
-                    <option value="HOTEL_ANNUALE">Hotel Annuale (per camera)</option>
-                    <option value="HOTEL_STAGIONALE">Hotel Stagionale (per camera)</option>
+                    <option value="TRIPLE_PLAY">Triple Play (95€)</option>
+                    <option value="WIFI_RID">Sky Wifi RID (40€)</option>
+                    <option value="WIFI_PREP">Sky Wifi Prepagata (30€)</option>
+                    <option value="BUSINESS_BAR">Business Bar (125€)</option>
+                    <option value="HOTEL_FINO_3">Hotel fino a 3 camere (100€)</option>
+                    <option value="HOTEL_ANNUALE">Hotel Annuale (30€ a cam.)</option>
+                    <option value="HOTEL_STAGIONALE">Hotel Stagionale (36€ a cam.)</option>
                 </select>
             </div>
             <div class="input-row">
@@ -203,40 +246,13 @@
                 <input type="number" id="sky-qta-ind" value="0" min="0">
             </div>
         </div>
-
-        <div class="card">
-            <h3>🛍️ Prodotti ed Efficientamento</h3>
-            <div class="input-row">
-                <label>Seleziona Prodotto:</label>
-                <select id="prod-tipo">
-                    <option value="FOTOVOLTAICO">Fotovoltaico</option>
-                    <option value="LED_4">LED Listino 4</option>
-                    <option value="LED_3">LED Listino 3</option>
-                    <option value="LED_2">LED Listino 2</option>
-                    <option value="LED_1">LED Listino 1</option>
-                    <option value="CLIMA">Clima</option>
-                    <option value="COLONNINE_3">Colonnine Listino 3</option>
-                    <option value="COLONNINE_2">Colonnine Listino 2</option>
-                    <option value="COLONNINE_1">Colonnine Listino 1</option>
-                    <option value="EBIKE">EBike</option>
-                </select>
-            </div>
-            <div class="input-row">
-                <label>Fatturato Personale Venduto (€):</label>
-                <input type="number" id="prod-fatturato" value="0" min="0">
-            </div>
-            <div class="input-row coordinator-only">
-                <label>Fatturato Rete Venduto (€):</label>
-                <input type="number" id="prod-fatturato-ind" value="0" min="0">
-            </div>
-        </div>
     </div>
 
     <div class="card coordinator-only" style="margin-top: 20px; border-left-color: #ff9800;">
         <h3>📊 Contributi su Volumi Rete (Solo Coordinator)</h3>
-        <p style="font-size: 0.85rem; color: #666;">I contributi vengono calcolati sommando i GWh di Luce inseriti sopra. Per il Gas inserito come indiretta, il sistema lo convertirà automaticamente in valore energetico equivalente per il raggiungimento delle soglie (1 Smc = 4 kWh).</p>
+        <p style="font-size: 0.85rem; color: #666;">I contributi vengono calcolati sul volume della rete (1 Smc = 4 kWh). Se hai altri dati inseriscili qui sotto.</p>
         <div class="input-row">
-            <label>Ulteriori GWh Luce Rete (se non calcolati sopra):</label>
+            <label>Ulteriori GWh Luce Rete:</label>
             <input type="number" id="gwh-manuali" value="0" step="0.01" min="0">
         </div>
     </div>
@@ -247,6 +263,7 @@
         <h2>Totale Stimato: <span id="totale-guadagno">0,00</span> €</h2>
         <div class="dettaglio">
             <p>Guadagno Diretto (Vendite Tue): <span id="tot-diretta">0,00</span> €</p>
+            <p>Di cui Bonus RID WEB Business: <span id="tot-rid-web">0,00</span> €</p>
             <p class="coordinator-only">Guadagno Indiretto (Dalla Rete): <span id="tot-indiretta">0,00</span> €</p>
             <p class="coordinator-only">Contributo Fisso Mensile Raggiunto: <span id="tot-contributo">0,00</span> €</p>
             <p class="coordinator-only" style="font-size:0.85rem; color:#555;">Volume Totale Rete Calcolato: <span id="volume-calcolato">0.00</span> GWh</p>
@@ -254,40 +271,12 @@
     </div>
 
     <div class="noticine">
-        <p><strong>Nota bene:</strong> I calcoli mostrati sono puramente indicativi e basati sui valori delle tabelle provvigionali 2026 fornite. Sono esclusi eventuali storni entro 6 mesi, decurtazioni per segnalazioni/referral e l'applicazione di penali.</p>
+        <p><strong>Nota bene:</strong> I calcoli dei POD/PDR Business inseriti singolarmente applicano il valore provvigionale corretto in base alla rispettiva fascia di consumo.</p>
     </div>
 </div>
 
 <script>
-    // Database completo e fedele estratto dai PDF ufficiali
     const tabelle = {
-        power: {
-            "RESIDENZIALE": { diretta: 66, indiretta: 6, kwh_medio: 2700 },
-            "RESIDENZIALE_R": { diretta: 86, indiretta: 10, kwh_medio: 2700 },
-            "B_1_5000": { diretta: 103, indiretta: 8, kwh_medio: 3500 },
-            "B_5001_10000": { diretta: 128, indiretta: 10, kwh_medio: 7500 },
-            "B_10001_25000": { diretta: 158, indiretta: 12, kwh_medio: 17500 },
-            "B_25001_50000": { diretta: 214, indiretta: 15, kwh_medio: 37500 },
-            "B_50001_100000": { diretta: 272, indiretta: 20, kwh_medio: 75000 },
-            "B_100001_300000": { diretta: 328, indiretta: 25, kwh_medio: 200000 },
-            "B_300001_500000": { diretta: 408, indiretta: 35, kwh_medio: 400000 },
-            "B_500001_700000": { diretta: 473, indiretta: 40, kwh_medio: 600000 },
-            "B_700001_999999": { diretta: 663, indiretta: 50, kwh_medio: 850000 }
-        },
-        gas: {
-            "RESIDENZIALE": { diretta: 64, indiretta: 6, smc_medio: 1000 },
-            "RESIDENZIALE_R": { diretta: 86, indiretta: 10, smc_medio: 1000 },
-            "B_1_1500": { diretta: 73, indiretta: 8, smc_medio: 1000 },
-            "B_1501_5000": { diretta: 108, indiretta: 9, smc_medio: 3250 },
-            "B_5001_10000": { diretta: 138, indiretta: 10, smc_medio: 7500 },
-            "B_10001_20000": { diretta: 198, indiretta: 15, smc_medio: 15000 },
-            "B_20001_30000": { diretta: 272, indiretta: 20, smc_medio: 25000 },
-            "B_30001_100000": { diretta: 328, indiretta: 25, smc_medio: 65000 },
-            "B_100001_200000": { diretta: 408, indiretta: 35, smc_medio: 150000 },
-            "B_200001_300000": { diretta: 473, indiretta: 40, smc_medio: 250000 },
-            "B_300001_400000": { diretta: 663, indiretta: 50, smc_medio: 350000 },
-            "B_MAGGIORE_400001": { diretta: 1013, indiretta: 60, smc_medio: 500000 }
-        },
         sky: {
             "TRIPLE_PLAY": { diretta: 95, indiretta: 9.50 },
             "WIFI_RID": { diretta: 40, indiretta: 4 },
@@ -296,18 +285,6 @@
             "HOTEL_FINO_3": { diretta: 100, indiretta: 10 },
             "HOTEL_ANNUALE": { diretta: 30, indiretta: 3 },
             "HOTEL_STAGIONALE": { diretta: 36, indiretta: 3.60 }
-        },
-        prodotti: {
-            "FOTOVOLTAICO": { diretta: 0.05, indiretta: 0.015 },
-            "LED_4": { diretta: 0.20, indiretta: 0.03 },
-            "LED_3": { diretta: 0.15, indiretta: 0.03 },
-            "LED_2": { diretta: 0.10, indiretta: 0.025 },
-            "LED_1": { diretta: 0.07, indiretta: 0.02 },
-            "CLIMA": { diretta: 0.08, indiretta: 0.02 },
-            "COLONNINE_3": { diretta: 0.10, indiretta: 0.025 },
-            "COLONNINE_2": { diretta: 0.085, indiretta: 0.02 },
-            "COLONNINE_1": { diretta: 0.07, indiretta: 0.015 },
-            "EBIKE": { diretta: 0.07, indiretta: 0.02 }
         }
     };
 
@@ -321,59 +298,109 @@
         document.getElementById('risultati-box').style.display = 'none';
     }
 
+    // Funzione per aggiungere un campo consumo dinamico
+    function aggiungiRigaBusiness(containerId, placeholderText) {
+        const container = document.getElementById(containerId);
+        const riga = document.createElement('div');
+        riga.className = 'business-item';
+        riga.innerHTML = `
+            <input type="number" class="consumo-business" placeholder="${placeholderText}" min="0">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        `;
+        container.appendChild(riga);
+    }
+
+    function getProvvigioneLuceBusiness(kwh) {
+        if (kwh <= 0) return 0;
+        if (kwh <= 5000) return 103;
+        if (kwh <= 10000) return 128;
+        if (kwh <= 25000) return 158;
+        if (kwh <= 50000) return 214;
+        if (kwh <= 100000) return 272;
+        if (kwh <= 300000) return 328;
+        if (kwh <= 500000) return 408;
+        if (kwh <= 700000) return 473;
+        return 663;
+    }
+
+    function getProvvigioneGasBusiness(smc) {
+        if (smc <= 0) return 0;
+        if (smc <= 1500) return 73;
+        if (smc <= 5000) return 108;
+        if (smc <= 10000) return 138;
+        if (smc <= 20000) return 198;
+        if (smc <= 30000) return 272;
+        if (smc <= 100000) return 328;
+        if (smc <= 200000) return 408;
+        if (smc <= 300000) return 473;
+        if (smc <= 400000) return 663;
+        return 1013;
+    }
+
     function calcolaProvvigioni() {
         const ruolo = document.getElementById('ruolo').value;
         
-        // Quantità Diretta
-        const pQta = parseInt(document.getElementById('power-qta').value) || 0;
-        const gQta = parseInt(document.getElementById('gas-qta').value) || 0;
+        // 1. LUCE DIRETTA
+        const pRes = parseInt(document.getElementById('p-res').value) || 0;
+        const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
+        
+        let totLuceDiretta = (pRes * 66) + (pResR * 70);
+        
+        // Calcolo dinamico POD Business
+        const inputsLuceBus = document.querySelectorAll('#p-bus-container .consumo-business');
+        inputsLuceBus.forEach(input => {
+            const kwh = parseFloat(input.value) || 0;
+            totLuceDiretta += getProvvigioneLuceBusiness(kwh);
+        });
+        
+        // 2. GAS DIRETTO
+        const gRes = parseInt(document.getElementById('g-res').value) || 0;
+        const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
+        
+        let totGasDiretta = (gRes * 64) + (gResR * 70);
+        
+        // Calcolo dinamico PDR Business
+        const inputsGasBus = document.querySelectorAll('#g-bus-container .consumo-business');
+        inputsGasBus.forEach(input => {
+            const smc = parseFloat(input.value) || 0;
+            totGasDiretta += getProvvigioneGasBusiness(smc);
+        });
+        
+        // 3. BONUS RID WEB SU CLIENTI BUSINESS
+        const cBus = parseInt(document.getElementById('c-bus').value) || 0;
+        const totRidWeb = cBus * 13;
+        
+        // 4. SKY
         const sQta = parseInt(document.getElementById('sky-qta').value) || 0;
-        const prodFatturato = parseFloat(document.getElementById('prod-fatturato').value) || 0;
-        
-        // Quantità Rete (Indiretta)
-        const pQtaInd = parseInt(document.getElementById('power-qta-ind').value) || 0;
-        const gQtaInd = parseInt(document.getElementById('gas-qta-ind').value) || 0;
-        const sQtaInd = parseInt(document.getElementById('sky-qta-ind').value) || 0;
-        const prodFatturatoInd = parseFloat(document.getElementById('prod-fatturato-ind').value) || 0;
-        
-        // Fasce scelte
-        const pFascia = document.getElementById('power-fascia').value;
-        const gFascia = document.getElementById('gas-fascia').value;
         const sTipo = document.getElementById('sky-tipo').value;
-        const prodTipo = document.getElementById('prod-tipo').value;
+        const totSkyDiretta = sQta * tabelle.sky[sTipo].diretta;
         
-        // 1. Calcolo Diretta
-        let totDiretta = 0;
-        totDiretta += pQta * tabelle.power[pFascia].diretta;
-        totDiretta += gQta * tabelle.gas[gFascia].diretta;
-        totDiretta += sQta * tabelle.sky[sTipo].diretta;
-        totDiretta += prodFatturato * tabelle.prodotti[prodTipo].diretta;
+        // TOTALE DIRETTA
+        const totDiretta = totLuceDiretta + totGasDiretta + totRidWeb + totSkyDiretta;
         
-        // 2. Calcolo Indiretta e calcolo Volumi per Soglie
+        // 5. CALCOLO RETE (Solo Coordinator)
         let totIndiretta = 0;
-        let volumeKwhRete = 0;
+        let volumeGwhRete = 0;
         
         if (ruolo === 'coordinator') {
-            totIndiretta += pQtaInd * tabelle.power[pFascia].indiretta;
-            totIndiretta += gQtaInd * tabelle.gas[gFascia].indiretta;
+            const pInd = parseInt(document.getElementById('p-ind').value) || 0;
+            const gInd = parseInt(document.getElementById('g-ind').value) || 0;
+            
+            totIndiretta += pInd * 10; 
+            totIndiretta += gInd * 10;
+            
+            const sQtaInd = parseInt(document.getElementById('sky-qta-ind').value) || 0;
             totIndiretta += sQtaInd * tabelle.sky[sTipo].indiretta;
-            totIndiretta += prodFatturatoInd * tabelle.prodotti[prodTipo].indiretta;
             
-            // Calcolo volume energetico stimato della rete per i bonus (GWh)
-            let kwhLuceRete = pQtaInd * tabelle.power[pFascia].kwh_medio;
-            let smcGasRete = gQtaInd * tabelle.gas[gFascia].smc_medio;
-            
-            // Regola tabellare del PDF: nel canale standard 1 Smc vale 4 kWh
-            let gasInKwh = smcGasRete * 4; 
-            
+            let kwhLuceRete = pInd * 3000;
+            let smcGasRete = gInd * 1000;
+            let gasInKwh = smcGasRete * 4;
             let kwhManuali = parseFloat(document.getElementById('gwh-manuali').value) * 1000000 || 0;
             
-            volumeKwhRete = kwhLuceRete + gasInKwh + kwhManuali;
+            volumeGwhRete = (kwhLuceRete + gasInKwh + kwhManuali) / 1000000;
         }
         
-        let volumeGwhRete = volumeKwhRete / 1000000; // Trasformazione in GigaWattOra
-        
-        // 3. Calcolo Contributo Fisso Mensile (Solo Coordinator)
+        // 6. CONTRIBUTO FISSO SOGLIE GWH
         let contributo = 0;
         if (ruolo === 'coordinator') {
             if (volumeGwhRete >= 1 && volumeGwhRete < 1.5) contributo = 500;
@@ -383,9 +410,10 @@
         
         const totaleComplessivo = totDiretta + totIndiretta + contributo;
         
-        // Mostra i risultati a schermo
+        // Mostra i risultati
         document.getElementById('totale-guadagno').innerText = totaleComplessivo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-diretta').innerText = totDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('tot-rid-web').innerText = totRidWeb.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-indiretta').innerText = totIndiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-contributo').innerText = contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('volume-calcolato').innerText = volumeGwhRete.toFixed(2);
