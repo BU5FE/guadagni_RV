@@ -196,6 +196,7 @@
 
 
 
+
     <button class="btn-calcola" style="margin-top: 20px;" onclick="calcolaProvvigioni()">Calcola Guadagno</button> 
         
         <div class="risultati" id="risultati-box"> 
@@ -222,16 +223,20 @@
                     <h4>📅 Simulazione Evoluzione Fatture Mensili</h4>
                     <p>Mantenendo questa produzione **costante ogni mese**, ecco come variano le tue fatture:</p>
                     <ul style="list-style-type: none; padding-left: 5px;">
-                        <li><strong>Mese 1 e Mese 2:</strong> <span id="fat-m1m2" style="font-weight:bold; color:#15803d;">0,00</span> € <span style="font-size:0.8rem; color:#555;">(Solo Gettoni + Contributo)</span></li>
-                        <li><strong>Mese 3:</strong> <span id="fat-m3" style="font-weight:bold; color:#15803d;">0,00</span> € <span style="font-size:0.8rem; color:#16a34a;">(+ Ricorrente Indiretto maturato)</span></li>
-                        <hr style="border:0; border-top:1px dashed #bbf7d0; margin:5px 0;">
-                        <li><strong>Mese 4 (Fine 1° Trim):</strong> <span id="fat-m4" style="font-weight:bold; color:#1d4ed8;">0,00</span> € <span style="font-size:0.8rem; color:#1d4ed8;">(+ Ricorrente Diretto Trimestrale)</span></li>
-                        <li><strong>Mese 5 e Mese 6:</strong> <span id="fat-m5m6" style="font-weight:bold; color:#15803d;">0,00</span> €</li>
-                        <li><strong>Mese 7 (Fine 2° Trim):</strong> <span id="fat-m7" style="font-weight:bold; color:#1d4ed8;">0,00</span> € <span style="font-size:0.8rem; color:#1d4ed8;">(+ Ricorrente Diretto raddoppiato)</span></li>
-                        <li><strong>Mese 8 e Mese 9:</strong> <span id="fat-m8m9" style="font-weight:bold; color:#15803d;">0,00</span> €</li>
-                        <li><strong>Mese 10 (Fine 3° Trim):</strong> <span id="fat-m10" style="font-weight:bold; color:#1d4ed8;">0,00</span> € <span style="font-size:0.8rem; color:#1d4ed8;">(+ Ricorrente Diretto triplicato)</span></li>
-                        <li><strong>Mese 11 e Mese 12:</strong> <span id="fat-m11m12" style="font-weight:bold; color:#15803d;">0,00</span> €</li>
-                        <li><strong>Mese 13 (Fine 4° Trim):</strong> <span id="fat-m13" style="font-weight:bold; color:#1d4ed8;">0,00</span> € <span style="font-size:0.8rem; color:#1d4ed8;">(+ Ricorrente Diretto quadruplicato)</span></li>
+                        <li style="margin-bottom: 5px;"><strong>Mese 1 e Mese 2:</strong> <span id="fat-m1m2" style="font-weight:bold; color:#15803d;">0,00</span> € <span style="font-size:0.85rem; color:#555;">(Solo Gettoni + Contributo)</span></li>
+                        <li style="margin-bottom: 5px;"><strong>Mese 3:</strong> <span id="fat-m3" style="font-weight:bold; color:#15803d;">0,00</span> € <span style="font-size:0.85rem; color:#16a34a;">(+ Ricorrente Indiretto maturato)</span></li>
+                        <hr style="border:0; border-top:1px dashed #bbf7d0; margin:8px 0;">
+                        
+                        <li style="margin-bottom: 5px;"><strong>Mese 4 (Fine 1° Trim):</strong> <span id="fat-m4" style="font-weight:bold; color:#1d4ed8;">0,00</span> € <br><span style="font-size:0.85rem; color:#1d4ed8;">↳ Include: Liquidazione Ricorrente Diretto Trimestrale (+<span id="ric-dir-1">0,00</span> €)</span></li>
+                        <li style="margin-bottom: 5px;"><strong>Mese 5 e Mese 6:</strong> <span id="fat-m5m6" style="font-weight:bold; color:#15803d;">0,00</span> € <span style="font-size:0.85rem; color:#16a34a;">(Solo fisso + Ricorrente Indiretto in crescita)</span></li>
+                        
+                        <li style="margin-bottom: 5px;"><strong>Mese 7 (Fine 2° Trim):</strong> <span id="fat-m7" style="font-weight:bold; color:#1d4ed8;">0,00</span> € <br><span style="font-size:0.85rem; color:#1d4ed8;">↳ Include: Liquidazione Ricorrente Diretto Trimestrale Raddoppiato (+<span id="ric-dir-2">0,00</span> €)</span></li>
+                        <li style="margin-bottom: 5px;"><strong>Mese 8 e Mese 9:</strong> <span id="fat-m8m9" style="font-weight:bold; color:#15803d;">0,00</span> €</li>
+                        
+                        <li style="margin-bottom: 5px;"><strong>Mese 10 (Fine 3° Trim):</strong> <span id="fat-m10" style="font-weight:bold; color:#1d4ed8;">0,00</span> € <br><span style="font-size:0.85rem; color:#1d4ed8;">↳ Include: Liquidazione Ricorrente Diretto Trimestrale Triplicato (+<span id="ric-dir-3">0,00</span> €)</span></li>
+                        <li style="margin-bottom: 5px;"><strong>Mese 11 e Mese 12:</strong> <span id="fat-m11m12" style="font-weight:bold; color:#15803d;">0,00</span> €</li>
+                        
+                        <li style="margin-bottom: 5px;"><strong>Mese 13 (Fine 4° Trim):</strong> <span id="fat-m13" style="font-weight:bold; color:#1d4ed8;">0,00</span> € <br><span style="font-size:0.85rem; color:#1d4ed8;">↳ Include: Liquidazione Ricorrente Diretto Trimestrale Quadruplicato (+<span id="ric-dir-4">0,00</span> €)</span></li>
                     </ul>
                     <p style="font-size: 0.8rem; color: #b91c1c; margin-top: 10px; font-weight: bold;">
                         * Al netto di switch-out dei clienti a portafoglio non correttamente reintegrati.
@@ -623,13 +628,28 @@
 
                 document.getElementById('fat-m1m2').innerText = fat_m1m2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m3').innerText = fat_m3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // MESE 4
                 document.getElementById('fat-m4').innerText = fat_m4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-dir-1').innerText = quotaTrimestraleDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
                 document.getElementById('fat-m5m6').innerText = fat_m5m6.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // MESE 7
                 document.getElementById('fat-m7').innerText = fat_m7.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-dir-2').innerText = (quotaTrimestraleDiretta * 2).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
                 document.getElementById('fat-m8m9').innerText = fat_m8m9.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // MESE 10
                 document.getElementById('fat-m10').innerText = fat_m10.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-dir-3').innerText = (quotaTrimestraleDiretta * 3).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
                 document.getElementById('fat-m11m12').innerText = fat_m11m12.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // MESE 13
                 document.getElementById('fat-m13').innerText = fat_m13.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-dir-4').innerText = (quotaTrimestraleDiretta * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             }
 
             document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
@@ -678,6 +698,4 @@
         } 
 
         cambiaRuolo(); 
-    </script> 
-</body> 
-</html>
+    </script>
