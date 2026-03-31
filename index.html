@@ -188,9 +188,13 @@
     </div>
 
 
+
+
+    
+
     <div class="card coordinator-only" style="margin-top: 20px; border-left-color: #ff9800;"> 
-            <h3>📊 Riepilogo Volumi Rete (Per Contributo)</h3> 
-            <p style="font-size: 0.85rem; color: #666;">I contributi vengono calcolati sul volume della rete. Canale Standard: 1 Smc Gas = 4 kWh Luce.</p> 
+            <h3>📊 Riepilogo Volumi Totali (Personale + Rete)</h3> 
+            <p style="font-size: 0.85rem; color: #666;">I contributi e i ricorrenti vengono calcolati sul volume complessivo (Personale + Rete). Canale Standard: 1 Smc Gas = 4 kWh Luce.</p> 
             <div class="input-row"> 
                 <label>Ulteriori kWh Luce Rete (Inseriti manualmente):</label> 
                 <input type="number" id="gwh-manuali" value="0" min="0" placeholder="Esempio: 500000"> 
@@ -203,22 +207,22 @@
                 <p>Guadagno diretto totale (Senza bonus gare): <span id="tot-diretta">0,00</span> €</p> 
                 <div class="coordinator-only" style="background: #fffbe6; padding: 10px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #ffeeba;"> 
                     <p><strong>Guadagno Indiretto (Squadra): <span id="tot-indiretta">0,00</span> €</strong></p> 
-                    <p style="font-size: 0.9rem;">• Gettoni Indiretti EE/Gas: <span id="ind-ee-gas">0,00</span> €</p> 
-                    <p style="font-size: 0.9rem;">• Ricorrente Indiretto EE/Gas: <span id="ric-ind-ee-gas">0,00</span> €</p> 
+                    <p style="font-size: 0.9rem;">• Gettoni Indiretti EE/Gas su Rete: <span id="ind-ee-gas">0,00</span> €</p> 
+                    <p style="font-size: 0.9rem;">• Ricorrente Totale EE/Gas (Pers. + Rete): <span id="ric-ind-ee-gas">0,00</span> €</p> 
                     <p style="font-size: 0.9rem;">• Gettoni Indiretti Sky: <span id="ind-sky">0,00</span> €</p> 
                     <p style="font-size: 0.9rem;">• Provvigioni Indirette Prodotti: <span id="ind-prod">0,00</span> €</p> 
                     <p style="font-size: 0.9rem;">• Gettoni Indiretti Verisure: <span id="ind-veri">0,00</span> €</p> 
                     <p style="font-size: 0.9rem;">• Contributo Fisso Rete Raggiunto: <span id="tot-contributo">0,00</span> €</p> 
-                    <p style="font-size: 0.85rem; color: #555;">Volume Totale Mese Squadra Calcolato: <span id="volume-calcolato">0.000</span> GWh</p> 
+                    <p style="font-size: 0.85rem; color: #555;">Volume Totale Mese (Pers. + Rete): <span id="volume-calcolato">0.000</span> GWh</p> 
                 </div> 
                 <div class="box-gare account-only"> 
                     <h4>🏆 Gare Mensili Sales Account</h4> 
                     <p>• <strong>Gara "Sales Academy" (Valida per i primi 3 mesi):</strong> <br> Punti accumulati: <span id="punti-academy" style="font-weight: bold; color: #0056b3;">0</span> <span id="label-academy" style="font-weight: bold; color: #666;"> (Nessun premio)</span><br> <input type="checkbox" id="usa-gara-academy" onchange="gestisciCheckboxAcademy()"> <label for="usa-gara-academy">Somma premio Academy al totale del mese (<span id="valore-academy-box">0,00</span> €)</label> </p> 
                     <p>• <strong>Gara Standard:</strong> <br> Contratti EE/Gas totali: <span id="pezzi-totali" style="font-weight: bold; color: #0056b3;">0</span>. <span id="label-acceleratore" style="font-weight: bold; color: #b94a48;">Nessun bonus raggiunto (Soglia minima 8 pezzi).</span><br> <input type="checkbox" id="usa-gara-std" onchange="gestisciCheckboxStd()"> <label for="usa-gara-std">Somma bonus Gara Standard al totale del mese (<span id="valore-gara-box">0,00</span> €)</label> </p> 
                 </div> 
-                <p style="margin-top: 15px;">Maturazione Ricorrente Trimestrale Stimata: <span id="tot-ric-stimata">0,00</span> € (Genera <span id="tot-ric-annuale">0,00</span> € all'anno)</p> 
+                <p style="margin-top: 15px;">Maturazione Ricorrente Trimestrale Personale: <span id="tot-ric-stimata">0,00</span> € (Genera <span id="tot-ric-annuale">0,00</span> € all'anno)</p> 
                 <div class="box-proiezione"> 
-                    <h4>🔄 Liquidazione Ricorrente su Produzione Costante</h4> 
+                    <h4>🔄 Liquidazione Ricorrente Personale su Produzione Costante</h4> 
                     <p>Mantenendo questa produzione <strong>costante ogni mese</strong>:</p> 
                     <ul> 
                         <li><strong>Primo trimestre:</strong> <span id="ric-trim1">0,00</span> €</li> 
@@ -387,37 +391,45 @@
             globale_bonusGaraStd = 0; 
             globale_bonusGaraAcademy = 0; 
             
-            let ricMaturatoMese = 0; 
-            let volumeKwhLuceRete = 0; 
-            let volumeSmcGasRete = 0; 
+            let ricMaturatoMesePersonale = 0; 
+            let volumeKwhLuceTotale = 0; 
+            let volumeSmcGasTotale = 0; 
             
             document.getElementById('usa-gara-academy').checked = false; 
             document.getElementById('usa-gara-std').checked = false; 
 
-            // 1. LUCE DIRETTA 
+            // 1. LUCE DIRETTA (E calcolo volumi per Coordinator)
             const pRes = parseInt(document.getElementById('p-res').value) || 0; 
             const pResR = parseInt(document.getElementById('p-res-r').value) || 0; 
             globale_totDiretta_Base += (pRes * 50) + (pResR * 70); 
-            ricMaturatoMese += (pRes * 4) + (pResR * 4); 
+            ricMaturatoMesePersonale += (pRes * 4) + (pResR * 4); 
+            
+            // Ipotizziamo un consumo forfettario medio per i Residenziali diretti (es. 3000 kWh) ai fini del calcolo volume totale
+            volumeKwhLuceTotale += (pRes * 3000) + (pResR * 3000);
 
             const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business'); 
             let pezziLuceBus = bLuceInputs.length; 
             bLuceInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
                 globale_totDiretta_Base += getLuceGettone(val, 'diretta'); 
+                volumeKwhLuceTotale += val; // Sommiamo i consumi business diretti
             }); 
 
-            // 2. GAS DIRETTO 
+            // 2. GAS DIRETTO (E calcolo volumi per Coordinator)
             const gRes = parseInt(document.getElementById('g-res').value) || 0; 
             const gResR = parseInt(document.getElementById('g-res-r').value) || 0; 
             globale_totDiretta_Base += (gRes * 50) + (gResR * 70); 
-            ricMaturatoMese += (gRes * 4) + (gResR * 4); 
+            ricMaturatoMesePersonale += (gRes * 4) + (gResR * 4); 
+            
+            // Ipotizziamo un consumo forfettario medio per i Residenziali diretti (es. 1000 Smc) ai fini del calcolo volume totale
+            volumeSmcGasTotale += (gRes * 1000) + (gResR * 1000);
 
             const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business'); 
             let pezziGasBus = bGasInputs.length; 
             bGasInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
                 globale_totDiretta_Base += getGasGettone(val, 'diretta'); 
+                volumeSmcGasTotale += val; // Sommiamo i consumi business diretti
             }); 
 
             // 3. SKY DIRETTO 
@@ -440,7 +452,6 @@
 
             // --- CALCOLI RETE (SOLO COORDINATOR) --- 
             let indEeGasGettoni = 0, indSky = 0, indProd = 0, indVeri = 0; 
-            let ricIndEeGas = 0; 
 
             if (ruolo === 'coordinator') { 
                 // LUCE RETE
@@ -448,16 +459,14 @@
                 const piResKwh = parseFloat(document.getElementById('p-ind-res-kwh').value) || 0; 
                 if (piRes > 0) {
                     indEeGasGettoni += (piRes * 6); 
-                    volumeKwhLuceRete += piResKwh; 
-                    ricIndEeGas += piResKwh * 0.0005; 
+                    volumeKwhLuceTotale += piResKwh; 
                 }
 
                 const piResR = parseInt(document.getElementById('p-ind-resr').value) || 0; 
                 const piResRKwh = parseFloat(document.getElementById('p-ind-resr-kwh').value) || 0; 
                 if (piResR > 0) {
                     indEeGasGettoni += (piResR * 10); 
-                    volumeKwhLuceRete += piResRKwh; 
-                    ricIndEeGas += piResRKwh * 0.0005; 
+                    volumeKwhLuceTotale += piResRKwh; 
                 }
 
                 const piBusPezzi = parseInt(document.getElementById('p-ind-bus-pezzi').value) || 0;
@@ -466,8 +475,7 @@
                     let mediaKwh = piBusKwh / piBusPezzi;
                     let gettoneSingolo = getLuceGettone(mediaKwh, 'indiretta');
                     indEeGasGettoni += (gettoneSingolo * piBusPezzi);
-                    volumeKwhLuceRete += piBusKwh;
-                    ricIndEeGas += piBusKwh * 0.0005;
+                    volumeKwhLuceTotale += piBusKwh;
                 }
 
                 // GAS RETE
@@ -475,16 +483,14 @@
                 const giResSmc = parseFloat(document.getElementById('g-ind-res-smc').value) || 0; 
                 if (giRes > 0) {
                     indEeGasGettoni += (giRes * 6); 
-                    volumeSmcGasRete += giResSmc; 
-                    ricIndEeGas += giResSmc * 0.0035; 
+                    volumeSmcGasTotale += giResSmc; 
                 }
 
                 const giResR = parseInt(document.getElementById('g-ind-resr').value) || 0; 
                 const giResRSmc = parseFloat(document.getElementById('g-ind-resr-smc').value) || 0; 
                 if (giResR > 0) {
                     indEeGasGettoni += (giResR * 10); 
-                    volumeSmcGasRete += giResRSmc; 
-                    ricIndEeGas += giResRSmc * 0.0035; 
+                    volumeSmcGasTotale += giResRSmc; 
                 }
 
                 const giBusPezzi = parseInt(document.getElementById('g-ind-bus-pezzi').value) || 0;
@@ -493,8 +499,7 @@
                     let mediaSmc = giBusSmc / giBusPezzi;
                     let gettoneSingolo = getGasGettone(mediaSmc, 'indiretta');
                     indEeGasGettoni += (gettoneSingolo * giBusPezzi);
-                    volumeSmcGasRete += giBusSmc;
-                    ricIndEeGas += giBusSmc * 0.0035;
+                    volumeSmcGasTotale += giBusSmc;
                 }
 
                 // SKY & PRODOTTI RETE
@@ -511,16 +516,19 @@
                 }); 
 
                 indVeri = (parseInt(document.getElementById('verisure-ind-qta').value) || 0) * 8; 
-                volumeKwhLuceRete += parseFloat(document.getElementById('gwh-manuali').value) || 0; 
+                volumeKwhLuceTotale += parseFloat(document.getElementById('gwh-manuali').value) || 0; 
             } 
 
-            globale_totIndiretta = indEeGasGettoni + ricIndEeGas + indSky + indProd + indVeri; 
+            // IL RICORRENTE DEL COORDINATOR SI CALCOLA SUI VOLUMI TOTALI (Personale + Rete)
+            let ricIndEeGasCumulato = (volumeKwhLuceTotale * 0.0005) + (volumeSmcGasTotale * 0.0035);
+
+            globale_totIndiretta = indEeGasGettoni + ricIndEeGasCumulato + indSky + indProd + indVeri; 
 
             // Regola standard di conversione: 1 Smc = 4 kWh
-            let volumeTotaleInKwh = volumeKwhLuceRete + (volumeSmcGasRete * 4); 
+            let volumeTotaleInKwh = volumeKwhLuceTotale + (volumeSmcGasTotale * 4); 
             let volumeTotaleInGwh = volumeTotaleInKwh / 1000000; 
 
-            // NUOVI SCAGLIONI SALES COORDINATOR 2026
+            // NUOVI SCAGLIONI SALES COORDINATOR 2026 (Basati sul volume TOTALE Personale + Rete)
             if (ruolo === 'coordinator') { 
                 if (volumeTotaleInGwh >= 4) globale_contributo = 4000;
                 else if (volumeTotaleInGwh >= 3) globale_contributo = 2500;
@@ -580,7 +588,7 @@
             // Aggiornamento etichette Coordinator nel box risultati
             if (ruolo === 'coordinator') {
                 document.getElementById('ind-ee-gas').innerText = indEeGasGettoni.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-ind-ee-gas').innerText = ricIndEeGas.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-ind-ee-gas').innerText = ricIndEeGasCumulato.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ind-sky').innerText = indSky.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ind-prod').innerText = indProd.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ind-veri').innerText = indVeri.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -591,16 +599,16 @@
             document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-indiretta').innerText = globale_totIndiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
-            // --- LOGICA RICORRENTI RICHIESTA --- 
-            document.getElementById('tot-ric-stimata').innerText = ricMaturatoMese.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-            let ricAnnualeGenerato = ricMaturatoMese * 4; 
+            // --- LOGICA RICORRENTI PERSONALI RICHIESTA --- 
+            document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+            let ricAnnualeGenerato = ricMaturatoMesePersonale * 4; 
             document.getElementById('tot-ric-annuale').innerText = ricAnnualeGenerato.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
             // Applicazione formule slittamento mese per mese 
-            let q1 = ricMaturatoMese / 3; 
-            let q2 = ricMaturatoMese * 3; 
-            let q3 = ricMaturatoMese * 6; 
-            let q4 = ricMaturatoMese * 9; 
+            let q1 = ricMaturatoMesePersonale / 3; 
+            let q2 = ricMaturatoMesePersonale * 3; 
+            let q3 = ricMaturatoMesePersonale * 6; 
+            let q4 = ricMaturatoMesePersonale * 9; 
 
             document.getElementById('ric-trim1').innerText = q1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('ric-trim2').innerText = q2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
