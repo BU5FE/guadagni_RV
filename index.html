@@ -39,6 +39,8 @@
         .box-gare label { display: inline; font-weight: normal; cursor: pointer; } 
         .box-gare input[type="checkbox"] { transform: scale(1.2); margin-right: 5px; cursor: pointer; } 
         .noticine { font-size: 0.85rem; color: #666; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px; } 
+        .flex-inputs { display: flex; gap: 10px; } 
+        .flex-inputs div { flex: 1; } 
     </style> 
 </head> 
 <body> 
@@ -73,17 +75,25 @@
             <div class="coordinator-only" style="background-color: #fff9db; padding: 10px; border-radius: 4px; margin-top: 15px; border: 1px solid #ffeeba;"> 
                 <h4>👥 Produzione Indiretta Squadra</h4> 
                 <div class="input-row"> 
-                    <label>POD Residenziali Rete:</label> 
-                    <input type="number" id="p-ind-res" value="0" min="0"> 
+                    <label>POD Residenziali Rete (Pezzi e Consumo Tot.):</label> 
+                    <div class="flex-inputs"> 
+                        <div><input type="number" id="p-ind-res" value="0" min="0" placeholder="Num. POD"></div> 
+                        <div><input type="number" id="p-ind-res-kwh" value="0" min="0" placeholder="kWh Totali"></div> 
+                    </div> 
                 </div> 
                 <div class="input-row"> 
-                    <label>POD Residenziali R+ Rete:</label> 
-                    <input type="number" id="p-ind-resr" value="0" min="0"> 
+                    <label>POD Residenziali R+ Rete (Pezzi e Consumo Tot.):</label> 
+                    <div class="flex-inputs"> 
+                        <div><input type="number" id="p-ind-resr" value="0" min="0" placeholder="Num. POD"></div> 
+                        <div><input type="number" id="p-ind-resr-kwh" value="0" min="0" placeholder="kWh Totali"></div> 
+                    </div> 
                 </div> 
-                <div> 
-                    <label>POD Business Rete (Su Consumo):</label> 
-                    <div id="p-bus-ind-container" class="business-list"></div> 
-                    <button class="btn-add" style="background-color: #e67e22;" onclick="aggiungiRigaBusiness('p-bus-ind-container', 'kWh consumo annuo')">+ Aggiungi POD Business Rete</button> 
+                <div class="input-row"> 
+                    <label>POD Business Rete (Pezzi e Consumo Tot.):</label> 
+                    <div class="flex-inputs"> 
+                        <div><input type="number" id="p-ind-bus-pezzi" value="0" min="0" placeholder="Num. POD"></div> 
+                        <div><input type="number" id="p-ind-bus-kwh" value="0" min="0" placeholder="kWh Totali"></div> 
+                    </div> 
                 </div> 
             </div> 
         </div> 
@@ -105,17 +115,25 @@
             <div class="coordinator-only" style="background-color: #fff9db; padding: 10px; border-radius: 4px; margin-top: 15px; border: 1px solid #ffeeba;"> 
                 <h4>👥 Produzione Indiretta Squadra</h4> 
                 <div class="input-row"> 
-                    <label>PDR Residenziali Rete:</label> 
-                    <input type="number" id="g-ind-res" value="0" min="0"> 
+                    <label>PDR Residenziali Rete (Pezzi e Consumo Tot.):</label> 
+                    <div class="flex-inputs"> 
+                        <div><input type="number" id="g-ind-res" value="0" min="0" placeholder="Num. PDR"></div> 
+                        <div><input type="number" id="g-ind-res-smc" value="0" min="0" placeholder="Smc Totali"></div> 
+                    </div> 
                 </div> 
                 <div class="input-row"> 
-                    <label>PDR Residenziali R+ Rete:</label> 
-                    <input type="number" id="g-ind-resr" value="0" min="0"> 
+                    <label>PDR Residenziali R+ Rete (Pezzi e Consumo Tot.):</label> 
+                    <div class="flex-inputs"> 
+                        <div><input type="number" id="g-ind-resr" value="0" min="0" placeholder="Num. PDR"></div> 
+                        <div><input type="number" id="g-ind-resr-smc" value="0" min="0" placeholder="Smc Totali"></div> 
+                    </div> 
                 </div> 
-                <div> 
-                    <label>PDR Business Rete (Su Consumo):</label> 
-                    <div id="g-bus-ind-container" class="business-list"></div> 
-                    <button class="btn-add" style="background-color: #e67e22;" onclick="aggiungiRigaBusiness('g-bus-ind-container', 'Smc consumo annuo')">+ Aggiungi PDR Business Rete</button> 
+                <div class="input-row"> 
+                    <label>PDR Business Rete (Pezzi e Consumo Tot.):</label> 
+                    <div class="flex-inputs"> 
+                        <div><input type="number" id="g-ind-bus-pezzi" value="0" min="0" placeholder="Num. PDR"></div> 
+                        <div><input type="number" id="g-ind-bus-smc" value="0" min="0" placeholder="Smc Totali"></div> 
+                    </div> 
                 </div> 
             </div> 
         </div> 
@@ -425,32 +443,61 @@
             let ricIndEeGas = 0; 
 
             if (ruolo === 'coordinator') { 
+                // LUCE RETE
                 const piRes = parseInt(document.getElementById('p-ind-res').value) || 0; 
+                const piResKwh = parseFloat(document.getElementById('p-ind-res-kwh').value) || 0; 
+                if (piRes > 0) {
+                    indEeGasGettoni += (piRes * 6); 
+                    volumeKwhLuceRete += piResKwh; 
+                    ricIndEeGas += piResKwh * 0.0005; 
+                }
+
                 const piResR = parseInt(document.getElementById('p-ind-resr').value) || 0; 
-                indEeGasGettoni += (piRes * 6) + (piResR * 10); 
-                volumeKwhLuceRete += (piRes * 3000 + piResR * 3000); 
-                ricIndEeGas += (piRes * 3000 + piResR * 3000) * 0.0005; 
+                const piResRKwh = parseFloat(document.getElementById('p-ind-resr-kwh').value) || 0; 
+                if (piResR > 0) {
+                    indEeGasGettoni += (piResR * 10); 
+                    volumeKwhLuceRete += piResRKwh; 
+                    ricIndEeGas += piResRKwh * 0.0005; 
+                }
 
-                document.querySelectorAll('#p-bus-ind-container .consumo-business').forEach(input => { 
-                    const val = parseFloat(input.value) || 0; 
-                    indEeGasGettoni += getLuceGettone(val, 'indiretta'); 
-                    volumeKwhLuceRete += val; 
-                    ricIndEeGas += val * 0.0005; 
-                }); 
+                const piBusPezzi = parseInt(document.getElementById('p-ind-bus-pezzi').value) || 0;
+                const piBusKwh = parseFloat(document.getElementById('p-ind-bus-kwh').value) || 0;
+                if (piBusPezzi > 0) {
+                    let mediaKwh = piBusKwh / piBusPezzi;
+                    let gettoneSingolo = getLuceGettone(mediaKwh, 'indiretta');
+                    indEeGasGettoni += (gettoneSingolo * piBusPezzi);
+                    volumeKwhLuceRete += piBusKwh;
+                    ricIndEeGas += piBusKwh * 0.0005;
+                }
 
+                // GAS RETE
                 const giRes = parseInt(document.getElementById('g-ind-res').value) || 0; 
+                const giResSmc = parseFloat(document.getElementById('g-ind-res-smc').value) || 0; 
+                if (giRes > 0) {
+                    indEeGasGettoni += (giRes * 6); 
+                    volumeSmcGasRete += giResSmc; 
+                    ricIndEeGas += giResSmc * 0.0035; 
+                }
+
                 const giResR = parseInt(document.getElementById('g-ind-resr').value) || 0; 
-                indEeGasGettoni += (giRes * 6) + (giResR * 10); 
-                volumeSmcGasRete += (giRes * 1000 + giResR * 1000); 
-                ricIndEeGas += (giRes * 1000 + giResR * 1000) * 0.0035; 
+                const giResRSmc = parseFloat(document.getElementById('g-ind-resr-smc').value) || 0; 
+                if (giResR > 0) {
+                    indEeGasGettoni += (giResR * 10); 
+                    volumeSmcGasRete += giResRSmc; 
+                    ricIndEeGas += giResRSmc * 0.0035; 
+                }
 
-                document.querySelectorAll('#g-bus-ind-container .consumo-business').forEach(input => { 
-                    const val = parseFloat(input.value) || 0; 
-                    indEeGasGettoni += getGasGettone(val, 'indiretta'); 
-                    volumeSmcGasRete += val; 
-                    ricIndEeGas += val * 0.0035; 
-                }); 
+                const giBusPezzi = parseInt(document.getElementById('g-ind-bus-pezzi').value) || 0;
+                const giBusSmc = parseFloat(document.getElementById('g-ind-bus-smc').value) || 0;
+                if (giBusPezzi > 0) {
+                    let mediaSmc = giBusSmc / giBusPezzi;
+                    let gettoneSingolo = getGasGettone(mediaSmc, 'indiretta');
+                    indEeGasGettoni += (gettoneSingolo * giBusPezzi);
+                    volumeSmcGasRete += giBusSmc;
+                    ricIndEeGas += giBusSmc * 0.0035;
+                }
 
+                // SKY & PRODOTTI RETE
                 document.querySelectorAll('#sky-ind-container .business-item').forEach(riga => { 
                     const tipo = riga.querySelector('.tipo-sky').value; 
                     const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
