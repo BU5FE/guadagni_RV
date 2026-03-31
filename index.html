@@ -3,438 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulatore Avanzato Coordinator 2026 - Futur Energy</title>
+    <title>Simulatore Coordinator 2026 PRO - Futur Energy</title>
     
     <style>
+        /* CSS AVANZATO (Circa 180 righe) */
         :root {
-            --primary: #0056b3;
-            --secondary: #28a745;
-            --accent: #fd7e14;
-            --bg: #f0f2f5;
+            --primary-color: #004a99;
+            --secondary-color: #2ecc71;
+            --accent-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-dark: #2c3e50;
+            --bg-light: #f4f7f6;
             --white: #ffffff;
-            --text: #333;
-            --shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             margin: 0;
-            padding: 20px;
-            line-height: 1.6;
+            padding: 0;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: var(--white);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: var(--shadow);
-        }
-
-        header {
+        .navbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
             text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 3px solid var(--primary);
-            padding-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .logo {
-            max-width: 280px;
-            height: auto;
-        }
-
-        h1 { color: var(--primary); margin: 10px 0 5px; font-size: 1.8rem; }
-        h2 { color: var(--primary); border-left: 5px solid var(--primary); padding-left: 15px; margin-top: 30px; font-size: 1.4rem; background: #f8f9fa; padding-top: 10px; padding-bottom: 10px; }
-        h3 { color: var(--accent); font-size: 1.1rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-
-        .grid {
+        .main-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        @media (max-width: 850px) {
-            .grid { grid-template-columns: 1fr; }
-        }
-
-        .section-card {
-            background: #fff;
-            border: 1px solid #e1e4e8;
-            border-radius: 10px;
-            padding: 20px;
-            transition: transform 0.2s;
-        }
-
-        .section-card:hover { border-color: var(--primary); }
-
-        .input-group {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-            color: #555;
-        }
-
-        input[type="number"] {
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0,86,179,0.1);
-        }
-
-        /* Sezione Prodotti Fisici */
-        .physical-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        /* Bottone Calcolo */
-        .calc-wrapper {
-            text-align: center;
-            margin: 50px 0;
-        }
-
-        .btn-main {
-            background: var(--secondary);
-            color: white;
-            padding: 20px 60px;
-            font-size: 1.4rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(40,167,69,0.3);
-            transition: all 0.3s;
-        }
-
-        .btn-main:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(40,167,69,0.4);
-            background: #218838;
-        }
-
-        /* Risultati */
-        #results-area {
-            display: none;
-            margin-top: 40px;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .res-summary {
-            background: #e7f3ff;
-            border: 2px solid var(--primary);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .res-summary h2 { background: none; border: none; font-size: 2.2rem; margin: 0; }
-        .euro-sign { font-size: 1.5rem; color: #555; }
-
-        .details-box {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
 
-        .detail-card {
-            background: #fdfdfd;
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 10px;
+        @media (max-width: 992px) {
+            .main-container { grid-template-columns: 1fr; }
         }
 
-        .detail-card h4 { margin: 0 0 15px; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        
-        .val-row {
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .card-gas { border-top-color: var(--accent-color); }
+        .card-tech { border-top-color: var(--secondary-color); }
+
+        h2 { margin-top: 0; color: var(--primary-color); border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        h3 { font-size: 1.1rem; color: #555; margin-bottom: 15px; background: #f9f9f9; padding: 8px; border-radius: 5px; }
+
+        .input-row {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
+            margin-bottom: 12px;
+            gap: 10px;
         }
 
-        .val-row span:last-child { font-weight: bold; }
+        .input-row label { flex: 1; font-weight: 600; font-size: 0.9rem; }
+        .input-row input {
+            width: 120px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1rem;
+        }
 
-        .highlight-green { color: var(--secondary); }
-        .highlight-orange { color: var(--accent); }
+        input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 5px rgba(0,74,153,0.2); }
 
-        .volume-meter {
-            background: #fff3cd;
-            border: 1px solid #ffeeba;
+        .btn-calculate {
+            grid-column: 1 / -1;
+            background: var(--secondary-color);
+            color: white;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(46,204,113,0.3);
+        }
+
+        .btn-calculate:hover { background: #27ae60; transform: translateY(-2px); }
+
+        /* AREA RISULTATI */
+        .results-panel {
+            grid-column: 1 / -1;
+            display: none;
+            background: var(--white);
+            border-radius: 15px;
+            padding: 40px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
             padding: 20px;
             border-radius: 10px;
-            margin-top: 20px;
             text-align: center;
+            border: 1px solid #eee;
         }
 
-        .footer-note {
-            margin-top: 50px;
-            font-size: 0.8rem;
-            color: #888;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
+        .stat-box label { display: block; font-size: 0.8rem; color: #777; text-transform: uppercase; margin-bottom: 10px; }
+        .stat-box span { font-size: 1.6rem; font-weight: bold; color: var(--primary-color); }
+
+        .bonus-highlight { background: #fff9e6; border: 2px solid var(--accent-color); }
+        .bonus-highlight span { color: #d35400; }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .breakdown-table th { background: #f4f4f4; text-align: left; padding: 12px; font-size: 0.9rem; }
+        .breakdown-table td { padding: 12px; border-bottom: 1px solid #eee; }
+
+        /* BARRA PROGRESSO GWh */
+        .progress-container {
+            margin: 30px 0;
+            background: #eee;
+            border-radius: 20px;
+            height: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+
+        .progress-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: #333;
+            font-size: 0.85rem;
+        }
+
+        .print-btn {
+            margin-top: 20px;
+            background: #34495e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        @media print {
+            .navbar, .btn-calculate, .print-btn, .main-container { display: none; }
+            .results-panel { display: block !important; position: absolute; top: 0; width: 100%; box-shadow: none; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <img src="https://via.placeholder.com/280x80?text=Futur+Energy" alt="Logo FuturEnergy" class="logo">
-        <h1>Simulatore Compensi Coordinator 2026</h1>
-        <p>Targeting & Overrides - Canale Standard</p>
-    </header>
+<div class="navbar">
+    <h1>FUTUR ENERGY - Simulator Coordinator 2026 (v.01/26)</h1>
+</div>
 
-    <h2>⚡ Energia Elettrica</h2>
-    <div class="grid">
-        <div class="section-card">
-            <h3>Produzione Diretta (Tua)</h3>
-            <div class="input-group"><label>POD Residenziali</label><input type="number" id="ee_dir_res" value="0"></div>
-            <div class="input-group"><label>POD Residenziali R+</label><input type="number" id="ee_dir_resr" value="0"></div>
-            <div class="input-group"><label>POD Business (Pezzi totali)</label><input type="number" id="ee_dir_bus_pz" value="0"></div>
-            <div class="input-group"><label>Volume Business (kWh totali)</label><input type="number" id="ee_dir_bus_vol" value="0"></div>
-        </div>
-        <div class="section-card" style="background: #f0f7ff;">
-            <h3>Produzione Rete (Squadra)</h3>
-            <div class="input-group"><label>POD Residenziali Rete</label><input type="number" id="ee_ind_res" value="0"></div>
-            <div class="input-group"><label>POD Residenziali R+ Rete</label><input type="number" id="ee_ind_resr" value="0"></div>
-            <div class="input-group"><label>POD Business Rete (Pezzi)</label><input type="number" id="ee_ind_bus_pz" value="0"></div>
-            <div class="input-group"><label>Volume Business Rete (kWh)</label><input type="number" id="ee_ind_bus_vol" value="0"></div>
-        </div>
+<div class="main-container">
+    
+    <div class="card">
+        <h2>⚡ Energia Elettrica</h2>
+        
+        <h3>Produzione Diretta (Tua)</h3>
+        <div class="input-row"><label>POD Residenziali:</label><input type="number" id="ee_dir_res" value="0" min="0"></div>
+        <div class="input-row"><label>POD Residenziali R+:</label><input type="number" id="ee_dir_resr" value="0" min="0"></div>
+        <div class="input-row"><label>Pezzi Business:</label><input type="number" id="ee_dir_bus_pz" value="0" min="0"></div>
+        <div class="input-row"><label>Volume Totale Business (kWh):</label><input type="number" id="ee_dir_bus_vol" value="0" min="0"></div>
+
+        <h3>Produzione Rete (Squadra)</h3>
+        <div class="input-row"><label>POD Residenziali Rete:</label><input type="number" id="ee_ind_res" value="0" min="0"></div>
+        <div class="input-row"><label>POD Residenziali R+ Rete:</label><input type="number" id="ee_ind_resr" value="0" min="0"></div>
+        <div class="input-row"><label>Pezzi Business Rete:</label><input type="number" id="ee_ind_bus_pz" value="0" min="0"></div>
+        <div class="input-row"><label>Volume Business Rete (kWh):</label><input type="number" id="ee_ind_bus_vol" value="0" min="0"></div>
     </div>
 
-    <h2>🔥 Gas Naturale</h2>
-    <div class="grid">
-        <div class="section-card">
-            <h3>Produzione Diretta (Tua)</h3>
-            <div class="input-group"><label>PDR Residenziali</label><input type="number" id="gas_dir_res" value="0"></div>
-            <div class="input-group"><label>PDR Residenziali R+</label><input type="number" id="gas_dir_resr" value="0"></div>
-            <div class="input-group"><label>PDR Business (Pezzi totali)</label><input type="number" id="gas_dir_bus_pz" value="0"></div>
-            <div class="input-group"><label>Volume Business (Smc totali)</label><input type="number" id="gas_dir_bus_vol" value="0"></div>
-        </div>
-        <div class="section-card" style="background: #fffcf0;">
-            <h3>Produzione Rete (Squadra)</h3>
-            <div class="input-group"><label>PDR Residenziali Rete</label><input type="number" id="gas_ind_res" value="0"></div>
-            <div class="input-group"><label>PDR Residenziali R+ Rete</label><input type="number" id="gas_ind_resr" value="0"></div>
-            <div class="input-group"><label>PDR Business Rete (Pezzi)</label><input type="number" id="gas_ind_bus_pz" value="0"></div>
-            <div class="input-group"><label>Volume Business Rete (Smc)</label><input type="number" id="gas_ind_bus_vol" value="0"></div>
-        </div>
+    <div class="card card-gas">
+        <h2>🔥 Gas Naturale</h2>
+        
+        <h3>Produzione Diretta (Tua)</h3>
+        <div class="input-row"><label>PDR Residenziali:</label><input type="number" id="gas_dir_res" value="0" min="0"></div>
+        <div class="input-row"><label>PDR Residenziali R+:</label><input type="number" id="gas_dir_resr" value="0" min="0"></div>
+        <div class="input-row"><label>Pezzi Business:</label><input type="number" id="gas_dir_bus_pz" value="0" min="0"></div>
+        <div class="input-row"><label>Volume Totale Business (Smc):</label><input type="number" id="gas_dir_bus_vol" value="0" min="0"></div>
+
+        <h3>Produzione Rete (Squadra)</h3>
+        <div class="input-row"><label>PDR Residenziali Rete:</label><input type="number" id="gas_ind_res" value="0" min="0"></div>
+        <div class="input-row"><label>PDR Residenziali R+ Rete:</label><input type="number" id="gas_ind_resr" value="0" min="0"></div>
+        <div class="input-row"><label>Pezzi Business Rete:</label><input type="number" id="gas_ind_bus_pz" value="0" min="0"></div>
+        <div class="input-row"><label>Volume Business Rete (Smc):</label><input type="number" id="gas_ind_bus_vol" value="0" min="0"></div>
     </div>
 
-    <h2>🛠️ Prodotti Fisici & Servizi</h2>
-    <div class="section-card">
-        <div class="physical-grid">
-            <div class="input-group"><label>Fotovoltaico (kWp totali)</label><input type="number" id="prod_fv" value="0"></div>
-            <div class="input-group"><label>Caldaie (Pezzi)</label><input type="number" id="prod_caldaie" value="0"></div>
-            <div class="input-group"><label>Climatizzatori (Pezzi)</label><input type="number" id="prod_clima" value="0"></div>
-            <div class="input-group"><label>Pompe di Calore (Pz)</label><input type="number" id="prod_pompe" value="0"></div>
-            <div class="input-group"><label>Wallbox / Colonnine</label><input type="number" id="prod_wallbox" value="0"></div>
-            <div class="input-group"><label>Contratti SKY</label><input type="number" id="prod_sky" value="0"></div>
-        </div>
-        <div class="physical-grid" style="border-top: 1px dashed #ccc; margin-top: 20px; padding-top: 20px;">
-            <div class="input-group"><label>FV Squadra (kWp)</label><input type="number" id="prod_fv_ind" value="0"></div>
-            <div class="input-group"><label>Caldaie Squadra</label><input type="number" id="prod_caldaie_ind" value="0"></div>
-            <div class="input-group"><label>Clima Squadra</label><input type="number" id="prod_clima_ind" value="0"></div>
-            <div class="input-group"><label>Sky Squadra</label><input type="number" id="prod_sky_ind" value="0"></div>
-        </div>
+    <div class="card card-tech">
+        <h2>🛠️ Prodotti Tecnici (Pag. 4)</h2>
+        <h3>Produzione Personale</h3>
+        <div class="input-row"><label>Fotovoltaico (kWp):</label><input type="number" id="tech_fv_dir" value="0" step="0.1"></div>
+        <div class="input-row"><label>Pompe di Calore (Pz):</label><input type="number" id="tech_pom_dir" value="0"></div>
+        <div class="input-row"><label>Caldaie (Pz):</label><input type="number" id="tech_cal_dir" value="0"></div>
+        <div class="input-row"><label>Climatizzatori (Pz):</label><input type="number" id="tech_cli_dir" value="0"></div>
+        <div class="input-row"><label>Sky (Pz):</label><input type="number" id="tech_sky_dir" value="0"></div>
+        
+        <h3>Overriding Squadra</h3>
+        <div class="input-row"><label>Fotovoltaico (kWp):</label><input type="number" id="tech_fv_ind" value="0"></div>
+        <div class="input-row"><label>Pompe di Calore (Pz):</label><input type="number" id="tech_pom_ind" value="0"></div>
+        <div class="input-row"><label>Caldaie (Pz):</label><input type="number" id="tech_cal_ind" value="0"></div>
+        <div class="input-row"><label>Sky (Pz):</label><input type="number" id="tech_sky_ind" value="0"></div>
     </div>
 
-    <div class="calc-wrapper">
-        <button class="btn-main" onclick="elaboraSimulazione()">CALCOLA COMPENSI</button>
-    </div>
+    <button class="btn-calculate" onclick="calcolaTutto()">GENERA REPORT MENSILE</button>
 
-    <div id="results-area">
-        <div class="res-summary">
-            <p>Guadagno Totale Stimato</p>
-            <h2 id="final_total">0,00</h2>
-            <span class="euro-sign">Euro / Mese</span>
-        </div>
-
-        <div class="details-box">
-            <div class="detail-card">
-                <h4>💎 Commodity (EE & Gas)</h4>
-                <div class="val-row"><span>Gettoni Diretti:</span><span id="res_get_dir">0,00 €</span></div>
-                <div class="val-row"><span>Bonus Accessori (RID/WEB):</span><span id="res_acc_dir">0,00 €</span></div>
-                <div class="val-row"><span>Overriding Squadra:</span><span id="res_over_ind">0,00 €</span></div>
-                <div class="val-row"><span>Ricorrente Mensile:</span><span id="res_ric_ind">0,00 €</span></div>
+    <div class="results-panel" id="results-area">
+        <h2>📊 Report Compensi Coordinatore</h2>
+        
+        <div class="summary-grid">
+            <div class="stat-box bonus-highlight">
+                <label>Total GWh (Target)</label>
+                <span id="res_gwh_tot">0,000</span>
             </div>
-
-            <div class="detail-card">
-                <h4>📦 Prodotti & Servizi</h4>
-                <div class="val-row"><span>Margine Diretto:</span><span id="res_fis_dir">0,00 €</span></div>
-                <div class="val-row"><span>Margine Indiretto:</span><span id="res_fis_ind">0,00 €</span></div>
-                <div class="val-row"><span>Bonus Sky:</span><span id="res_sky_tot">0,00 €</span></div>
+            <div class="stat-box">
+                <label>Compensi Diretti</label>
+                <span id="res_diretta_tot">0,00 €</span>
             </div>
-
-            <div class="detail-card" style="background: #fff4e6; border-color: #ffd8a8;">
-                <h4>🏆 Bonus Coordinator</h4>
-                <div class="val-row"><span>Volume GWh (EE + Gas*4):</span><span id="res_vol_gwh">0,000</span></div>
-                <div class="val-row" style="font-size: 1.2rem; margin-top: 10px;"><span>Contributo Fisso:</span><span id="res_bonus_target" class="highlight-orange">0,00 €</span></div>
+            <div class="stat-box">
+                <label>Overriding Rete</label>
+                <span id="res_rete_tot">0,00 €</span>
+            </div>
+            <div class="stat-box bonus-highlight">
+                <label>GUADAGNO TOTALE</label>
+                <span id="res_finale_tot">0,00 €</span>
             </div>
         </div>
 
-        <div class="volume-meter">
-            <p><strong>Status Obiettivo:</strong> Per la soglia successiva mancano <span id="missing_vol">---</span> GWh</p>
+        <h3>Avanzamento Obiettivo Bonus Coordinatore</h3>
+        <div class="progress-container">
+            <div class="progress-bar" id="res_progress"></div>
+            <div class="progress-label" id="res_progress_txt">0% del Target</div>
         </div>
-    </div>
+        <p id="res_next_step" style="font-weight: bold; text-align: center;"></p>
 
-    <div class="footer-note">
-        <p>Simulator V2.6 - Conforme a Mandato Coordinator 2026 (Pag 1-6). Calcoli basati su medie di consumo standard: Residenziale 2000kWh/1000Smc. Note: La regola dello storno si applica entro 180 giorni.</p>
+        <h3>Breakdown Analitico</h3>
+        <table class="breakdown-table">
+            <thead>
+                <tr><th>Voce di Compenso</th><th>Luce</th><th>Gas</th><th>Altro</th><th>Totale</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Gettoni Diretti</td><td id="b_ee_get_dir">0</td><td id="b_gas_get_dir">0</td><td>-</td><td id="t_get_dir">0</td></tr>
+                <tr><td>Bonus RID/WEB/Ric. Trim.</td><td id="b_ee_bonus_dir">0</td><td id="b_gas_bonus_dir">0</td><td>-</td><td id="t_bonus_dir">0</td></tr>
+                <tr><td>Overriding Rete (Gettone)</td><td id="b_ee_over_ind">0</td><td id="b_gas_over_ind">0</td><td>-</td><td id="t_over_ind">0</td></tr>
+                <tr><td>Ricorrente Mensile Portfolio</td><td id="b_ee_ric_ind">0</td><td id="b_gas_ric_ind">0</td><td>-</td><td id="t_ric_ind">0</td></tr>
+                <tr><td>Prodotti Tecnici / Sky</td><td>-</td><td>-</td><td id="b_tech_tot">0</td><td id="t_tech_tot">0</td></tr>
+                <tr style="background: #fdfdfd; font-weight: bold;">
+                    <td>Contributo Fisso Target (Pag. 6)</td><td>-</td><td>-</td><td>-</td><td id="t_fisso_target">0</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button class="print-btn" onclick="window.print()">Salva PDF / Stampa</button>
     </div>
 </div>
 
 <script>
-    // TABELLE PROVVIGIONALI (Mappatura completa fasce Business p. 1 e 2)
-    const TAB_EE_DIR = [
-        {lim: 5000, get: 50, ric: 10, rid: 10, web: 3, over: 8},
-        {lim: 10000, get: 65, ric: 12.5, rid: 10, web: 3, over: 10},
-        {lim: 25000, get: 85, ric: 15, rid: 10, web: 3, over: 12},
-        {lim: 50000, get: 135, ric: 16.5, rid: 10, web: 3, over: 15},
-        {lim: 100000, get: 185, ric: 20, rid: 10, web: 3, over: 20},
-        {lim: 300000, get: 225, ric: 25, rid: 10, web: 3, over: 25},
-        {lim: 500000, get: 275, ric: 35, rid: 10, web: 3, over: 35},
-        {lim: 700000, get: 300, ric: 40, rid: 10, web: 3, over: 40},
-        {lim: Infinity, get: 350, ric: 50, rid: 10, web: 3, over: 50}
+    /* LOGICA DI CALCOLO INTEGRALE (Circa 350 righe JS) */
+
+    // TABELLE FASCE CANALE STANDARD (Mappatura Analitica Mandato)
+    const TIER_EE = [
+        { max: 5000, get: 50, ric: 10, over: 8 },
+        { max: 10000, get: 65, ric: 12.5, over: 10 },
+        { max: 25000, get: 85, ric: 15, over: 12 },
+        { max: 50000, get: 135, ric: 16.5, over: 15 },
+        { max: 100000, get: 185, ric: 20, over: 20 },
+        { max: 300000, get: 225, ric: 25, over: 25 },
+        { max: 500000, get: 275, ric: 35, over: 35 },
+        { max: 700000, get: 300, ric: 40, over: 40 },
+        { max: Infinity, get: 350, ric: 50, over: 50 }
     ];
 
-    const TAB_GAS_DIR = [
-        {lim: 1500, get: 40, ric: 10, rid: 10, web: 3, over: 8},
-        {lim: 5000, get: 55, ric: 12.5, rid: 10, web: 3, over: 9},
-        {lim: 10000, get: 75, ric: 15, rid: 10, web: 3, over: 10},
-        {lim: 20000, get: 125, ric: 16.5, rid: 10, web: 3, over: 15},
-        {lim: 30000, get: 185, ric: 20, rid: 10, web: 3, over: 20},
-        {lim: 100000, get: 225, ric: 25, rid: 10, web: 3, over: 25},
-        {lim: 200000, get: 275, ric: 35, rid: 10, web: 3, over: 35},
-        {lim: 300000, get: 300, ric: 40, rid: 10, web: 3, over: 40},
-        {lim: 400000, get: 350, ric: 50, rid: 10, web: 3, over: 50},
-        {lim: Infinity, get: 500, ric: 60, rid: 10, web: 3, over: 60}
+    const TIER_GAS = [
+        { max: 1500, get: 40, ric: 10, over: 8 },
+        { max: 5000, get: 55, ric: 12.5, over: 9 },
+        { max: 10000, get: 75, ric: 15, over: 10 },
+        { max: 20000, get: 125, ric: 16.5, over: 15 },
+        { max: 30000, get: 185, ric: 20, over: 20 },
+        { max: 100000, get: 225, ric: 25, over: 25 },
+        { max: 200000, get: 275, ric: 35, over: 35 },
+        { max: 300000, get: 300, ric: 40, over: 40 },
+        { max: 400000, get: 350, ric: 50, over: 50 },
+        { max: Infinity, get: 500, ric: 60, over: 60 }
     ];
 
-    function getFascia(val, tabella) {
-        return tabella.find(f => val <= f.lim);
+    function trovaFascia(valore, tabella) {
+        return tabella.find(t => valore <= t.max);
     }
 
-    function elaboraSimulazione() {
-        // --- Input Luce ---
-        const eDRes = parseFloat(document.getElementById('ee_dir_res').value) || 0;
-        const eDResR = parseFloat(document.getElementById('ee_dir_resr').value) || 0;
-        const eDBusPz = parseFloat(document.getElementById('ee_dir_bus_pz').value) || 0;
-        const eDBusVol = parseFloat(document.getElementById('ee_dir_bus_vol').value) || 0;
+    function formatCur(val) { return val.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' }); }
 
-        const eIRes = parseFloat(document.getElementById('ee_ind_res').value) || 0;
-        const eIResR = parseFloat(document.getElementById('ee_ind_resr').value) || 0;
-        const eIBusPz = parseFloat(document.getElementById('ee_ind_bus_pz').value) || 0;
-        const eIBusVol = parseFloat(document.getElementById('ee_ind_bus_vol').value) || 0;
+    function calcolaTutto() {
+        // --- 1. ACQUISIZIONE DATI ---
+        const d_ee_res = parseInt(document.getElementById('ee_dir_res').value) || 0;
+        const d_ee_resr = parseInt(document.getElementById('ee_dir_resr').value) || 0;
+        const d_ee_bpz = parseInt(document.getElementById('ee_dir_bus_pz').value) || 0;
+        const d_ee_bvol = parseFloat(document.getElementById('ee_dir_bus_vol').value) || 0;
 
-        // --- Input Gas ---
-        const gDRes = parseFloat(document.getElementById('gas_dir_res').value) || 0;
-        const gDResR = parseFloat(document.getElementById('gas_dir_resr').value) || 0;
-        const gDBusPz = parseFloat(document.getElementById('gas_dir_bus_pz').value) || 0;
-        const gDBusVol = parseFloat(document.getElementById('gas_dir_bus_vol').value) || 0;
+        const i_ee_res = parseInt(document.getElementById('ee_ind_res').value) || 0;
+        const i_ee_resr = parseInt(document.getElementById('ee_ind_resr').value) || 0;
+        const i_ee_bpz = parseInt(document.getElementById('ee_ind_bus_pz').value) || 0;
+        const i_ee_bvol = parseFloat(document.getElementById('ee_ind_bus_vol').value) || 0;
 
-        const gIRes = parseFloat(document.getElementById('gas_ind_res').value) || 0;
-        const gIResR = parseFloat(document.getElementById('gas_ind_resr').value) || 0;
-        const gIBusPz = parseFloat(document.getElementById('gas_ind_bus_pz').value) || 0;
-        const gIBusVol = parseFloat(document.getElementById('gas_ind_bus_vol').value) || 0;
+        const d_gas_res = parseInt(document.getElementById('gas_dir_res').value) || 0;
+        const d_gas_resr = parseInt(document.getElementById('gas_dir_resr').value) || 0;
+        const d_gas_bpz = parseInt(document.getElementById('gas_dir_bus_pz').value) || 0;
+        const d_gas_bvol = parseFloat(document.getElementById('gas_dir_bus_vol').value) || 0;
 
-        // --- Calcolo Volumi per Target GWh (Regola Gas x 4) ---
-        // Media Residenziale Luce: 2000 kWh | Media Gas: 1000 Smc
-        let volLuceTeam = (eDRes + eDResR + eIRes + eIResR) * 2000 + eDBusVol + eIBusVol;
-        let volGasTeam = (gDRes + gDResR + gIRes + gIResR) * 1000 + gDBusVol + gIBusVol;
+        const i_gas_res = parseInt(document.getElementById('gas_ind_res').value) || 0;
+        const i_gas_resr = parseInt(document.getElementById('gas_ind_resr').value) || 0;
+        const i_gas_bpz = parseInt(document.getElementById('gas_ind_bus_pz').value) || 0;
+        const i_gas_bvol = parseFloat(document.getElementById('gas_ind_bus_vol').value) || 0;
+
+        // --- 2. CALCOLO VOLUMI (REGOLA GAS X 4) ---
+        // Medie residenziali standard: Luce 2000 kWh, Gas 1000 Smc
+        let vol_ee_tot = d_ee_bvol + i_ee_bvol + ((d_ee_res + d_ee_resr + i_ee_res + i_ee_resr) * 2000);
+        let vol_gas_tot = d_gas_bvol + i_gas_bvol + ((d_gas_res + d_gas_resr + i_gas_res + i_gas_resr) * 1000);
         
-        let volumeGwh = (volLuceTeam + (volGasTeam * 4)) / 1000000;
+        let target_gwh = (vol_ee_tot + (vol_gas_tot * 4)) / 1000000;
 
-        // --- Compensi Commodity Diretti ---
-        let gettoniDiretti = (eDRes * 50) + (eDResR * 70) + (gDRes * 50) + (gDResR * 70);
-        let bonusAccDiretti = (eDRes * 16) + (eDResR * 16) + (gDRes * 14) + (gDResR * 16); // RID+WEB+Ricorrente
+        // --- 3. COMPENSI LUCE ---
+        let ee_get_dir = (d_ee_res * 50) + (d_ee_resr * 70);
+        let ee_bonus_dir = (d_ee_res * 16) + (d_ee_resr * 16); // RID 6 + WEB 6 + RIC 4
 
-        // Business Diretti (Luce)
-        if (eDBusPz > 0) {
-            let fascia = getFascia(eDBusVol/eDBusPz, TAB_EE_DIR);
-            gettoniDiretti += eDBusPz * fascia.get;
-            bonusAccDiretti += eDBusPz * (fascia.rid + fascia.web);
-        }
-        // Business Diretti (Gas)
-        if (gDBusPz > 0) {
-            let fascia = getFascia(gDBusVol/gDBusPz, TAB_GAS_DIR);
-            gettoniDiretti += gDBusPz * fascia.get;
-            bonusAccDiretti += gDBusPz * (fascia.rid + fascia.web);
+        if(d_ee_bpz > 0) {
+            let f = trovaFascia(d_ee_bvol/d_ee_bpz, TIER_EE);
+            ee_get_dir += (d_ee_bpz * f.get);
+            ee_bonus_dir += (d_ee_bpz * 13); // RID 10 + WEB 3 (Business)
         }
 
-        // --- Compensi Commodity Indiretti (Overriding) ---
-        let overIndiretto = (eIRes * 6) + (eIResR * 10) + (gIRes * 6) + (gIResR * 10);
+        let ee_over_ind = (i_ee_res * 6) + (i_ee_resr * 10) + (d_ee_res * 6) + (d_ee_resr * 10);
+        if((d_ee_bpz + i_ee_bpz) > 0) {
+            let media = (d_ee_bvol + i_ee_bvol) / (d_ee_bpz + i_ee_bpz);
+            ee_over_ind += ((d_ee_bpz + i_ee_bpz) * trovaFascia(media, TIER_EE).over);
+        }
+
+        let ee_ric_ind = vol_ee_tot * 0.0005; // Pag. 5 ($0.50/MWh$)
+
+        // --- 4. COMPENSI GAS ---
+        let gas_get_dir = (d_gas_res * 50) + (d_gas_resr * 70);
+        let gas_bonus_dir = (d_gas_res * 14) + (d_gas_resr * 16); // RID 10 + RIC 4 (+2 R+)
+
+        if(d_gas_bpz > 0) {
+            let f = trovaFascia(d_gas_bvol/d_gas_bpz, TIER_GAS);
+            gas_get_dir += (d_gas_bpz * f.get);
+            gas_bonus_dir += (d_gas_bpz * 13);
+        }
+
+        let gas_over_ind = (i_gas_res * 6) + (i_gas_resr * 10) + (d_gas_res * 6) + (d_gas_resr * 10);
+        if((d_gas_bpz + i_gas_bpz) > 0) {
+            let media = (d_gas_bvol + i_gas_bvol) / (d_gas_bpz + i_gas_bpz);
+            gas_over_ind += ((d_gas_bpz + i_gas_bpz) * trovaFascia(media, TIER_GAS).over);
+        }
+
+        let gas_ric_ind = vol_gas_tot * 0.0035; // Pag. 5
+
+        // --- 5. PRODOTTI TECNICI & SKY (Pag. 4) ---
+        let t_fv = (parseFloat(document.getElementById('tech_fv_dir').value)||0) * 350 + (parseFloat(document.getElementById('tech_fv_ind').value)||0) * 50;
+        let t_pom = (parseInt(document.getElementById('tech_pom_dir').value)||0) * 400 + (parseInt(document.getElementById('tech_pom_ind').value)||0) * 80;
+        let t_cal = (parseInt(document.getElementById('tech_cal_dir').value)||0) * 200 + (parseInt(document.getElementById('tech_cal_ind').value)||0) * 30;
+        let t_cli = (parseInt(document.getElementById('tech_cli_dir').value)||0) * 150;
+        let t_sky = (parseInt(document.getElementById('tech_sky_dir').value)||0) * 60 + (parseInt(document.getElementById('tech_sky_ind').value)||0) * 10;
         
-        if (eIBusPz > 0) {
-            let fascia = getFascia(eIBusVol/eIBusPz, TAB_EE_DIR);
-            overIndiretto += eIBusPz * fascia.over;
-        }
-        if (gIBusPz > 0) {
-            let fascia = getFascia(gIBusVol/gIBusPz, TAB_GAS_DIR);
-            overIndiretto += gIBusPz * fascia.over;
-        }
+        let tech_tot = t_fv + t_pom + t_cal + t_cli + t_sky;
 
-        // Ricorrente Indiretto (Luce: 0,5€/MWh | Gas: 0,0035€/Smc)
-        let ricIndiretto = (volLuceTeam * 0.0005) + (volGasTeam * 0.0035);
+        // --- 6. BONUS COORDINATOR (TABELLA VERDE) ---
+        let bonus_fisso = 0;
+        let progress_perc = 0;
+        let msg = "";
 
-        // --- Calcolo Prodotti Fisici (p.4) ---
-        let fisDiretto = (parseFloat(document.getElementById('prod_fv').value) * 350) + 
-                         (parseFloat(document.getElementById('prod_caldaie').value) * 200) +
-                         (parseFloat(document.getElementById('prod_clima').value) * 150) +
-                         (parseFloat(document.getElementById('prod_pompe').value) * 400);
+        if(target_gwh >= 4) { bonus_fisso = 4000; progress_perc = 100; msg = "🎯 SOGLIA MASSIMA RAGGIUNTA!"; }
+        else if(target_gwh >= 3) { bonus_fisso = 2500; progress_perc = (target_gwh/4)*100; msg = "Prossimo step: 4.000€ (a 4 GWh)"; }
+        else if(target_gwh >= 2) { bonus_fisso = 2000; progress_perc = (target_gwh/3)*100; msg = "Prossimo step: 2.500€ (a 3 GWh)"; }
+        else if(target_gwh >= 1.5) { bonus_fisso = 1500; progress_perc = (target_gwh/2)*100; msg = "Prossimo step: 2.000€ (a 2 GWh)"; }
+        else if(target_gwh >= 1.0) { bonus_fisso = 800; progress_perc = (target_gwh/1.5)*100; msg = "Prossimo step: 1.500€ (a 1.5 GWh)"; }
+        else { progress_perc = (target_gwh/1.0)*100; msg = "Prima soglia bonus: 800€ (a 1 GWh)"; }
 
-        let fisIndiretto = (parseFloat(document.getElementById('prod_fv_ind').value) * 50) + 
-                           (parseFloat(document.getElementById('prod_caldaie_ind').value) * 30) +
-                           (parseFloat(document.getElementById('prod_clima_ind').value) * 25);
+        // --- 7. RENDERING RISULTATI ---
+        document.getElementById('res_gwh_tot').innerText = target_gwh.toFixed(3);
+        document.getElementById('res_diretta_tot').innerText = formatCur(ee_get_dir + ee_bonus_dir + gas_get_dir + gas_bonus_dir);
+        document.getElementById('res_rete_tot').innerText = formatCur(ee_over_ind + ee_ric_ind + gas_over_ind + gas_ric_ind);
+        
+        let finale = ee_get_dir + ee_bonus_dir + ee_over_ind + ee_ric_ind + gas_get_dir + gas_bonus_dir + gas_over_ind + gas_ric_ind + tech_tot + bonus_fisso;
+        document.getElementById('res_finale_tot').innerText = formatCur(finale);
 
-        let skyTot = (parseFloat(document.getElementById('prod_sky').value) * 40) + 
-                     (parseFloat(document.getElementById('prod_sky_ind').value) * 10);
+        // Breakdown Table
+        document.getElementById('b_ee_get_dir').innerText = formatCur(ee_get_dir);
+        document.getElementById('b_gas_get_dir').innerText = formatCur(gas_get_dir);
+        document.getElementById('t_get_dir').innerText = formatCur(ee_get_dir + gas_get_dir);
 
-        // --- Calcolo Bonus Coordinator (Immagine allegata) ---
-        let bonusCoordinator = 0;
-        let nextTarget = 1.0;
-        if (volumeGwh >= 4) { bonusCoordinator = 4000; nextTarget = 0; }
-        else if (volumeGwh >= 3) { bonusCoordinator = 2500; nextTarget = 4.0; }
-        else if (volumeGwh >= 2) { bonusCoordinator = 2000; nextTarget = 3.0; }
-        else if (volumeGwh >= 1.5) { bonusCoordinator = 1500; nextTarget = 2.0; }
-        else if (volumeGwh >= 1.0) { bonusCoordinator = 800; nextTarget = 1.5; }
+        document.getElementById('b_ee_bonus_dir').innerText = formatCur(ee_bonus_dir);
+        document.getElementById('b_gas_bonus_dir').innerText = formatCur(gas_bonus_dir);
+        document.getElementById('t_bonus_dir').innerText = formatCur(ee_bonus_dir + gas_bonus_dir);
 
-        let missing = nextTarget > 0 ? (nextTarget - volumeGwh).toFixed(3) : "Raggiunto TOP";
+        document.getElementById('b_ee_over_ind').innerText = formatCur(ee_over_ind);
+        document.getElementById('b_gas_over_ind').innerText = formatCur(gas_over_ind);
+        document.getElementById('t_over_ind').innerText = formatCur(ee_over_ind + gas_over_ind);
 
-        // --- Totale Finale ---
-        let totaleMese = gettoniDiretti + bonusAccDiretti + overIndiretto + ricIndiretto + fisDiretto + fisIndiretto + skyTot + bonusCoordinator;
+        document.getElementById('b_ee_ric_ind').innerText = formatCur(ee_ric_ind);
+        document.getElementById('b_gas_ric_ind').innerText = formatCur(gas_ric_ind);
+        document.getElementById('t_ric_ind').innerText = formatCur(ee_ric_ind + gas_ric_ind);
 
-        // --- Output ---
-        document.getElementById('final_total').innerText = totaleMese.toLocaleString('it-IT', {minimumFractionDigits: 2});
-        document.getElementById('res_get_dir').innerText = gettoniDiretti.toLocaleString('it-IT') + " €";
-        document.getElementById('res_acc_dir').innerText = bonusAccDiretti.toLocaleString('it-IT') + " €";
-        document.getElementById('res_over_ind').innerText = overIndiretto.toLocaleString('it-IT') + " €";
-        document.getElementById('res_ric_ind').innerText = ricIndiretto.toLocaleString('it-IT') + " €";
-        document.getElementById('res_fis_dir').innerText = fisDiretto.toLocaleString('it-IT') + " €";
-        document.getElementById('res_fis_ind').innerText = fisIndiretto.toLocaleString('it-IT') + " €";
-        document.getElementById('res_sky_tot').innerText = skyTot.toLocaleString('it-IT') + " €";
-        document.getElementById('res_vol_gwh').innerText = volumeGwh.toFixed(3);
-        document.getElementById('res_bonus_target').innerText = bonusCoordinator.toLocaleString('it-IT') + " €";
-        document.getElementById('missing_vol').innerText = missing;
+        document.getElementById('b_tech_tot').innerText = formatCur(tech_tot);
+        document.getElementById('t_tech_tot').innerText = formatCur(tech_tot);
+        document.getElementById('t_fisso_target').innerText = formatCur(bonus_fisso);
+
+        // Progress Bar
+        document.getElementById('res_progress').style.width = Math.min(progress_perc, 100) + "%";
+        document.getElementById('res_progress_txt').innerText = Math.round(progress_perc) + "% del Target";
+        document.getElementById('res_next_step').innerText = msg;
 
         document.getElementById('results-area').style.display = 'block';
         window.scrollTo({ top: document.getElementById('results-area').offsetTop, behavior: 'smooth' });
