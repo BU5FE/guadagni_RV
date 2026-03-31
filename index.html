@@ -142,7 +142,6 @@
             border-top: 1px solid #eee;
             padding-top: 10px;
         }
-        .info-small { font-size: 0.75rem; color: #777; font-weight: normal; }
     </style>
 </head>
 <body>
@@ -174,7 +173,7 @@
             </div>
             
             <div style="background: #eef7ff; padding: 10px; border-radius: 4px; margin-top: 10px;">
-                <label>🏢 POD Business (Consumi Diversi):</label>
+                <label>🏢 POD Business (Gettone su Consumo):</label>
                 <div id="p-bus-container" class="business-list">
                     </div>
                 <button class="btn-add" onclick="aggiungiRigaBusiness('p-bus-container', 'kWh consumo annuo')">+ Aggiungi POD Business</button>
@@ -198,7 +197,7 @@
             </div>
             
             <div style="background: #fff3e0; padding: 10px; border-radius: 4px; margin-top: 10px;">
-                <label>🏢 PDR Business (Consumi Diversi):</label>
+                <label>🏢 PDR Business (Gettone su Consumo):</label>
                 <div id="g-bus-container" class="business-list">
                     </div>
                 <button class="btn-add" onclick="aggiungiRigaBusiness('g-bus-container', 'Smc consumo annuo')">+ Aggiungi PDR Business</button>
@@ -248,10 +247,10 @@
     </div>
 
     <div class="card coordinator-only" style="margin-top: 20px; border-left-color: #ff9800;">
-        <h3>📊 Contributi su Volumi Rete (Solo Coordinator)</h3>
+        <h3>📊 Riepilogo Volumi Rete (Solo Coordinator)</h3>
         <p style="font-size: 0.85rem; color: #666;">I contributi vengono calcolati sul volume della rete (1 Smc = 4 kWh).</p>
         <div class="input-row">
-            <label>Ulteriori GWh Luce Rete:</label>
+            <label>Ulteriori GWh Luce Rete (Inseriti manualmente):</label>
             <input type="number" id="gwh-manuali" value="0" step="0.01" min="0">
         </div>
     </div>
@@ -261,16 +260,21 @@
     <div class="risultati" id="risultati-box">
         <h2>Totale Stimato: <span id="totale-guadagno">0,00</span> €</h2>
         <div class="dettaglio">
-            <p>Guadagno Diretto (Vendite Tue): <span id="tot-diretta">0,00</span> €</p>
+            <p>Guadagno Diretto (Gettoni): <span id="tot-diretta">0,00</span> €</p>
             <p>Di cui Bonus RID WEB Business: <span id="tot-rid-web">0,00</span> €</p>
-            <p class="coordinator-only">Guadagno Indiretto (Dalla Rete): <span id="tot-indiretta">0,00</span> €</p>
-            <p class="coordinator-only">Contributo Fisso Mensile Raggiunto: <span id="tot-contributo">0,00</span> €</p>
-            <p class="coordinator-only" style="font-size:0.85rem; color:#555;">Volume Totale Rete Calcolato: <span id="volume-calcolato">0.00</span> GWh</p>
+            
+            <div class="coordinator-only" style="margin-top: 15px; background: #eef7ff; padding: 10px; border-radius: 4px;">
+                <p><strong>Riepilogo Squadra (Rete):</strong></p>
+                <p>Totale Contratti Rete (POD + PDR): <span id="tot-pezzi-rete">0</span></p>
+                <p>Volume Annuo Rete Stimato: <span id="volume-calcolato">0.00</span> GWh</p>
+                <p>Contributo Fisso Mensile Raggiunto: <span id="tot-contributo">0,00</span> €</p>
+                <p style="font-size: 0.85rem; color: #555;"><i>I conteggi analitici delle provvigioni indirette verranno sbloccati nei prossimi step.</i></p>
+            </div>
         </div>
     </div>
 
     <div class="noticine">
-        <p><strong>Nota bene:</strong> I contratti residenziali standard pagano 50€, i residenziali R+ pagano 70€. Il bonus RID WEB si attiva solo sui Clienti Business.</p>
+        <p><strong>Nota bene:</strong> I calcoli mostrano ora esclusivamente il Gettone d'ingresso e i bonus per la produzione diretta, rispettando rigorosamente le tabelle del mandato 2026.</p>
     </div>
 </div>
 
@@ -308,61 +312,65 @@
         container.appendChild(riga);
     }
 
-    function getProvvigioneLuceBusiness(kwh) {
+    // LUCE BUSINESS: Restituisce SOLO Gettone
+    function getGettoneLuceBusiness(kwh) {
         if (kwh <= 0) return 0;
-        if (kwh <= 5000) return 103;
-        if (kwh <= 10000) return 128;
-        if (kwh <= 25000) return 158;
-        if (kwh <= 50000) return 214;
-        if (kwh <= 100000) return 272;
-        if (kwh <= 300000) return 328;
-        if (kwh <= 500000) return 408;
-        if (kwh <= 700000) return 473;
-        return 663;
+        if (kwh <= 5000) return 50;
+        if (kwh <= 10000) return 65;
+        if (kwh <= 25000) return 85;
+        if (kwh <= 50000) return 135;
+        if (kwh <= 100000) return 185;
+        if (kwh <= 300000) return 225;
+        if (kwh <= 500000) return 275;
+        if (kwh <= 700000) return 300;
+        return 350; 
     }
 
-    function getProvvigioneGasBusiness(smc) {
+    // GAS BUSINESS: Restituisce SOLO Gettone
+    function getGettoneGasBusiness(smc) {
         if (smc <= 0) return 0;
-        if (smc <= 1500) return 73;
-        if (smc <= 5000) return 108;
-        if (smc <= 10000) return 138;
-        if (smc <= 20000) return 198;
-        if (smc <= 30000) return 272;
-        if (smc <= 100000) return 328;
-        if (smc <= 200000) return 408;
-        if (smc <= 300000) return 473;
-        if (smc <= 400000) return 663;
-        return 1013;
+        if (smc <= 1500) return 40;
+        if (smc <= 5000) return 55;
+        if (smc <= 10000) return 75;
+        if (smc <= 20000) return 125;
+        if (smc <= 30000) return 185;
+        if (smc <= 100000) return 225;
+        if (smc <= 200000) return 275;
+        if (smc <= 300000) return 300;
+        if (smc <= 400000) return 350;
+        return 500; 
     }
 
     function calcolaProvvigioni() {
         const ruolo = document.getElementById('ruolo').value;
         
+        let totGettoneDiretto = 0;
+        
         // 1. LUCE DIRETTA
         const pRes = parseInt(document.getElementById('p-res').value) || 0;
         const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
         
-        let totLuceDiretta = (pRes * 50) + (pResR * 70); // Corretto a 50
+        totGettoneDiretto += (pRes * 50) + (pResR * 70);
         
         const inputsLuceBus = document.querySelectorAll('#p-bus-container .consumo-business');
         inputsLuceBus.forEach(input => {
             const kwh = parseFloat(input.value) || 0;
-            totLuceDiretta += getProvvigioneLuceBusiness(kwh);
+            totGettoneDiretto += getGettoneLuceBusiness(kwh);
         });
         
         // 2. GAS DIRETTO
         const gRes = parseInt(document.getElementById('g-res').value) || 0;
         const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
         
-        let totGasDiretta = (gRes * 50) + (gResR * 70); // Corretto a 50
+        totGettoneDiretto += (gRes * 50) + (gResR * 70);
         
         const inputsGasBus = document.querySelectorAll('#g-bus-container .consumo-business');
         inputsGasBus.forEach(input => {
             const smc = parseFloat(input.value) || 0;
-            totGasDiretta += getProvvigioneGasBusiness(smc);
+            totGettoneDiretto += getGettoneGasBusiness(smc);
         });
         
-        // 3. BONUS RID WEB SU CLIENTI BUSINESS
+        // 3. BONUS RID WEB SU CLIENTI BUSINESS (13€ l'uno)
         const cBus = parseInt(document.getElementById('c-bus').value) || 0;
         const totRidWeb = cBus * 13;
         
@@ -372,22 +380,20 @@
         const totSkyDiretta = sQta * tabelle.sky[sTipo].diretta;
         
         // TOTALE DIRETTA
-        const totDiretta = totLuceDiretta + totGasDiretta + totRidWeb + totSkyDiretta;
+        const totDiretta = totGettoneDiretto + totRidWeb + totSkyDiretta;
         
         // 5. CALCOLO RETE (Solo Coordinator)
-        let totIndiretta = 0;
+        let totPezziRete = 0;
         let volumeGwhRete = 0;
         
         if (ruolo === 'coordinator') {
             const pInd = parseInt(document.getElementById('p-ind').value) || 0;
             const gInd = parseInt(document.getElementById('g-ind').value) || 0;
             
-            totIndiretta += pInd * 10; 
-            totIndiretta += gInd * 10;
+            // Somma pezzi rete
+            totPezziRete = pInd + gInd;
             
-            const sQtaInd = parseInt(document.getElementById('sky-qta-ind').value) || 0;
-            totIndiretta += sQtaInd * tabelle.sky[sTipo].indiretta;
-            
+            // Calcolo volumi forfettari per le soglie (media 3000 kwh e 1000 smc)
             let kwhLuceRete = pInd * 3000;
             let smcGasRete = gInd * 1000;
             let gasInKwh = smcGasRete * 4;
@@ -404,13 +410,14 @@
             else if (volumeGwhRete >= 2) contributo = 1000;
         }
         
-        const totaleComplessivo = totDiretta + totIndiretta + contributo;
+        const totaleComplessivo = totDiretta + contributo;
         
         // Mostra i risultati
         document.getElementById('totale-guadagno').innerText = totaleComplessivo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('tot-diretta').innerText = totDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('tot-diretta').innerText = totGettoneDiretto.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-rid-web').innerText = totRidWeb.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('tot-indiretta').innerText = totIndiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        document.getElementById('tot-pezzi-rete').innerText = totPezziRete;
         document.getElementById('tot-contributo').innerText = contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('volume-calcolato').innerText = volumeGwhRete.toFixed(2);
         
