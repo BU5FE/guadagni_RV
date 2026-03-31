@@ -652,17 +652,17 @@
         document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-indiretta').innerText = globale_totIndiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
-        // --- LOGICA RICORRENTI CORRETTA ---
+        // --- LOGICA RICORRENTI RICHIESTA ---
         document.getElementById('tot-ric-stimata').innerText = ricMaturatoMese.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
         let ricAnnualeGenerato = ricMaturatoMese * 4;
         document.getElementById('tot-ric-annuale').innerText = ricAnnualeGenerato.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
-        // Calcolo quote trimestrali esatte (Formule limitate a 2 decimali)
+        // Applicazione formule slittamento mese per mese
         let q1 = ricMaturatoMese / 3; 
-        let q2 = (ricMaturatoMese * 4) / 3;
-        let q3 = (ricMaturatoMese * 7) / 3;
-        let q4 = (ricMaturatoMese * 10) / 3;
+        let q2 = ricMaturatoMese * 3;
+        let q3 = ricMaturatoMese * 6;
+        let q4 = ricMaturatoMese * 9;
 
         document.getElementById('ric-trim1').innerText = q1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('ric-trim2').innerText = q2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
