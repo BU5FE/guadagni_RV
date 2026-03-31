@@ -145,17 +145,6 @@
             </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
         <button class="btn-calcola" style="margin-top: 20px;" onclick="calcolaProvvigioni()">Calcola Guadagno</button> 
         
         <div class="risultati" id="risultati-box"> 
@@ -387,69 +376,56 @@
             let volumeKwhLuceTotale = 0; 
             let volumeSmcGasTotale = 0; 
             
-            // Variabile per soli gettoni Luce e Gas diretti
-            let gettoniSoloLuceGasDiretti = 0;
-
             document.getElementById('usa-gara-academy').checked = false; 
             document.getElementById('usa-gara-std').checked = false; 
 
             // 1. LUCE DIRETTA 
             const pRes = parseInt(document.getElementById('p-res').value) || 0; 
             const pResR = parseInt(document.getElementById('p-res-r').value) || 0; 
-            
-            let gettoniLuceRes = (pRes * 50) + (pResR * 70);
-            globale_totDiretta_Base += gettoniLuceRes; 
-            gettoniSoloLuceGasDiretti += gettoniLuceRes; 
-            
+            globale_totDiretta_Base += (pRes * 50) + (pResR * 70); 
             ricMaturatoMesePersonale += (pRes * 4) + (pResR * 4); 
+            
             volumeKwhLuceTotale += (pRes * 3000) + (pResR * 3000);
 
             const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business'); 
             let pezziLuceBus = bLuceInputs.length; 
             bLuceInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
-                let gettoneBus = getLuceGettone(val, 'diretta');
-                globale_totDiretta_Base += gettoneBus; 
-                gettoniSoloLuceGasDiretti += gettoneBus; 
+                globale_totDiretta_Base += getLuceGettone(val, 'diretta'); 
                 volumeKwhLuceTotale += val; 
             }); 
 
             // 2. GAS DIRETTO 
             const gRes = parseInt(document.getElementById('g-res').value) || 0; 
             const gResR = parseInt(document.getElementById('g-res-r').value) || 0; 
-            
-            let gettoniGasRes = (gRes * 50) + (gResR * 70);
-            globale_totDiretta_Base += gettoniGasRes; 
-            gettoniSoloLuceGasDiretti += gettoniGasRes; 
-            
+            globale_totDiretta_Base += (gRes * 50) + (gResR * 70); 
             ricMaturatoMesePersonale += (gRes * 4) + (gResR * 4); 
+            
             volumeSmcGasTotale += (gRes * 1000) + (gResR * 1000);
 
             const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business'); 
             let pezziGasBus = bGasInputs.length; 
             bGasInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
-                let gettoneGasBus = getGasGettone(val, 'diretta');
-                globale_totDiretta_Base += gettoneGasBus; 
-                gettoniSoloLuceGasDiretti += gettoneGasBus; 
+                globale_totDiretta_Base += getGasGettone(val, 'diretta'); 
                 volumeSmcGasTotale += val; 
             }); 
 
-            // 3. SKY DIRETTO
+            // 3. SKY DIRETTO 
             document.querySelectorAll('#sky-container .business-item').forEach(riga => { 
                 const tipo = riga.querySelector('.tipo-sky').value; 
                 const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
                 globale_totDiretta_Base += (qta * tabelle.sky[tipo].diretta); 
             }); 
 
-            // 4. PRODOTTI DIRETTI
+            // 4. PRODOTTI DIRETTI 
             document.querySelectorAll('#prodotti-container .business-item').forEach(riga => { 
                 const tipo = riga.querySelector('.tipo-prodotto').value; 
                 const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0; 
                 globale_totDiretta_Base += (val * tabelle.prodotti[tipo].diretta); 
             }); 
 
-            // 5. BONUS RID WEB & VERISURE DIRETTA
+            // 5. BONUS RID WEB & VERISURE DIRETTA 
             globale_totDiretta_Base += (parseInt(document.getElementById('c-bus').value) || 0) * 13; 
             let verisureDirettoPezzi = parseInt(document.getElementById('verisure-qta').value) || 0;
             globale_totDiretta_Base += verisureDirettoPezzi * 75; 
@@ -514,7 +490,7 @@
 
             // RICORRENTI MATURATI NEL MESE
             let ricIndEeGasAnnuale = (volumeKwhLuceTotale * 0.0005) + (volumeSmcGasTotale * 0.0035);
-            let ricIndEeGasMensile = ricIndEeGasAnnuale / 12; 
+            let ricIndEeGasMensile = ricIndEeGasAnnuale / 12; // Ricorrente indiretto (mensile)
 
             globale_totIndiretta = indEeGasGettoni + indSky + indProd + indVeri; 
 
@@ -536,14 +512,12 @@
 
             if (ruolo === 'account') { 
                 const labelAcceleratore = document.getElementById('label-acceleratore'); 
-                
-                // Ora la percentuale agisce solo sui gettoni Luce e Gas
                 if (pezziTotali >= 8 && pezziTotali <= 14) { 
-                    globale_bonusGaraStd = gettoniSoloLuceGasDiretti * 0.25; 
-                    labelAcceleratore.innerText = "Ottimo! Livello 1: +25% di Bonus (su gettoni Luce/Gas)."; 
+                    globale_bonusGaraStd = globale_totDiretta_Base * 0.25; 
+                    labelAcceleratore.innerText = "Ottimo! Livello 1: +25% di Bonus."; 
                 } else if (pezziTotali >= 15) { 
-                    globale_bonusGaraStd = gettoniSoloLuceGasDiretti * 0.30; 
-                    labelAcceleratore.innerText = "Super! Livello massimo: +30% di Bonus (su gettoni Luce/Gas)."; 
+                    globale_bonusGaraStd = globale_totDiretta_Base * 0.30; 
+                    labelAcceleratore.innerText = "Super! Livello massimo: +30% di Bonus."; 
                 } else { 
                     globale_bonusGaraStd = 0; 
                     labelAcceleratore.innerText = "Nessun bonus raggiunto (Soglia minima 8 pezzi)."; 
@@ -563,7 +537,7 @@
                 document.getElementById('usa-gara-std').disabled = (globale_bonusGaraStd === 0); 
             } 
 
-            // Calcolo Base del Mese
+            // Calcolo Base del Mese (Gettoni + Contributo)
             let fatturaGettoniEContributo = globale_totDiretta_Base + globale_totIndiretta + globale_contributo;
 
             if (ruolo === 'coordinator') {
@@ -577,30 +551,52 @@
                 document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
 
-                // CRONOPROGRAMMA
-                let quotaTrimestraleDiretta = ricMaturatoMesePersonale; 
+                // CALCOLO CRONOPROGRAMMA FATTURE
+                let quotaTrimestraleDiretta = ricMaturatoMesePersonale; // Ricorrente diretto (trimestrale)
 
+                // Mesi 1 e 2: solo gettoni + contributo
                 let fat_m1m2 = fatturaGettoniEContributo;
+                // Mese 3: si aggiunge il ricorrente indiretto (pari a 1 mese)
                 let fat_m3 = fatturaGettoniEContributo + ricIndEeGasMensile;
+
+                // Mese 4 (Fine 1° Trim): gettoni + ric indiretto cresciuto (2 mesi) + 1° gradino ric diretto
                 let fat_m4 = fatturaGettoniEContributo + (ricIndEeGasMensile * 2) + quotaTrimestraleDiretta;
-                let fat_m5m6 = fatturaGettoniEContributo + (ricIndEeGasMensile * 4); 
+                // Mese 5 e 6: Gettoni + Ric indiretto che continua a crescere ma senza ric diretto
+                let fat_m5m6 = fatturaGettoniEContributo + (ricIndEeGasMensile * 4); // Media mese 5 e 6
+
+                // Mese 7 (Fine 2° Trim): si sblocca il 2° gradino del ricorrente diretto (raddoppiato)
                 let fat_m7 = fatturaGettoniEContributo + (ricIndEeGasMensile * 5) + (quotaTrimestraleDiretta * 2);
                 let fat_m8m9 = fatturaGettoniEContributo + (ricIndEeGasMensile * 7);
+
+                // Mese 10 (Fine 3° Trim): 3° gradino del ricorrente diretto (triplicato)
                 let fat_m10 = fatturaGettoniEContributo + (ricIndEeGasMensile * 8) + (quotaTrimestraleDiretta * 3);
                 let fat_m11m12 = fatturaGettoniEContributo + (ricIndEeGasMensile * 10);
+
+                // Mese 13 (Fine 4° Trim): 4° gradino del ricorrente diretto (quadruplicato)
                 let fat_m13 = fatturaGettoniEContributo + (ricIndEeGasMensile * 11) + (quotaTrimestraleDiretta * 4);
 
                 document.getElementById('fat-m1m2').innerText = fat_m1m2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m3').innerText = fat_m3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // MESE 4
                 document.getElementById('fat-m4').innerText = fat_m4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-dir-1').innerText = quotaTrimestraleDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
                 document.getElementById('fat-m5m6').innerText = fat_m5m6.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // MESE 7
                 document.getElementById('fat-m7').innerText = fat_m7.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-dir-2').innerText = (quotaTrimestraleDiretta * 2).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
                 document.getElementById('fat-m8m9').innerText = fat_m8m9.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // MESE 10
                 document.getElementById('fat-m10').innerText = fat_m10.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-dir-3').innerText = (quotaTrimestraleDiretta * 3).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
                 document.getElementById('fat-m11m12').innerText = fat_m11m12.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // MESE 13
                 document.getElementById('fat-m13').innerText = fat_m13.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-dir-4').innerText = (quotaTrimestraleDiretta * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             }
@@ -610,6 +606,7 @@
             let indMostrato = globale_totIndiretta + globale_contributo;
             document.getElementById('tot-indiretta').innerText = indMostrato.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
+            // RICORRENTE DIRETTO
             document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
