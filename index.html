@@ -281,14 +281,12 @@
             <p>Di cui Segnalazioni Verisure: <span id="tot-verisure">0,00</span> €</p>
             
             <div class="box-proiezione">
-                <h4>🔄 Rendita Ricorrente Trimestrale (In Fornitura)</h4>
-                <p>Mantenendo questa produzione <strong>costante ogni mese</strong>, l'estratto conto trimestrale delle competenze maturerà:</p>
+                <h4>🔄 Rendita Ricorrente Trimestrale</h4>
+                <p>Mantenendo questa produzione <strong>costante ogni mese di un trimestre</strong>, l'estratto conto maturerà:</p>
                 <ul>
-                    <li><strong>Nel 1° Trimestre di calendario:</strong> <span id="ric-trim1">0,00</span> € totali</li>
-                    <li><strong>Nel 2° Trimestre di calendario:</strong> <span id="ric-trim2">0,00</span> € totali</li>
-                    <li><strong>A regime, dopo 12 mesi (4° Trimestre):</strong> <span id="ric-trim12">0,00</span> € totali</li>
+                    <li><strong>Nel primo trimestre di produzione:</strong> <span id="ric-trim1">0,00</span> € (Matura solo 1/3 del Mese 1)</li>
+                    <li><strong>A regime, nei trimestri successivi:</strong> <span id="ric-trim2">0,00</span> € (Trimestre precedente pieno + 1/3 del nuovo)</li>
                 </ul>
-                <p style="font-size: 0.8rem; color: #777; margin-top: 5px;">*Il calcolo applica la scomposizione frazionata pro-rata in base ai mesi di fornitura attiva dei clienti nel trimestre di liquidazione.</p>
             </div>
 
             <div class="coordinator-only" style="margin-top: 15px; background: #eef7ff; padding: 10px; border-radius: 4px;">
@@ -303,7 +301,7 @@
 
     <div class="noticine">
         <p><strong>Nota bene:</strong> I calcoli mostrano esclusivamente il Gettone d'ingresso diretto, i bonus e i prodotti, secondo le direttive e le tabelle del mandato 2026.</p>
-        <p><i>Si ricorda che, come da piano provvigionale 2026, per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni (6 mesi) dalla data di inizio fornitura[cite: 179].</i></p>
+        <p><i>Si ricorda che, come da piano provvigionale 2026, per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni (6 mesi) dalla data di inizio fornitura.</i></p>
     </div>
 </div>
 
@@ -399,7 +397,7 @@
     function calcolaProvvigioni() {
         const ruolo = document.getElementById('ruolo').value;
         let totGettoneDiretto = 0;
-        let totRicorrenteUnMese = 0; // Il valore che un solo mese di produzione genera
+        let totRicorrenteUnMese = 0; // Ricorrente generato da UN SOLO mese di produzione
         
         // 1. LUCE DIRETTA
         const pRes = parseInt(document.getElementById('p-res').value) || 0;
@@ -458,14 +456,12 @@
         // TOTALE DIRETTA MENSILE
         const totDiretta = totGettoneDiretto + totRidWeb + totSkyDiretta + totProdotti + totVerisure;
         
-        // 7. PROIEZIONI RICORRENTE TRIMESTRALE (Formula Pro-Rata Corretta)
-        // Se si produce un valore mensile X costante:
-        // Trimestre 1 = 1 + 2/3 + 1/3 = 2X
-        const renditaTrim1 = totRicorrenteUnMese * 2; 
-        // Trimestre 2 = 3 mesi pieni + 2X del nuovo trimestre = 5X
-        const renditaTrim2 = totRicorrenteUnMese * 5;
-        // Trimestre 4 (Dopo 12 mesi) = 9 mesi pieni + 2X dell'ultimo trimestre = 11X
-        const renditaTrim12 = totRicorrenteUnMese * 11;
+        // 7. PROIEZIONI RICORRENTE TRIMESTRALE (Formula dinamica e realistica)
+        // Nel 1° trimestre in cui si produce: Solo il mese 1 genera 1/3 della sua quota (0.33)
+        const renditaTrim1 = totRicorrenteUnMese * (1 / 3); 
+        
+        // Nei trimestri successivi (A regime): Il trimestre precedente vale 3 mensilità piene + 1/3 del nuovo trimestre
+        const renditaTrim2 = totRicorrenteUnMese * (3 + (1 / 3));
 
         // 8. CALCOLO RETE (Solo Coordinator)
         let totPezziRete = 0; let volumeGwhRete = 0;
@@ -498,10 +494,9 @@
         document.getElementById('tot-prodotti').innerText = totProdotti.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('tot-verisure').innerText = totVerisure.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
-        // Aggiorna box Ricorrente (Progressione Reale)
+        // Aggiorna box Ricorrente
         document.getElementById('ric-trim1').innerText = renditaTrim1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('ric-trim2').innerText = renditaTrim2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('ric-trim12').innerText = renditaTrim12.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
         document.getElementById('tot-pezzi-rete').innerText = totPezziRete;
         document.getElementById('tot-contributo').innerText = contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
