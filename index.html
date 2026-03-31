@@ -211,7 +211,7 @@
                     <p style="font-size: 0.85rem; color: #555;">Volume Totale Mese (Pers. + Rete): <span id="volume-calcolato">0.000</span> GWh</p> 
                 </div> 
 
-                <div class="box-proiezione coordinator-only" style="background: #e0f2fe; border: 1px solid #bae6fd;">
+                <div class="box-proiezione coordinator-only" style="background: #e0f2fe; border: 1px solid #bae6fd; margin-bottom: 15px;">
                     <h4>🔄 Proiezione Ricorrente di Rete (Capogruppo)</h4>
                     <p>Mantenendo questa produzione di squadra **costante ogni mese**:</p>
                     <ul>
@@ -229,7 +229,7 @@
                     <p>• <strong>Gara Standard:</strong> <br> Contratti EE/Gas totali: <span id="pezzi-totali" style="font-weight: bold; color: #0056b3;">0</span>. <span id="label-acceleratore" style="font-weight: bold; color: #b94a48;">Nessun bonus raggiunto (Soglia minima 8 pezzi).</span><br> <input type="checkbox" id="usa-gara-std" onchange="gestisciCheckboxStd()"> <label for="usa-gara-std">Somma bonus Gara Standard al totale del mese (<span id="valore-gara-box">0,00</span> €)</label> </p> 
                 </div> 
 
-                <div class="account-only" style="margin-top: 15px;">
+                <div style="margin-top: 15px;">
                     <p>Maturazione Ricorrente Trimestrale Personale: <span id="tot-ric-stimata">0,00</span> € (Genera <span id="tot-ric-annuale">0,00</span> € all'anno)</p> 
                     <div class="box-proiezione"> 
                         <h4>🔄 Liquidazione Ricorrente Personale su Produzione Costante</h4> 
@@ -601,8 +601,7 @@
                 document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
                 
-                // --- LOGICA PROSPETTIVA RICORRENTE RETE ---
-                // Mese 1 = x1, Mese 2 = x2 ... Mese 6 = x6 (Sommatoria accumulata)
+                // LOGICA PROSPETTIVA RICORRENTE RETE 
                 let ric6Mesi = ricIndEeGasCumulato * 6;
                 let ric12Mesi = ricIndEeGasCumulato * 12;
                 document.getElementById('ric-6mesi').innerText = ric6Mesi.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -612,7 +611,7 @@
             document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-indiretta').innerText = globale_totIndiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
-            // --- RICORRENTE PERSONALE (SOPRAVVISSUTO PER ACCOUNT) ---
+            // RICORRENTE PERSONALE (Sempre attivo)
             document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
