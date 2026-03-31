@@ -194,6 +194,8 @@
 
 
 
+
+
     <button class="btn-calcola" style="margin-top: 20px;" onclick="calcolaProvvigioni()">Calcola Guadagno</button> 
         
         <div class="risultati" id="risultati-box"> 
@@ -594,12 +596,6 @@
                 document.getElementById('ind-veri').innerText = indVeri.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
-                
-                // Vecchia proiezione solo rendita
-                let ric6Mesi = ricIndEeGasMensile * 6;
-                let ric12Mesi = ricIndEeGasMensile * 12;
-                document.getElementById('ric-6mesi').innerText = ric6Mesi.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-12mesi').innerText = ric12Mesi.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
                 // CALCOLO CRONOPROGRAMMA FATTURE
                 let quotaTrimestraleDiretta = ricMaturatoMesePersonale; // Ricorrente diretto (trimestrale)
