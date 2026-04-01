@@ -1,57 +1,223 @@
 <!DOCTYPE html>
-
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulatore Provvigioni FuturENERGY</title>
-<style>
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background-color: #f4f7f6; color: #333; padding: 20px; }
-.container { max-width: 1000px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-.logo-container { text-align: center; margin-bottom: 20px; }
-.logo-container img { max-width: 280px; height: auto; }
-h1 { color: #006037; text-align: center; margin-bottom: 30px; font-size: 2rem; border-bottom: 2px solid #006037; padding-bottom: 10px; }
-h3 { background: #006037; color: #fff; padding: 10px 15px; border-radius: 4px; margin-top: 25px; }
-h4 { color: #006037; margin-top: 15px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-@media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-.form-group { margin-bottom: 15px; }
-label { display: block; font-weight: 600; margin-bottom: 5px; color: #555; font-size: 0.95rem; }
-input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1rem; }
-input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 0 5px rgba(0,96,55,0.2); }
-.business-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
-.btn-add { background: #e8f5e9; color: #006037; border: 1px solid #006037; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.9rem; margin-top: 5px; }
-.btn-add:hover { background: #006037; color: #fff; }
-.btn-remove { background: #ffebee; color: #c62828; border: 1px solid #c62828; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-.btn-remove:hover { background: #c62828; color: #fff; }
-.btn-calcola { width: 100%; padding: 15px; background: #006037; color: white; border: none; border-radius: 4px; font-size: 1.3rem; font-weight: bold; cursor: pointer; margin-top: 30px; transition: background 0.2s; }
-.btn-calcola:hover { background: #004d2c; }
-.risultati { margin-top: 40px; border: 2px solid #006037; border-radius: 6px; padding: 25px; background: #fff; display: none; }
-.risultati h2 { color: #006037; text-align: center; margin-top: 0; font-size: 1.8rem; }
-.box-info { background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 4px; padding: 20px; margin-bottom: 20px; }
-.box-info p { margin: 10px 0; font-size: 1.05rem; display: flex; justify-content: space-between; }
-.box-proiezione { background: #edf7f1; border: 1px solid #c8e6c9; border-radius: 4px; padding: 20px; }
-.box-proiezione ul { padding-left: 20px; margin: 10px 0; }
-.box-proiezione li { margin-bottom: 8px; font-size: 1rem; }
-.coordinator-only, .account-only { display: none; }
-.highlight { font-weight: bold; color: #006037; }
-.success { color: #2e7d32; font-weight: bold; }
-.valore { font-weight: bold; color: #333; }
-.opzioni-gare { margin-top: 20px; background: #fafafa; padding: 15px; border: 1px solid #ddd; border-radius: 4px; }
-.opzioni-gare label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: normal; }
-.opzioni-gare input[type="checkbox"] { width: auto; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulatore Provvigioni FuturENERGY</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background-color: #f4f7f6; color: #333; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .logo-container { text-align: center; margin-bottom: 20px; }
+        .logo-container img { max-width: 280px; height: auto; }
+        h1 { color: #006037; text-align: center; margin-bottom: 30px; font-size: 2rem; border-bottom: 2px solid #006037; padding-bottom: 10px; }
+        h3 { background: #006037; color: #fff; padding: 10px 15px; border-radius: 4px; margin-top: 25px; }
+        h4 { color: #006037; margin-top: 15px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; color: #555; font-size: 0.95rem; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1rem; }
+        input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 0 5px rgba(0,96,55,0.2); }
+        .business-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+        .btn-add { background: #e8f5e9; color: #006037; border: 1px solid #006037; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.9rem; margin-top: 5px; }
+        .btn-add:hover { background: #006037; color: #fff; }
+        .btn-remove { background: #ffebee; color: #c62828; border: 1px solid #c62828; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-remove:hover { background: #c62828; color: #fff; }
+        .btn-calcola { width: 100%; padding: 15px; background: #006037; color: white; border: none; border-radius: 4px; font-size: 1.3rem; font-weight: bold; cursor: pointer; margin-top: 30px; transition: background 0.2s; }
+        .btn-calcola:hover { background: #004d2c; }
+        .risultati { margin-top: 40px; border: 2px solid #006037; border-radius: 6px; padding: 25px; background: #fff; display: none; }
+        .risultati h2 { color: #006037; text-align: center; margin-top: 0; font-size: 1.8rem; }
+        .box-info { background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 4px; padding: 20px; margin-bottom: 20px; }
+        .box-info p { margin: 10px 0; font-size: 1.05rem; display: flex; justify-content: space-between; }
+        .box-proiezione { background: #edf7f1; border: 1px solid #c8e6c9; border-radius: 4px; padding: 20px; }
+        .box-proiezione ul { padding-left: 20px; margin: 10px 0; }
+        .box-proiezione li { margin-bottom: 8px; font-size: 1rem; }
+        .coordinator-only { display: block; }
+        .highlight { font-weight: bold; color: #006037; }
+        .success { color: #2e7d32; font-weight: bold; }
+        .valore { font-weight: bold; color: #333; }
+    </style>
 </head>
 <body>
 
+    <div class="container">
+        <div class="logo-container">
+            <img src="LOGO FUTURENERGY.PNG" alt="Logo FuturENERGY">
+        </div>
 
+        <h1>Simulatore Provvigioni 2026</h1>
 
+        <div class="form-group" style="max-width: 400px; margin: 0 auto 30px auto; text-align: center;">
+            <label style="font-size: 1.1rem;">PROFILO ATTIVO</label>
+            <select id="ruolo" style="font-weight: bold; font-size: 1.1rem; text-align: center;" disabled>
+                <option value="coordinator" selected>Sales Coordinator</option>
+            </select>
+        </div>
 
+        <div class="grid">
+            <div>
+                <h3>PRODUZIONE PERSONALE</h3>
+                
+                <div class="form-group">
+                    <label>Luce Residenziale (Std / R+):</label>
+                    <div class="business-item">
+                        <input type="number" id="p-res" placeholder="Q.tà Standard">
+                        <input type="number" id="p-res-r" placeholder="Q.tà R+">
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <label>Gas Residenziale (Std / R+):</label>
+                    <div class="business-item">
+                        <input type="number" id="g-res" placeholder="Q.tà Standard">
+                        <input type="number" id="g-res-r" placeholder="Q.tà R+">
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <label>Luce Business (Inserisci i kWh annui per singolo contratto):</label>
+                    <div id="p-bus-container"></div>
+                    <button class="btn-add" onclick="aggiungiRigaBusiness('p-bus-container', 'kWh annui')">+ Aggiungi Contratto Luce Business</button>
+                </div>
 
+                <div class="form-group">
+                    <label>Gas Business (Inserisci i SMC annui per singolo contratto):</label>
+                    <div id="g-bus-container"></div>
+                    <button class="btn-add" onclick="aggiungiRigaBusiness('g-bus-container', 'SMC annui')">+ Aggiungi Contratto Gas Business</button>
+                </div>
 
+                <div class="form-group">
+                    <label>Sky Diretto:</label>
+                    <div id="sky-container"></div>
+                    <button class="btn-add" onclick="aggiungiRigaSky('sky-container')">+ Aggiungi Sky</button>
+                </div>
 
+                <div class="form-group">
+                    <label>Prodotti (Fotovoltaico, LED, Clima, ecc.):</label>
+                    <div id="prodotti-container"></div>
+                    <button class="btn-add" onclick="aggiungiRigaProdotto('prodotti-container')">+ Aggiungi Prodotto</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Contratti Business con RID/Web (Bonus extra):</label>
+                    <input type="number" id="c-bus" placeholder="Numero di contratti">
+                </div>
+                
+                <div class="form-group">
+                    <label>Verisure Diretta (Pezzi):</label>
+                    <input type="number" id="verisure-qta" placeholder="Pezzi chiusi">
+                </div>
+            </div>
+
+            <div class="coordinator-only">
+                <h3>PRODUZIONE RETE (INDIRETTA)</h3>
+                
+                <div class="form-group">
+                    <label>Luce Res. Standard (Pezzi / kWh Totali):</label>
+                    <div class="business-item">
+                        <input type="number" id="p-ind-res" placeholder="Pezzi">
+                        <input type="number" id="p-ind-res-kwh" placeholder="kWh Totali">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Luce Res. R+ (Pezzi / kWh Totali):</label>
+                    <div class="business-item">
+                        <input type="number" id="p-ind-resr" placeholder="Pezzi">
+                        <input type="number" id="p-ind-resr-kwh" placeholder="kWh Totali">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Luce Business (Pezzi / kWh Globali):</label>
+                    <div class="business-item">
+                        <input type="number" id="p-ind-bus-pezzi" placeholder="Pezzi">
+                        <input type="number" id="p-ind-bus-kwh" placeholder="kWh Globale">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gas Res. Standard (Pezzi / SMC Totali):</label>
+                    <div class="business-item">
+                        <input type="number" id="g-ind-res" placeholder="Pezzi">
+                        <input type="number" id="g-ind-res-smc" placeholder="SMC Totali">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gas Res. R+ (Pezzi / SMC Totali):</label>
+                    <div class="business-item">
+                        <input type="number" id="g-ind-resr" placeholder="Pezzi">
+                        <input type="number" id="g-ind-resr-smc" placeholder="SMC Totali">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gas Business (Pezzi / SMC Globali):</label>
+                    <div class="business-item">
+                        <input type="number" id="g-ind-bus-pezzi" placeholder="Pezzi">
+                        <input type="number" id="g-ind-bus-smc" placeholder="SMC Globale">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Sky Rete:</label>
+                    <div id="sky-ind-container"></div>
+                    <button class="btn-add" onclick="aggiungiRigaSky('sky-ind-container')">+ Aggiungi Sky Rete</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Prodotti Rete:</label>
+                    <div id="prodotti-ind-container"></div>
+                    <button class="btn-add" onclick="aggiungiRigaProdotto('prodotti-ind-container')">+ Aggiungi Prodotti Rete</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Verisure Indiretta (Pezzi):</label>
+                    <input type="number" id="verisure-ind-qta" placeholder="Pezzi chiusi dalla rete">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-calcola" onclick="calcolaProvvigioni()">CALCOLA GUADAGNO</button>
+
+        <div id="risultati-box" class="risultati">
+            <h2>Totale Stimato Mese: <span id="totale-guadagno" class="success">0,00</span> €</h2>
+            
+            <div class="box-info">
+                <p><span>Gettoni Diretti Base:</span> <span id="tot-diretta" class="valore">0,00 €</span></p>
+                <p><span>Gettoni Indiretti Totali:</span> <span id="tot-indiretta" class="valore">0,00 €</span></p>
+                <p style="font-size: 0.9rem; color: #666; padding-left: 15px;">
+                    <span>• di cui Luce/Gas Indiretti:</span> <span id="ind-ee-gas">0,00 €</span>
+                </p>
+                <p style="font-size: 0.9rem; color: #666; padding-left: 15px;">
+                    <span>• di cui Sky/Prodotti/Verisure:</span> <span id="ind-altri">0,00 €</span>
+                </p>
+                <p><span>Contributo Mensile sul Volume:</span> <span id="tot-contributo" class="valore">0,00 €</span></p>
+                <p style="font-size: 0.9rem; color: #666; padding-left: 15px;">
+                    <span>• Volume Totale Calcolato:</span> <span id="volume-calcolato">0.000 GWh</span>
+                </p>
+            </div>
+
+            <div class="box-proiezione">
+                <h4>Sviluppo e Proiezione del Mese</h4>
+                <p>Fatturato Ricorrente Indiretto Generato (Luce + Gas): <strong><span id="ric-ind-ee-gas">0,00</span> € al mese</strong></p>
+                <ul>
+                    <li><strong>Mese 1 e 2:</strong> Incassi solo i Gettoni e Contributi fissi = <span id="fat-m1m2" class="highlight">0,00 €</span></li>
+                    <li><strong>Mese 3:</strong> Entra il Ricorrente Indiretto = <span id="fat-m3" class="highlight">0,00 €</span></li>
+                    <li><strong>Mese 4 (Fine Trimestre):</strong> Scatta il Ricorrente Diretto Personale trimestrale (+<span id="ric-dir-1">0,00</span> €) = <span id="fat-m4" class="success">0,00 €</span></li>
+                    <li><strong>Mese 7 (Fine Semestre):</strong> Il Ricorrente Diretto raddoppia (+<span id="ric-dir-2">0,00</span> €) = <span id="fat-m7" class="success">0,00 €</span></li>
+                </ul>
+                <p style="margin-top: 15px; border-top: 1px solid #c8e6c9; padding-top: 10px;">
+                    Valore Annuo stimato del Ricorrente Personale Diretto creato questo mese: <strong><span id="tot-ric-annuale">0,00</span> € / anno</strong>
+                </p>
+            </div>
+            
+            <p style="font-size: 0.8rem; color: #777; text-align: center; margin-top: 20px;">
+                * I dati sopra riportati costituiscono una simulazione basata sulle tabelle provvigionali <span id="label-mandato"></span> 2026.
+            </p>
+        </div>
+    </div>
 
     <script>
         // Tabelle Provvigionali fisse
@@ -84,11 +250,7 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
         let globale_contributo = 0;
 
         function cambiaRuolo() {
-            // Bloccato su Coordinator come da accordi di ieri mattina
             document.getElementById('ruolo').value = "coordinator";
-            document.querySelectorAll('.coordinator-only').forEach(el => el.style.display = 'block');
-            document.querySelectorAll('.account-only').forEach(el => el.style.display = 'none');
-            
             document.getElementById('label-mandato').innerText = "COORDINATOR";
             document.getElementById('risultati-box').style.display = 'none';
         }
@@ -140,7 +302,7 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
             container.appendChild(div);
         }
 
-        // SCAGLIONI RICORRENTI DIRETTI BUSINESS (Come da documento)
+        // SCAGLIONI RICORRENTI DIRETTI BUSINESS (Tabelle tratte da Pagina 1 e 2 del PDF)
         function getRicorrenteLuceBus(kwh) {
             if (kwh <= 5000) return 10.00;
             if (kwh <= 10000) return 12.50;
@@ -179,14 +341,14 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
             const pRes = parseInt(document.getElementById('p-res').value) || 0;
             const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
             globale_totDiretta_Base += (pRes * 50) + (pResR * 70);
-            ricMaturatoMesePersonale += (pRes + pResR) * 4; // Ricorrente Residenziale Fisso
+            ricMaturatoMesePersonale += (pRes + pResR) * 4; 
             volumeLuceTotale += (pRes + pResR) * 3000; 
 
             const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business');
             bLuceInputs.forEach(input => {
                 let v = parseFloat(input.value) || 0;
-                globale_totDiretta_Base += 50; // Gettone base fittizio per calcolo rapido diretta
-                ricMaturatoMesePersonale += getRicorrenteLuceBus(v); // Ricorrente da tabella
+                globale_totDiretta_Base += 50; // Valore fittizio di gettone base usato ieri
+                ricMaturatoMesePersonale += getRicorrenteLuceBus(v); 
                 volumeLuceTotale += v;
             });
 
@@ -239,7 +401,7 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
             const piBusPezzi = parseInt(document.getElementById('p-ind-bus-pezzi').value) || 0;
             const piBusKwh = parseFloat(document.getElementById('p-ind-bus-kwh').value) || 0;
             volumeLuceTotale += piBusKwh;
-            indEeGas += (piBusPezzi * 15); // Media sovrascrittura fissa usata ieri mattina
+            indEeGas += (piBusPezzi * 15); 
 
             const giRes = parseInt(document.getElementById('g-ind-res').value) || 0;
             const giResSmc = parseFloat(document.getElementById('g-ind-res-smc').value) || 0;
@@ -277,7 +439,7 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
             // Ricorrente Indiretto Standard (0.5€/MW luce e 0.0035€/smc gas)
             let ricIndMensile = ((volumeLuceTotale * 0.0005) + (volumeGasTotale * 0.0035)) / 12;
 
-            // Calcolo Volume Globale GWh (REGOLE DA MANDATO: 1 SMC = 4 KWh)
+            // Calcolo Volume Globale GWh (REGOLE DA MANDATO COORDINATOR: 1 SMC = 4 KWh)
             let volGwh = (volumeLuceTotale + (volumeGasTotale * 4)) / 1000000;
             
             // CONTRIBUTI MENSILI REALI (Da Pagina 6 del PDF)
@@ -315,5 +477,8 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
             window.scrollTo(0, document.body.scrollHeight);
         }
 
+        // Forza il ruolo all'avvio
         cambiaRuolo();
     </script>
+</body>
+</html>
