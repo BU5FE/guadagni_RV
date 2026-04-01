@@ -29,6 +29,10 @@
         .risultati h2 { color: #006037; text-align: center; margin-top: 0; font-size: 1.8rem; }
         .box-proiezione { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: 20px; }
         .box-gare { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 20px; margin-top: 15px; }
+        .box-gare p { margin-bottom: 15px; }
+        .box-gare p:last-child { margin-bottom: 0; }
+        .gara-item { display: flex; align-items: flex-start; gap: 10px; }
+        .gara-item input[type="checkbox"] { width: auto; margin-top: 5px; cursor: pointer; }
         .noticine { font-size: 0.8rem; color: #777; text-align: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
         .coordinator-only { display: none; }
         .account-only { display: none; }
@@ -224,8 +228,24 @@
 
                 <div class="box-gare account-only"> 
                     <h4>🏆 Gare Mensili Sales Account</h4> 
-                    <p>• <strong>Gara "Sales Academy" (Valida per i primi 3 mesi):</strong> <br> Punti accumulati: <span id="punti-academy" style="font-weight: bold; color: #0056b3;">0</span> <span id="label-academy" style="font-weight: bold; color: #666;"> (Nessun premio)</span><br> <input type="checkbox" id="usa-gara-academy" onchange="gestisciCheckboxAcademy()"> <label for="usa-gara-academy">Somma premio Academy al totale del mese (<span id="valore-academy-box">0,00</span> €)</label> </p> 
-                    <p>• <strong>Gara Standard:</strong> <br> Contratti EE/Gas totali: <span id="pezzi-totali" style="font-weight: bold; color: #0056b3;">0</span>. <span id="label-acceleratore" style="font-weight: bold; color: #b94a48;">Nessun bonus raggiunto (Soglia minima 8 pezzi).</span><br> <input type="checkbox" id="usa-gara-std" onchange="gestisciCheckboxStd()"> <label for="usa-gara-std">Somma bonus Gara Standard al totale del mese (<span id="valore-gara-box">0,00</span> €)</label> </p> 
+                    
+                    <div class="gara-item">
+                        <input type="checkbox" id="usa-gara-academy" onchange="gestisciCheckboxAcademy()">
+                        <label for="usa-gara-academy">
+                            <strong>Gara "Sales Academy" (Valida per i primi 3 mesi):</strong><br>
+                            Punti accumulati: <span id="punti-academy" style="font-weight: bold; color: #0056b3;">0</span> <span id="label-academy" style="font-weight: bold; color: #666;"> (Nessun premio)</span><br>
+                            Spuntando questa voce sommi il premio Academy al totale del mese (+<span id="valore-academy-box">0,00</span> €)
+                        </label>
+                    </div>
+
+                    <div class="gara-item" style="margin-top: 15px;">
+                        <input type="checkbox" id="usa-gara-std" onchange="gestisciCheckboxStd()">
+                        <label for="usa-gara-std">
+                            <strong>Gara Standard:</strong><br>
+                            Contratti EE/Gas totali: <span id="pezzi-totali" style="font-weight: bold; color: #0056b3;">0</span>. <span id="label-acceleratore" style="font-weight: bold; color: #b94a48;">Nessun bonus raggiunto (Soglia minima 8 pezzi).</span><br>
+                            Spuntando questa voce sommi il bonus Gara Standard al totale del mese (+<span id="valore-gara-box">0,00</span> €)
+                        </label>
+                    </div>
                 </div> 
 
                 <div style="margin-top: 15px;">
@@ -240,7 +260,7 @@
                             <li><strong>Quarto trimestre:</strong> <span id="ric-trim4">0,00</span> €</li> 
                         </ul> 
                         <p style="font-size: 0.8rem; color: #777; margin-top: 10px; font-style: italic;">
-                            * Nota: La simulazione del ricorrente trimestrale è calcolata presumendo che il primo mese di collaborazione coincida con il primo mese del trimestre di riferimento.
+                            * Nota: La simulazione del ricorrente trimestrale è calcolata presumendo che il primo mese di collaborazione coincida con il primo mese del trimestre di riferimento, al netto di possibili switch-out non correttamente reintegrati.
                         </p>
                     </div> 
                 </div>
