@@ -107,8 +107,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Contratti Business con RID/Web (Bonus extra):</label>
-                    <input type="number" id="c-bus" placeholder="Numero di contratti">
+                    <label>Numero Clienti Business (Bonus RID/Web):</label>
+                    <input type="number" id="c-bus" placeholder="Numero di clienti">
                 </div>
                 
                 <div class="form-group">
@@ -207,7 +207,7 @@
                         <p style="padding-left: 15px;">• Gettoni Sky Diretti: <span id="dir-sky">0,00</span> €</p>
                         <p style="padding-left: 15px;">• Gettoni Prodotti Diretti: <span id="dir-prod">0,00</span> €</p>
                         <p style="padding-left: 15px;">• Gettoni Verisure Diretti: <span id="dir-veri">0,00</span> €</p>
-                        <p style="padding-left: 15px;">• Bonus Contratti RID/Web: <span id="dir-rid">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Bonus Clienti Business RID/Web: <span id="dir-rid">0,00</span> €</p>
                         <p style="padding-left: 15px; color: #15803d;">• Bonus Gara Standard applicato: <span id="dir-bonus-gara">0,00</span> €</p>
                         <p style="padding-left: 15px; color: #15803d;">• Bonus Gara Academy applicato: <span id="dir-bonus-academy">0,00</span> €</p>
                     </div>
@@ -403,7 +403,7 @@
                 if (kwh <= 10000) return 65; 
                 if (kwh <= 25000) return 85; 
                 if (kwh <= 50000) return 135; 
-                if (kwh <= 100000) return 185; 
+                if (kwh <= 10000) return 185; 
                 if (kwh <= 300000) return 225; 
                 if (kwh <= 500000) return 275; 
                 if (kwh <= 700000) return 300; 
