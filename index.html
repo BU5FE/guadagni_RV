@@ -1,225 +1,49 @@
 <!DOCTYPE html>
+
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcolatore Provvigioni 2026 - Versione Business</title>
-    <style>
-        /* Grafica Pulita e Professionale */
-        body { font-family: Arial, sans-serif; line-height: 1.6; background-color: #f9f9f9; color: #333; padding: 20px; }
-        .container { max-width: 850px; margin: auto; background: #fff; padding: 20px; border: 1px solid #ddd; }
-        
-        h1 { color: #004a99; text-align: center; border-bottom: 2px solid #004a99; padding-bottom: 10px; }
-        h3 { background: #004a99; color: #fff; padding: 8px 12px; margin-top: 25px; font-size: 1.1rem; }
-        h4 { color: #004a99; margin-bottom: 10px; border-bottom: 1px solid #ccc; }
-
-        .section { margin-bottom: 20px; }
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
-        
-        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; box-sizing: border-box; }
-        
-        .business-item { display: flex; gap: 5px; margin-bottom: 5px; }
-        .btn-add { background: #eee; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer; font-size: 0.8rem; margin-bottom: 10px; }
-        .btn-add:hover { background: #ddd; }
-        .btn-remove { background: #cc0000; color: white; border: none; padding: 5px 10px; cursor: pointer; }
-
-        .btn-calcola { width: 100%; padding: 15px; background: #28a745; color: white; border: none; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
-        .btn-calcola:hover { background: #218838; }
-
-        /* Area Risultati */
-        .risultati { margin-top: 30px; border: 2px solid #28a745; padding: 20px; background: #fff; display: none; }
-        .risultati h2 { color: #28a745; text-align: center; margin-top: 0; }
-        
-        .box-info { background: #f0f7ff; border: 1px solid #bcdff1; padding: 15px; margin-bottom: 15px; }
-        .box-proiezione { background: #fdfdfd; border: 1px solid #eee; padding: 15px; font-size: 0.9rem; }
-        .box-proiezione ul { padding-left: 20px; }
-        
-        .coordinator-only, .account-only { display: none; }
-        
-        .highlight { font-weight: bold; color: #004a99; }
-        .success { color: #28a745; font-weight: bold; }
-        .warning { color: #856404; background-color: #fff3cd; padding: 2px 5px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulatore Provvigioni FuturENERGY</title>
+<style>
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background-color: #f4f7f6; color: #333; padding: 20px; }
+.container { max-width: 1000px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.logo-container { text-align: center; margin-bottom: 20px; }
+.logo-container img { max-width: 280px; height: auto; }
+h1 { color: #006037; text-align: center; margin-bottom: 30px; font-size: 2rem; border-bottom: 2px solid #006037; padding-bottom: 10px; }
+h3 { background: #006037; color: #fff; padding: 10px 15px; border-radius: 4px; margin-top: 25px; }
+h4 { color: #006037; margin-top: 15px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+@media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+.form-group { margin-bottom: 15px; }
+label { display: block; font-weight: 600; margin-bottom: 5px; color: #555; font-size: 0.95rem; }
+input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1rem; }
+input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 0 5px rgba(0,96,55,0.2); }
+.business-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+.btn-add { background: #e8f5e9; color: #006037; border: 1px solid #006037; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.9rem; margin-top: 5px; }
+.btn-add:hover { background: #006037; color: #fff; }
+.btn-remove { background: #ffebee; color: #c62828; border: 1px solid #c62828; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+.btn-remove:hover { background: #c62828; color: #fff; }
+.btn-calcola { width: 100%; padding: 15px; background: #006037; color: white; border: none; border-radius: 4px; font-size: 1.3rem; font-weight: bold; cursor: pointer; margin-top: 30px; transition: background 0.2s; }
+.btn-calcola:hover { background: #004d2c; }
+.risultati { margin-top: 40px; border: 2px solid #006037; border-radius: 6px; padding: 25px; background: #fff; display: none; }
+.risultati h2 { color: #006037; text-align: center; margin-top: 0; font-size: 1.8rem; }
+.box-info { background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 4px; padding: 20px; margin-bottom: 20px; }
+.box-info p { margin: 10px 0; font-size: 1.05rem; display: flex; justify-content: space-between; }
+.box-proiezione { background: #edf7f1; border: 1px solid #c8e6c9; border-radius: 4px; padding: 20px; }
+.box-proiezione ul { padding-left: 20px; margin: 10px 0; }
+.box-proiezione li { margin-bottom: 8px; font-size: 1rem; }
+.coordinator-only, .account-only { display: none; }
+.highlight { font-weight: bold; color: #006037; }
+.success { color: #2e7d32; font-weight: bold; }
+.valore { font-weight: bold; color: #333; }
+.opzioni-gare { margin-top: 20px; background: #fafafa; padding: 15px; border: 1px solid #ddd; border-radius: 4px; }
+.opzioni-gare label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: normal; }
+.opzioni-gare input[type="checkbox"] { width: auto; }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Calcolatore Provvigioni 2026</h1>
-
-        <div class="form-group" style="text-align: center; background: #eee; padding: 15px;">
-            <label>SELEZIONA PROFILO:</label>
-            <select id="ruolo" onchange="cambiaRuolo()" style="width: 250px; font-weight: bold;">
-                <option value="account">Sales Account</option>
-                <option value="coordinator" selected>Sales Coordinator</option>
-            </select>
-        </div>
-
-        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 300px;">
-                <h3>PRODUZIONE PERSONALE</h3>
-                
-                <label>EE Residenziale (Std / Rientro):</label>
-                <div class="business-item">
-                    <input type="number" id="p-res" placeholder="Standard">
-                    <input type="number" id="p-res-r" placeholder="Rientro">
-                </div>
-
-                <label>Gas Residenziale (Std / Rientro):</label>
-                <div class="business-item">
-                    <input type="number" id="g-res" placeholder="Standard">
-                    <input type="number" id="g-res-r" placeholder="Rientro">
-                </div>
-
-                <label>EE Business (kWh annui):</label>
-                <div id="p-bus-container"></div>
-                <button class="btn-add" onclick="aggiungiRigaBusiness('p-bus-container', 'kWh annui')">+ Aggiungi EE Business</button>
-
-                <label>Gas Business (SMC annui):</label>
-                <div id="g-bus-container"></div>
-                <button class="btn-add" onclick="aggiungiRigaBusiness('g-bus-container', 'SMC annui')">+ Aggiungi Gas Business</button>
-
-                <label>Sky Diretto:</label>
-                <div id="sky-container"></div>
-                <button class="btn-add" onclick="aggiungiRigaSky('sky-container')">+ Aggiungi Sky</button>
-
-                <label>Prodotti (FV, LED, Clima...):</label>
-                <div id="prodotti-container"></div>
-                <button class="btn-add" onclick="aggiungiRigaProdotto('prodotti-container')">+ Aggiungi Prodotto</button>
-
-                <div class="form-group">
-                    <label>Contratti Business RID/Web:</label>
-                    <input type="number" id="c-bus" placeholder="Quantità">
-                </div>
-                <div class="form-group">
-                    <label>Verisure Diretta (Pezzi):</label>
-                    <input type="number" id="verisure-qta" placeholder="Quantità">
-                </div>
-            </div>
-
-            <div class="coordinator-only" style="flex: 1; min-width: 300px;">
-                <h3>PRODUZIONE RETE (INDIRETTA)</h3>
-                
-                <div class="form-group">
-                    <label>Luce Res. Stand. (Pezzi / kWh Tot):</label>
-                    <div class="business-item">
-                        <input type="number" id="p-ind-res" placeholder="Pezzi">
-                        <input type="number" id="p-ind-res-kwh" placeholder="kWh Tot">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Luce Res. Rientro (Pezzi / kWh Tot):</label>
-                    <div class="business-item">
-                        <input type="number" id="p-ind-resr" placeholder="Pezzi">
-                        <input type="number" id="p-ind-resr-kwh" placeholder="kWh Tot">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Luce Business (Pezzi / kWh Globale):</label>
-                    <div class="business-item">
-                        <input type="number" id="p-ind-bus-pezzi" placeholder="Pezzi">
-                        <input type="number" id="p-ind-bus-kwh" placeholder="kWh Globale">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Gas Res. Stand. (Pezzi / SMC Tot):</label>
-                    <div class="business-item">
-                        <input type="number" id="g-ind-res" placeholder="Pezzi">
-                        <input type="number" id="g-ind-res-smc" placeholder="SMC Tot">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Gas Res. Rientro (Pezzi / SMC Tot):</label>
-                    <div class="business-item">
-                        <input type="number" id="g-ind-resr" placeholder="Pezzi">
-                        <input type="number" id="g-ind-resr-smc" placeholder="SMC Tot">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Gas Business (Pezzi / SMC Globale):</label>
-                    <div class="business-item">
-                        <input type="number" id="g-ind-bus-pezzi" placeholder="Pezzi">
-                        <input type="number" id="g-ind-bus-smc" placeholder="SMC Globale">
-                    </div>
-                </div>
-
-                <label>Sky Rete:</label>
-                <div id="sky-ind-container"></div>
-                <button class="btn-add" onclick="aggiungiRigaSky('sky-ind-container')">+ Aggiungi Sky Rete</button>
-
-                <label>Prodotti Rete:</label>
-                <div id="prodotti-ind-container"></div>
-                <button class="btn-add" onclick="aggiungiRigaProdotto('prodotti-ind-container')">+ Aggiungi Prodotti Rete</button>
-
-                <div class="form-group">
-                    <label>Verisure Indiretta (Pezzi):</label>
-                    <input type="number" id="verisure-ind-qta" placeholder="Quantità">
-                </div>
-            </div>
-        </div>
-
-        <div class="account-only" style="margin-top:20px; background:#f5f5f5; padding:15px; border:1px solid #ccc;">
-            <h4>Opzioni Gare</h4>
-            <label><input type="checkbox" id="usa-gara-academy" checked style="width:auto;"> Calcola ed includi Gara Academy nel totale</label><br>
-            <label><input type="checkbox" id="usa-gara-std" checked style="width:auto;"> Calcola ed includi Acceleratore Gara Std nel totale</label>
-        </div>
-
-        <button class="btn-calcola" onclick="calcolaProvvigioni()">CALCOLA GUADAGNO</button>
-
-        <div id="risultati-box" class="risultati">
-            <h2>Stima Compensi: <span id="totale-guadagno">0,00</span> €</h2>
-            
-            <div class="box-info">
-                <p><strong>Gettoni Diretti Base:</strong> <span id="tot-diretta">0,00</span> €</p>
-                
-                <div class="account-only">
-                    <p><strong>Bonus Gara Std (Acceleratore):</strong> +<span id="valore-gara-box">0,00</span> €</p>
-                    <p><strong>Premio Gara Academy:</strong> +<span id="valore-academy-box">0,00</span> €</p>
-                </div>
-
-                <div class="coordinator-only">
-                    <p><strong>Gettoni Indiretti Totali:</strong> <span id="tot-indiretta">0,00</span> €</p>
-                    <p style="font-size: 0.85rem; color: #555; padding-left: 15px;">
-                        • EE/Gas Indiretti: <span id="ind-ee-gas">0,00</span> €<br>
-                        • Sky/Prodotti/Verisure: <span id="ind-altri">0,00</span> €
-                    </p>
-                    <p><strong>Contributo Mensile Volume:</strong> <span id="tot-contributo">0,00</span> € <br>
-                       <small>(Volume calcolato: <span id="volume-calcolato">0.000</span> GWh)</small></p>
-                </div>
-            </div>
-
-            <div class="box-proiezione">
-                <h4>Evoluzione Mensile (Produzione Costante)</h4>
-                <div class="coordinator-only">
-                    <p>Ricorrente Indiretto Maturato (Mese): <strong><span id="ric-ind-ee-gas">0,00</span> €</strong></p>
-                    <ul>
-                        <li>Mese 1-2: <span id="fat-m1m2" class="highlight">0,00</span> €</li>
-                        <li>Mese 3: <span id="fat-m3" class="highlight">0,00</span> € (Inizio pagamento Ric. Indiretto)</li>
-                        <li>Mese 4 (Fine 1° Trim): <span id="fat-m4" class="success">0,00</span> € <br> <small>(Include Ric. Diretto Trimestrale: +<span id="ric-dir-1">0,00</span> €)</small></li>
-                        <li>Mese 7 (Fine 2° Trim): <span id="fat-m7" class="success">0,00</span> € <br> <small>(Include Ric. Diretto Doppia Produzione: +<span id="ric-dir-2">0,00</span> €)</small></li>
-                    </ul>
-                </div>
-
-                <div class="account-only">
-                    <p><strong>Gare Sales Account:</strong></p>
-                    <p id="label-acceleratore" style="font-weight:bold;"></p>
-                    <p>• Pezzi Luce/Gas validi per gare: <span id="pezzi-totali" class="highlight">0</span></p>
-                    <p>• Punti Academy (0.5 Res / 1 Bus): <span id="punti-academy" class="highlight">0</span> <span id="label-academy"></span></p>
-                </div>
-                
-                <p style="margin-top:10px;">Ricorrente Personale Annuo Generato: <strong><span id="tot-ric-annuale">0,00</span> €</strong></p>
-            </div>
-            
-            <div style="font-size: 0.7rem; color: #999; margin-top: 15px;">
-                * Calcoli basati su mandato <span id="label-mandato"></span> 2026. Soggetto a storni 180gg.
-            </div>
-        </div>
-    </div>
 
 
 
@@ -230,262 +54,339 @@
 
 
     <script>
-        // Tabelle Provvigionali Ufficiali
-        const tabelle = {
-            sky: {
-                "TRIPLE_PLAY": {diretta: 95, indiretta: 9.5},
-                "SKY_WIFI_RID": {diretta: 40, indiretta: 4},
-                "SKY_WIFI_PREPAGATA": {diretta: 30, indiretta: 3},
-                "BUSINESS_BAR": {diretta: 125, indiretta: 12.5},
-                "HOTEL_FINO_A_3_CAMERE": {diretta: 100, indiretta: 10},
-                "HOTEL_ANNUALE": {diretta: 30, indiretta: 3},
-                "HOTEL_STAGIONALE": {diretta: 36, indiretta: 3.6}
-            },
-            prodotti: {
-                "FOTOVOLTAICO": {diretta: 0.05, indiretta: 0.015},
-                "LED_LISTINO_4": {diretta: 0.20, indiretta: 0.03},
-                "LED_LISTINO_3": {diretta: 0.15, indiretta: 0.03},
-                "LED_LISTINO_2": {diretta: 0.10, indiretta: 0.025},
-                "LED_LISTINO_1": {diretta: 0.07, indiretta: 0.02},
-                "CLIMA": {diretta: 0.08, indiretta: 0.02},
-                "COLONNINE_LISTINO_3": {diretta: 0.10, indiretta: 0.025},
-                "COLONNINE_LISTINO_2": {diretta: 0.085, indiretta: 0.02},
-                "COLONNINE_LISTINO_1": {diretta: 0.07, indiretta: 0.015},
-                "EBIKE": {diretta: 0.07, indiretta: 0.02}
-            }
-        };
-
-        let globale_totDiretta_Base = 0;
-        let globale_totIndiretta = 0;
-        let globale_contributo = 0;
-        let globale_bonusGaraAcademy = 0;
-        let globale_bonusGaraStd = 0;
-
-        function cambiaRuolo() {
-            const ruolo = document.getElementById('ruolo').value;
-            document.querySelectorAll('.coordinator-only').forEach(el => el.style.display = (ruolo === 'coordinator') ? 'block' : 'none');
-            document.querySelectorAll('.account-only').forEach(el => el.style.display = (ruolo === 'account') ? 'block' : 'none');
-            document.getElementById('label-mandato').innerText = ruolo.toUpperCase();
-            document.getElementById('risultati-box').style.display = 'none';
+    // Tabelle Provvigionali
+    const tabelle = {
+        sky: {
+            "TRIPLE_PLAY": {diretta: 95, indiretta: 9.5},
+            "SKY_WIFI_RID": {diretta: 40, indiretta: 4},
+            "SKY_WIFI_PREPAGATA": {diretta: 30, indiretta: 3},
+            "BUSINESS_BAR": {diretta: 125, indiretta: 12.5},
+            "HOTEL_FINO_A_3_CAMERE": {diretta: 100, indiretta: 10},
+            "HOTEL_ANNUALE": {diretta: 30, indiretta: 3},
+            "HOTEL_STAGIONALE": {diretta: 36, indiretta: 3.6}
+        },
+        prodotti: {
+            "FOTOVOLTAICO": {diretta: 0.05, indiretta: 0.015},
+            "LED_LISTINO_4": {diretta: 0.20, indiretta: 0.03},
+            "LED_LISTINO_3": {diretta: 0.15, indiretta: 0.03},
+            "LED_LISTINO_2": {diretta: 0.10, indiretta: 0.025},
+            "LED_LISTINO_1": {diretta: 0.07, indiretta: 0.02},
+            "CLIMA": {diretta: 0.08, indiretta: 0.02},
+            "COLONNINE_LISTINO_3": {diretta: 0.10, indiretta: 0.025},
+            "COLONNINE_LISTINO_2": {diretta: 0.085, indiretta: 0.02},
+            "COLONNINE_LISTINO_1": {diretta: 0.07, indiretta: 0.015},
+            "EBIKE": {diretta: 0.07, indiretta: 0.02}
         }
+    };
 
-        function aggiungiRigaBusiness(id, text) {
-            const div = document.createElement('div');
-            div.className = 'business-item';
-            div.innerHTML = `<input type="number" class="consumo-business" placeholder="${text}"><button class="btn-remove" onclick="this.parentElement.remove()">X</button>`;
-            document.getElementById(id).appendChild(div);
+    let globale_totDiretta_Base = 0;
+    let globale_totIndiretta = 0;
+    let globale_contributo = 0;
+    let globale_bonusGaraAcademy = 0;
+    let globale_bonusGaraStd = 0;
+
+    function cambiaRuolo() {
+        const ruolo = document.getElementById('ruolo').value;
+        const isCoord = (ruolo === 'coordinator');
+        
+        document.querySelectorAll('.coordinator-only').forEach(el => el.style.display = isCoord ? 'block' : 'none');
+        document.querySelectorAll('.account-only').forEach(el => el.style.display = isCoord ? 'none' : 'block');
+        
+        document.getElementById('label-mandato').innerText = ruolo.toUpperCase();
+        document.getElementById('risultati-box').style.display = 'none';
+    }
+
+    function aggiungiRigaBusiness(id, placeholderText) {
+        const container = document.getElementById(id);
+        const div = document.createElement('div');
+        div.className = 'business-item';
+        div.innerHTML = `
+            <input type="number" class="consumo-business" placeholder="${placeholderText}">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        `;
+        container.appendChild(div);
+    }
+
+    function aggiungiRigaSky(id) {
+        const container = document.getElementById(id);
+        const div = document.createElement('div');
+        div.className = 'business-item';
+        
+        let optionsHtml = '';
+        for (const key in tabelle.sky) {
+            optionsHtml += `<option value="${key}">${key.replace(/_/g, ' ')}</option>`;
         }
+        
+        div.innerHTML = `
+            <select class="tipo-sky" style="flex: 2;">${optionsHtml}</select>
+            <input type="number" class="qta-sky" value="1" style="flex: 0.5;" placeholder="Q.tà">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        `;
+        container.appendChild(div);
+    }
 
-        function aggiungiRigaSky(id) {
-            const div = document.createElement('div');
-            div.className = 'business-item';
-            let opts = Object.keys(tabelle.sky).map(k => `<option value="${k}">${k}</option>`).join('');
-            div.innerHTML = `<select class="tipo-sky" style="flex:2">${opts}</select><input type="number" class="qta-sky" value="1" style="flex:1"><button class="btn-remove" onclick="this.parentElement.remove()">X</button>`;
-            document.getElementById(id).appendChild(div);
+    function aggiungiRigaProdotto(id) {
+        const container = document.getElementById(id);
+        const div = document.createElement('div');
+        div.className = 'business-item';
+        
+        let optionsHtml = '';
+        for (const key in tabelle.prodotti) {
+            optionsHtml += `<option value="${key}">${key.replace(/_/g, ' ')}</option>`;
         }
+        
+        div.innerHTML = `
+            <select class="tipo-prodotto" style="flex: 2;">${optionsHtml}</select>
+            <input type="number" class="valore-prodotto" style="flex: 1;" placeholder="Valore Commessa €">
+            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+        `;
+        container.appendChild(div);
+    }
 
-        function aggiungiRigaProdotto(id) {
-            const div = document.createElement('div');
-            div.className = 'business-item';
-            let opts = Object.keys(tabelle.prodotti).map(k => `<option value="${k}">${k}</option>`).join('');
-            div.innerHTML = `<select class="tipo-prodotto" style="flex:2">${opts}</select><input type="number" class="valore-prodotto" placeholder="Valore €" style="flex:2"><button class="btn-remove" onclick="this.parentElement.remove()">X</button>`;
-            document.getElementById(id).appendChild(div);
+    function getLuceGettone(kwh, tipo) {
+        const scaglioni = [5000, 10000, 25000, 50000, 100000, 300000, 500000, 700000];
+        const valoriDiretti = [50, 65, 85, 135, 185, 225, 275, 300, 350];
+        const valoriIndiretti = [8, 10, 12, 15, 20, 25, 35, 40, 50];
+        
+        const arrayRiferimento = (tipo === 'diretta') ? valoriDiretti : valoriIndiretti;
+        
+        for (let i = 0; i < scaglioni.length; i++) {
+            if (kwh <= scaglioni[i]) return arrayRiferimento[i];
         }
+        return arrayRiferimento[arrayRiferimento.length - 1];
+    }
 
-        function getLuceGettone(kwh, tipo) {
-            const scaglioni = [5000, 10000, 25000, 50000, 100000, 300000, 500000, 700000];
-            const valori = tipo === 'diretta' ? [50, 65, 85, 135, 185, 225, 275, 300, 350] : [8, 10, 12, 15, 20, 25, 35, 40, 50];
-            for (let i = 0; i < scaglioni.length; i++) { if (kwh <= scaglioni[i]) return valori[i]; }
-            return valori[valori.length - 1];
+    function getGasGettone(smc, tipo) {
+        const scaglioni = [1500, 5000, 10000, 20000, 30000, 100000, 200000, 300000, 400000];
+        const valoriDiretti = [40, 55, 75, 125, 185, 225, 275, 300, 350, 500];
+        const valoriIndiretti = [8, 9, 10, 15, 20, 25, 35, 40, 50, 60];
+        
+        const arrayRiferimento = (tipo === 'diretta') ? valoriDiretti : valoriIndiretti;
+        
+        for (let i = 0; i < scaglioni.length; i++) {
+            if (smc <= scaglioni[i]) return arrayRiferimento[i];
         }
+        return arrayRiferimento[arrayRiferimento.length - 1];
+    }
 
-        function getGasGettone(smc, tipo) {
-            const scaglioni = [1500, 5000, 10000, 20000, 30000, 100000, 200000, 300000, 400000];
-            const valori = tipo === 'diretta' ? [40, 55, 75, 125, 185, 225, 275, 300, 350, 500] : [8, 9, 10, 15, 20, 25, 35, 40, 50, 60];
-            for (let i = 0; i < scaglioni.length; i++) { if (smc <= scaglioni[i]) return valori[i]; }
-            return valori[valori.length - 1];
-        }
+    function calcolaProvvigioni() {
+        const ruolo = document.getElementById('ruolo').value;
+        
+        globale_totDiretta_Base = 0;
+        globale_totIndiretta = 0;
+        globale_contributo = 0;
+        
+        let ricMaturatoMesePersonale = 0;
+        
+        let volumeLuceTotale = 0;
+        let volumeGasTotale = 0;
 
-        function calcolaProvvigioni() {
-            const ruolo = document.getElementById('ruolo').value;
-            globale_totDiretta_Base = 0;
-            globale_totIndiretta = 0;
-            let ricMaturatoMesePersonale = 0;
-            let volKwh = 0, volSmc = 0;
+        const pRes = parseInt(document.getElementById('p-res').value) || 0;
+        const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
+        globale_totDiretta_Base += (pRes * 50) + (pResR * 70);
+        
+        ricMaturatoMesePersonale += (pRes + pResR) * 4;
+        volumeLuceTotale += (pRes + pResR) * 3000;
 
-            // 1. LUCE DIRETTA
-            const pRes = parseInt(document.getElementById('p-res').value) || 0;
-            const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
-            globale_totDiretta_Base += (pRes * 50) + (pResR * 70);
-            ricMaturatoMesePersonale += (pRes + pResR) * 4;
-            volKwh += (pRes + pResR) * 3000;
+        const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business');
+        let pezziLuceBus = bLuceInputs.length;
+        bLuceInputs.forEach(input => {
+            let v = parseFloat(input.value) || 0;
+            globale_totDiretta_Base += getLuceGettone(v, 'diretta');
+            volumeLuceTotale += v;
+        });
 
-            const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business');
-            let pezziLuceBus = bLuceInputs.length;
-            bLuceInputs.forEach(input => {
-                let v = parseFloat(input.value) || 0;
-                globale_totDiretta_Base += getLuceGettone(v, 'diretta');
-                volKwh += v;
-            });
+        const gRes = parseInt(document.getElementById('g-res').value) || 0;
+        const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
+        globale_totDiretta_Base += (gRes * 50) + (gResR * 70);
+        
+        ricMaturatoMesePersonale += (gRes + gResR) * 4;
+        volumeGasTotale += (gRes + gResR) * 1000;
 
-            // 2. GAS DIRETTO
-            const gRes = parseInt(document.getElementById('g-res').value) || 0;
-            const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
-            globale_totDiretta_Base += (gRes * 50) + (gResR * 70);
-            ricMaturatoMesePersonale += (gRes + gResR) * 4;
-            volSmc += (gRes + gResR) * 1000;
+        const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business');
+        let pezziGasBus = bGasInputs.length;
+        bGasInputs.forEach(input => {
+            let v = parseFloat(input.value) || 0;
+            globale_totDiretta_Base += getGasGettone(v, 'diretta');
+            volumeGasTotale += v;
+        });
 
-            const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business');
-            let pezziGasBus = bGasInputs.length;
-            bGasInputs.forEach(input => {
-                let v = parseFloat(input.value) || 0;
-                globale_totDiretta_Base += getGasGettone(v, 'diretta');
-                volSmc += v;
-            });
+        const skyRighe = document.querySelectorAll('#sky-container .business-item');
+        skyRighe.forEach(riga => {
+            const tipo = riga.querySelector('.tipo-sky').value;
+            const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
+            globale_totDiretta_Base += qta * tabelle.sky[tipo].diretta;
+        });
 
-            // 3. SKY DIRETTO
-            document.querySelectorAll('#sky-container .business-item').forEach(r => {
-                globale_totDiretta_Base += (parseInt(r.querySelector('.qta-sky').value) || 0) * tabelle.sky[r.querySelector('.tipo-sky').value].diretta;
-            });
+        const prodRighe = document.querySelectorAll('#prodotti-container .business-item');
+        prodRighe.forEach(riga => {
+            const tipo = riga.querySelector('.tipo-prodotto').value;
+            const valoreCommessa = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
+            globale_totDiretta_Base += valoreCommessa * tabelle.prodotti[tipo].diretta;
+        });
 
-            // 4. PRODOTTI DIRETTI
-            document.querySelectorAll('#prodotti-container .business-item').forEach(r => {
-                globale_totDiretta_Base += (parseFloat(r.querySelector('.valore-prodotto').value) || 0) * tabelle.prodotti[r.querySelector('.tipo-prodotto').value].diretta;
-            });
+        const bonusBusRid = parseInt(document.getElementById('c-bus').value) || 0;
+        globale_totDiretta_Base += bonusBusRid * 13;
+        
+        const verisureDir = parseInt(document.getElementById('verisure-qta').value) || 0;
+        globale_totDiretta_Base += verisureDir * 75;
 
-            // 5. BONUS RID WEB & VERISURE DIRETTA
-            globale_totDiretta_Base += (parseInt(document.getElementById('c-bus').value) || 0) * 13;
-            globale_totDiretta_Base += (parseInt(document.getElementById('verisure-qta').value) || 0) * 75;
+        let indEeGas = 0;
+        let indAltri = 0;
 
-            // 6. PRODUZIONE RETE (SOLO COORDINATOR)
-            let indEeGas = 0, indAltri = 0;
-            if (ruolo === 'coordinator') {
-                const piRes = parseInt(document.getElementById('p-ind-res').value) || 0;
-                indEeGas += (piRes * 6); volKwh += (parseFloat(document.getElementById('p-ind-res-kwh').value) || 0);
-                
-                const piResR = parseInt(document.getElementById('p-ind-resr').value) || 0;
-                indEeGas += (piResR * 10); volKwh += (parseFloat(document.getElementById('p-ind-resr-kwh').value) || 0);
-
-                const piBusP = parseInt(document.getElementById('p-ind-bus-pezzi').value) || 0;
-                const piBusK = parseFloat(document.getElementById('p-ind-bus-kwh').value) || 0;
-                if(piBusP > 0) { indEeGas += (getLuceGettone(piBusK/piBusP, 'indiretta') * piBusP); volKwh += piBusK; }
-
-                const giRes = parseInt(document.getElementById('g-ind-res').value) || 0;
-                indEeGas += (giRes * 6); volSmc += (parseFloat(document.getElementById('g-ind-res-smc').value) || 0);
-
-                const giResR = parseInt(document.getElementById('g-ind-resr').value) || 0;
-                indEeGas += (giResR * 10); volSmc += (parseFloat(document.getElementById('g-ind-resr-smc').value) || 0);
-
-                const giBusP = parseInt(document.getElementById('g-ind-bus-pezzi').value) || 0;
-                const giBusS = parseFloat(document.getElementById('g-ind-bus-smc').value) || 0;
-                if(giBusP > 0) { indEeGas += (getGasGettone(giBusS/giBusP, 'indiretta') * giBusP); volSmc += giBusS; }
-
-                document.querySelectorAll('#sky-ind-container .business-item').forEach(r => {
-                    indAltri += (parseInt(r.querySelector('.qta-sky').value) || 0) * tabelle.sky[r.querySelector('.tipo-sky').value].indiretta;
-                });
-                document.querySelectorAll('#prodotti-ind-container .business-item').forEach(r => {
-                    indAltri += (parseFloat(r.querySelector('.valore-prodotto').value) || 0) * tabelle.prodotti[r.querySelector('.tipo-prodotto').value].indiretta;
-                });
-                indAltri += (parseInt(document.getElementById('verisure-ind-qta').value) || 0) * 8;
-            }
-
-            globale_totIndiretta = indEeGas + indAltri;
-            let ricIndMensile = ((volKwh * 0.0005) + (volSmc * 0.0035)) / 12;
-            let volGwh = (volKwh + (volSmc * 4)) / 1000000;
+        if (ruolo === 'coordinator') {
+            const piRes = parseInt(document.getElementById('p-ind-res').value) || 0;
+            const piResKwh = parseFloat(document.getElementById('p-ind-res-kwh').value) || 0;
+            indEeGas += (piRes * 6);
+            volumeLuceTotale += piResKwh;
             
-            if (volGwh >= 4) globale_contributo = 4000;
-            else if (volGwh >= 3) globale_contributo = 2500;
-            else if (volGwh >= 2) globale_contributo = 2000;
-            else if (volGwh >= 1.5) globale_contributo = 1500;
-            else if (volGwh >= 1) globale_contributo = 800;
-            else globale_contributo = 0;
+            const piResR = parseInt(document.getElementById('p-ind-resr').value) || 0;
+            const piResRKwh = parseFloat(document.getElementById('p-ind-resr-kwh').value) || 0;
+            indEeGas += (piResR * 10);
+            volumeLuceTotale += piResRKwh;
 
-            // --- CALCOLO GARE SALES ACCOUNT ---
-            let pezziLuceGasGara = pRes + pResR + pezziLuceBus + gRes + gResR + pezziGasBus;
-            let puntiAcademy = (pRes + pResR + gRes + gResR) * 0.5 + (pezziLuceBus + pezziGasBus) * 1.0;
-
-            // Gara Academy (10pt->500€ | 18pt->800€ | 25pt->1000€)
-            if (puntiAcademy >= 25) globale_bonusGaraAcademy = 1000;
-            else if (puntiAcademy >= 18) globale_bonusGaraAcademy = 800;
-            else if (puntiAcademy >= 10) globale_bonusGaraAcademy = 500;
-            else globale_bonusGaraAcademy = 0;
-
-            // Gara Standard (+25% o +30%)
-            let percentualeGaraStd = 0;
-            if (pezziLuceGasGara >= 15) percentualeGaraStd = 0.30;
-            else if (pezziLuceGasGara >= 8) percentualeGaraStd = 0.25;
-
-            globale_bonusGaraStd = globale_totDiretta_Base * percentualeGaraStd;
-
-            // --- AGGIORNAMENTO BOX GARE VISIVI ---
-            document.getElementById('pezzi-totali').innerText = pezziLuceGasGara;
-            let labelAcc = document.getElementById('label-acceleratore');
-            if (percentualeGaraStd > 0) {
-                labelAcc.innerText = `Raggiunto Acceleratore Gara: +${percentualeGaraStd * 100}% sui gettoni!`;
-                labelAcc.style.color = "#16a34a";
-            } else {
-                labelAcc.innerText = "Nessun acceleratore (Soglia minima 8 pezzi luce/gas).";
-                labelAcc.style.color = "#b94a48";
+            const piBusPezzi = parseInt(document.getElementById('p-ind-bus-pezzi').value) || 0;
+            const piBusKwh = parseFloat(document.getElementById('p-ind-bus-kwh').value) || 0;
+            volumeLuceTotale += piBusKwh;
+            if (piBusPezzi > 0) {
+                const mediaKwh = piBusKwh / piBusPezzi;
+                indEeGas += (getLuceGettone(mediaKwh, 'indiretta') * piBusPezzi);
             }
 
-            document.getElementById('punti-academy').innerText = puntiAcademy.toFixed(1);
-            let lblAcademy = document.getElementById('label-academy');
-            if (globale_bonusGaraAcademy > 0) {
-                lblAcademy.innerText = ` (Premio sbloccato: ${globale_bonusGaraAcademy}€)`;
-                lblAcademy.style.color = "#16a34a";
-            } else {
-                lblAcademy.innerText = " (Nessun premio)";
-                lblAcademy.style.color = "#666";
+            const giRes = parseInt(document.getElementById('g-ind-res').value) || 0;
+            const giResSmc = parseFloat(document.getElementById('g-ind-res-smc').value) || 0;
+            indEeGas += (giRes * 6);
+            volumeGasTotale += giResSmc;
+
+            const giResR = parseInt(document.getElementById('g-ind-resr').value) || 0;
+            const giResRSmc = parseFloat(document.getElementById('g-ind-resr-smc').value) || 0;
+            indEeGas += (giResR * 10);
+            volumeGasTotale += giResRSmc;
+
+            const giBusPezzi = parseInt(document.getElementById('g-ind-bus-pezzi').value) || 0;
+            const giBusSmc = parseFloat(document.getElementById('g-ind-bus-smc').value) || 0;
+            volumeGasTotale += giBusSmc;
+            if (giBusPezzi > 0) {
+                const mediaSmc = giBusSmc / giBusPezzi;
+                indEeGas += (getGasGettone(mediaSmc, 'indiretta') * giBusPezzi);
             }
 
-            document.getElementById('valore-academy-box').innerText = globale_bonusGaraAcademy.toFixed(2).replace('.', ',');
-            document.getElementById('valore-gara-box').innerText = globale_bonusGaraStd.toFixed(2).replace('.', ',');
+            const skyIndRighe = document.querySelectorAll('#sky-ind-container .business-item');
+            skyIndRighe.forEach(riga => {
+                const tipo = riga.querySelector('.tipo-sky').value;
+                const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
+                indAltri += qta * tabelle.sky[tipo].indiretta;
+            });
 
-            // --- STAMPA RISULTATI ---
-            document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toFixed(2).replace('.', ',');
-            document.getElementById('tot-indiretta').innerText = globale_totIndiretta.toFixed(2).replace('.', ',');
-            document.getElementById('ind-ee-gas').innerText = indEeGas.toFixed(2).replace('.', ',');
-            document.getElementById('ind-altri').innerText = indAltri.toFixed(2).replace('.', ',');
-            document.getElementById('tot-contributo').innerText = globale_contributo.toFixed(2).replace('.', ',');
-            
-            document.getElementById('ric-ind-ee-gas').innerText = ricIndMensile.toFixed(2).replace('.', ',');
-            document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 12).toFixed(2).replace('.', ',');
-            document.getElementById('volume-calcolato').innerText = volGwh.toFixed(3);
+            const prodIndRighe = document.querySelectorAll('#prodotti-ind-container .business-item');
+            prodIndRighe.forEach(riga => {
+                const tipo = riga.querySelector('.tipo-prodotto').value;
+                const valoreCommessa = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
+                indAltri += valoreCommessa * tabelle.prodotti[tipo].indiretta;
+            });
 
-            let baseMese = globale_totDiretta_Base;
-            if (ruolo === 'coordinator') baseMese += globale_totIndiretta + globale_contributo;
-
-            // Proiezioni
-            document.getElementById('fat-m1m2').innerText = baseMese.toFixed(2).replace('.', ',') + " €";
-            document.getElementById('fat-m3').innerText = (baseMese + ricIndMensile).toFixed(2).replace('.', ',') + " €";
-            let ricTrim = ricMaturatoMesePersonale * 3;
-            document.getElementById('fat-m4').innerText = (baseMese + (ricIndMensile * 2) + ricTrim).toFixed(2).replace('.', ',') + " €";
-            document.getElementById('ric-dir-1').innerText = ricTrim.toFixed(2).replace('.', ',');
-            document.getElementById('fat-m7').innerText = (baseMese + (ricIndMensile * 5) + (ricTrim * 2)).toFixed(2).replace('.', ',') + " €";
-            document.getElementById('ric-dir-2').innerText = (ricTrim * 2).toFixed(2).replace('.', ',');
-
-            aggiornaTotaleFinale();
-            document.getElementById('risultati-box').style.display = 'block';
-            window.scrollTo(0, document.body.scrollHeight);
+            const verisureInd = parseInt(document.getElementById('verisure-ind-qta').value) || 0;
+            indAltri += verisureInd * 8;
         }
 
-        function aggiornaTotaleFinale() {
-            let totaleGuadagno = globale_totDiretta_Base;
-            const ruolo = document.getElementById('ruolo').value;
-            
-            if (ruolo === 'coordinator') {
-                totaleGuadagno += globale_totIndiretta + globale_contributo;
-            } else {
-                if (document.getElementById('usa-gara-academy').checked) totaleGuadagno += globale_bonusGaraAcademy;
-                if (document.getElementById('usa-gara-std').checked) totaleGuadagno += globale_bonusGaraStd;
-            }
-            document.getElementById('totale-guadagno').innerText = totaleGuadagno.toFixed(2).replace('.', ',');
+        globale_totIndiretta = indEeGas + indAltri;
+
+        let ricIndMensile = ((volumeLuceTotale * 0.0005) + (volumeGasTotale * 0.0035)) / 12;
+
+        let volGwh = (volumeLuceTotale + (volumeGasTotale * 4)) / 1000000;
+        
+        if (volGwh >= 4.0) globale_contributo = 4000;
+        else if (volGwh >= 3.0) globale_contributo = 2500;
+        else if (volGwh >= 2.0) globale_contributo = 2000;
+        else if (volGwh >= 1.5) globale_contributo = 1500;
+        else if (volGwh >= 1.0) globale_contributo = 800;
+        else globale_contributo = 0;
+
+        let pezziLuceGasGara = pRes + pResR + pezziLuceBus + gRes + gResR + pezziGasBus;
+        let puntiAcademy = (pRes + pResR + gRes + gResR) * 0.5 + (pezziLuceBus + pezziGasBus) * 1.0;
+
+        if (puntiAcademy >= 25) globale_bonusGaraAcademy = 1000;
+        else if (puntiAcademy >= 18) globale_bonusGaraAcademy = 800;
+        else if (puntiAcademy >= 10) globale_bonusGaraAcademy = 500;
+        else globale_bonusGaraAcademy = 0;
+
+        let percentualeGaraStd = 0;
+        if (pezziLuceGasGara >= 15) percentualeGaraStd = 0.30;
+        else if (pezziLuceGasGara >= 8) percentualeGaraStd = 0.25;
+
+        globale_bonusGaraStd = globale_totDiretta_Base * percentualeGaraStd;
+
+        document.getElementById('pezzi-totali').innerText = pezziLuceGasGara;
+        let labelAcc = document.getElementById('label-acceleratore');
+        if (percentualeGaraStd > 0) {
+            labelAcc.innerText = `Complimenti! Raggiunto Acceleratore Gara Std: +${percentualeGaraStd * 100}% sui gettoni!`;
+            labelAcc.style.color = "#2e7d32";
+        } else {
+            labelAcc.innerText = "Nessun acceleratore scattato (Soglia minima 8 pezzi luce/gas).";
+            labelAcc.style.color = "#cc0000";
         }
 
-        document.getElementById('usa-gara-academy').addEventListener('change', aggiornaTotaleFinale);
-        document.getElementById('usa-gara-std').addEventListener('change', aggiornaTotaleFinale);
+        document.getElementById('punti-academy').innerText = puntiAcademy.toFixed(1);
+        let lblAcademy = document.getElementById('label-academy');
+        if (globale_bonusGaraAcademy > 0) {
+            lblAcademy.innerText = `(Premio sbloccato: ${globale_bonusGaraAcademy}€)`;
+            lblAcademy.style.color = "#2e7d32";
+        } else {
+            lblAcademy.innerText = "(Nessun premio sbloccato)";
+            lblAcademy.style.color = "#666";
+        }
 
-        cambiaRuolo();
-    </script>
-</body>
+        document.getElementById('valore-academy-box').innerText = globale_bonusGaraAcademy.toFixed(2).replace('.', ',') + " €";
+        document.getElementById('valore-gara-box').innerText = globale_bonusGaraStd.toFixed(2).replace('.', ',') + " €";
+
+        document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toFixed(2).replace('.', ',') + " €";
+        document.getElementById('tot-indiretta').innerText = globale_totIndiretta.toFixed(2).replace('.', ',') + " €";
+        document.getElementById('ind-ee-gas').innerText = indEeGas.toFixed(2).replace('.', ',') + " €";
+        document.getElementById('ind-altri').innerText = indAltri.toFixed(2).replace('.', ',') + " €";
+        document.getElementById('tot-contributo').innerText = globale_contributo.toFixed(2).replace('.', ',') + " €";
+        
+        document.getElementById('ric-ind-ee-gas').innerText = ricIndMensile.toFixed(2).replace('.', ',');
+        document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 12).toFixed(2).replace('.', ',');
+        document.getElementById('volume-calcolato').innerText = volGwh.toFixed(3) + " GWh";
+
+        let baseMese = globale_totDiretta_Base;
+        if (ruolo === 'coordinator') {
+            baseMese += globale_totIndiretta + globale_contributo;
+        }
+
+        document.getElementById('fat-m1m2').innerText = baseMese.toFixed(2).replace('.', ',') + " €";
+        document.getElementById('fat-m3').innerText = (baseMese + ricIndMensile).toFixed(2).replace('.', ',') + " €";
+        
+        let ricTrim = ricMaturatoMesePersonale * 3;
+        document.getElementById('fat-m4').innerText = (baseMese + (ricIndMensile * 2) + ricTrim).toFixed(2).replace('.', ',') + " €";
+        document.getElementById('ric-dir-1').innerText = ricTrim.toFixed(2).replace('.', ',');
+        
+        document.getElementById('fat-m7').innerText = (baseMese + (ricIndMensile * 5) + (ricTrim * 2)).toFixed(2).replace('.', ',') + " €";
+        document.getElementById('ric-dir-2').innerText = (ricTrim * 2).toFixed(2).replace('.', ',');
+
+        aggiornaTotaleFinale();
+        
+        document.getElementById('risultati-box').style.display = 'block';
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function aggiornaTotaleFinale() {
+        let totaleGuadagno = globale_totDiretta_Base;
+        const ruolo = document.getElementById('ruolo').value;
+        
+        if (ruolo === 'coordinator') {
+            totaleGuadagno += globale_totIndiretta + globale_contributo;
+        } else {
+            const usaAcademy = document.getElementById('usa-gara-academy').checked;
+            const usaStd = document.getElementById('usa-gara-std').checked;
+            
+            if (usaAcademy) totaleGuadagno += globale_bonusGaraAcademy;
+            if (usaStd) totaleGuadagno += globale_bonusGaraStd;
+        }
+        
+        document.getElementById('totale-guadagno').innerText = totaleGuadagno.toFixed(2).replace('.', ',');
+    }
+
+    cambiaRuolo();
+        
 </html>
