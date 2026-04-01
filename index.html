@@ -201,6 +201,15 @@
                 
                 <div class="box-riepilogo-unico">
                     <p><strong>Gettoni Diretti:</strong> <span id="tot-diretta">0,00</span> €</p>
+                    <div class="account-only">
+                        <p style="padding-left: 15px;">• Gettoni EE/Gas Diretti: <span id="dir-ee-gas">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Gettoni Sky Diretti: <span id="dir-sky">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Gettoni Prodotti Diretti: <span id="dir-prod">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Gettoni Verisure Diretti: <span id="dir-veri">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Bonus Contratti RID/Web: <span id="dir-rid">0,00</span> €</p>
+                        <p style="padding-left: 15px; color: #15803d;">• Bonus Gara Standard applicato: <span id="dir-bonus-gara">0,00</span> €</p>
+                        <p style="padding-left: 15px; color: #15803d;">• Bonus Gara Academy applicato: <span id="dir-bonus-academy">0,00</span> €</p>
+                    </div>
                     
                     <div class="coordinator-only">
                         <p><strong>Gettoni Indiretti (Personale + Squadra):</strong> <span id="tot-indiretta">0,00</span> €</p>
@@ -238,8 +247,9 @@
                         
                         <li style="margin-bottom: 5px;"><strong>Mese 13 (Fine 4° Trim):</strong> <span id="fat-m13" style="font-weight:bold; color:#1d4ed8;">0,00</span> € <br><span style="font-size:0.85rem; color:#1d4ed8;">↳ Include: Liquidazione Ricorrente Diretto Trimestrale Quadruplicato (+<span id="ric-dir-4">0,00</span> €)</span></li>
                     </ul>
-                    <p style="font-size: 0.8rem; color: #b91c1c; margin-top: 10px; font-weight: bold;">
-                        * Al netto di switch-out dei clienti a portafoglio non correttamente reintegrati.
+                    <p style="font-size: 0.8rem; color: #b91c1c; margin-top: 10px;">
+                        * Nota: la simulazione del ricorrente trimestrale è calcolata presumendo che il primo mese di collaborazione coincida con il primo mese del trimestre di riferimento.<br>
+                        La proiezione per i trimestri successivi è considerata al netto di possibili switch-out non correttamente reintegrati.
                     </p>
                 </div>
 
@@ -277,7 +287,8 @@
                             <li><strong>Quarto trimestre:</strong> <span id="ric-trim4">0,00</span> €</li> 
                         </ul> 
                         <p style="font-size: 0.8rem; color: #777; margin-top: 10px; font-style: italic;">
-                            * Nota: La simulazione del ricorrente trimestrale è calcolata presumendo che il primo mese di collaborazione coincida con il primo mese del trimestre di riferimento, al netto di possibili switch-out non correttamente reintegrati.
+                            * Nota: la simulazione del ricorrente trimestrale è calcolata presumendo che il primo mese di collaborazione coincida con il primo mese del trimestre di riferimento.<br>
+                            La proiezione per i trimestri successivi è considerata al netto di possibili switch-out non correttamente reintegrati.
                         </p>
                     </div> 
                 </div>
@@ -328,6 +339,9 @@
         let globale_contributo = 0; 
         let globale_bonusGaraStd = 0; 
         let globale_bonusGaraAcademy = 0; 
+        
+        // Variabili per lo split Account
+        let s_dirEeGas = 0, s_dirSky = 0, s_dirProd = 0, s_dirVeri = 0, s_dirRid = 0;
 
         function cambiaRuolo() { 
             const ruolo = document.getElementById('ruolo').value; 
@@ -473,6 +487,9 @@
             globale_bonusGaraStd = 0; 
             globale_bonusGaraAcademy = 0; 
             
+            // Azzeramento variabili di split
+            s_dirEeGas = 0; s_dirSky = 0; s_dirProd = 0; s_dirVeri = 0; s_dirRid = 0;
+            
             let ricMaturatoMesePersonale = 0; 
             let volumeKwhLuceTotale = 0; 
             let volumeSmcGasTotale = 0; 
@@ -483,7 +500,7 @@
             // 1. LUCE DIRETTA 
             const pRes = parseInt(document.getElementById('p-res').value) || 0; 
             const pResR = parseInt(document.getElementById('p-res-r').value) || 0; 
-            globale_totDiretta_Base += (pRes * 50) + (pResR * 70); 
+            s_dirEeGas += (pRes * 50) + (pResR * 70); 
             ricMaturatoMesePersonale += (pRes * 4) + (pResR * 4); 
             volumeKwhLuceTotale += (pRes * 3000) + (pResR * 3000);
 
@@ -491,7 +508,7 @@
             let pezziLuceBus = bLuceInputs.length; 
             bLuceInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
-                globale_totDiretta_Base += getLuceGettone(val, 'diretta'); 
+                s_dirEeGas += getLuceGettone(val, 'diretta'); 
                 ricMaturatoMesePersonale += getLuceRicorrenteDiretto(val);
                 volumeKwhLuceTotale += val; 
             }); 
@@ -499,7 +516,7 @@
             // 2. GAS DIRETTO 
             const gRes = parseInt(document.getElementById('g-res').value) || 0; 
             const gResR = parseInt(document.getElementById('g-res-r').value) || 0; 
-            globale_totDiretta_Base += (gRes * 50) + (gResR * 70); 
+            s_dirEeGas += (gRes * 50) + (gResR * 70); 
             ricMaturatoMesePersonale += (gRes * 4) + (gResR * 4); 
             volumeSmcGasTotale += (gRes * 1000) + (gResR * 1000);
 
@@ -507,7 +524,7 @@
             let pezziGasBus = bGasInputs.length; 
             bGasInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
-                globale_totDiretta_Base += getGasGettone(val, 'diretta'); 
+                s_dirEeGas += getGasGettone(val, 'diretta'); 
                 ricMaturatoMesePersonale += getGasRicorrenteDiretto(val);
                 volumeSmcGasTotale += val; 
             }); 
@@ -516,20 +533,23 @@
             document.querySelectorAll('#sky-container .business-item').forEach(riga => { 
                 const tipo = riga.querySelector('.tipo-sky').value; 
                 const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
-                globale_totDiretta_Base += (qta * tabelle.sky[tipo].diretta); 
+                s_dirSky += (qta * tabelle.sky[tipo].diretta); 
             }); 
 
             // 4. PRODOTTI DIRETTI 
             document.querySelectorAll('#prodotti-container .business-item').forEach(riga => { 
                 const tipo = riga.querySelector('.tipo-prodotto').value; 
                 const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0; 
-                globale_totDiretta_Base += (val * tabelle.prodotti[tipo].diretta); 
+                s_dirProd += (val * tabelle.prodotti[tipo].diretta); 
             }); 
 
             // 5. BONUS RID WEB & VERISURE DIRETTA 
-            globale_totDiretta_Base += (parseInt(document.getElementById('c-bus').value) || 0) * 13; 
+            s_dirRid += (parseInt(document.getElementById('c-bus').value) || 0) * 13; 
             let verisureDirettoPezzi = parseInt(document.getElementById('verisure-qta').value) || 0;
-            globale_totDiretta_Base += verisureDirettoPezzi * 75; 
+            s_dirVeri += verisureDirettoPezzi * 75; 
+
+            // Il totale base diretto è la somma di queste singole voci
+            globale_totDiretta_Base = s_dirEeGas + s_dirSky + s_dirProd + s_dirVeri + s_dirRid;
 
             // --- CALCOLI RETE --- 
             let indEeGasGettoni = 0, indSky = 0, indProd = 0, indVeri = 0; 
@@ -684,12 +704,12 @@
                 document.getElementById('ric-dir-4').innerText = (quotaTrimestraleDiretta * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             }
 
-            document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-            
-            let indGettoniPuri = globale_totIndiretta; 
-            document.getElementById('tot-indiretta').innerText = indGettoniPuri.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-
-            document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            // Popolamento dello split Sales Account
+            document.getElementById('dir-ee-gas').innerText = s_dirEeGas.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('dir-sky').innerText = s_dirSky.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('dir-prod').innerText = s_dirProd.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('dir-veri').innerText = s_dirVeri.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('dir-rid').innerText = s_dirRid.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
             document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
@@ -719,17 +739,34 @@
         }
 
         function riconteggiaTotale() {
-            let totale = globale_totDiretta_Base + globale_totIndiretta + globale_contributo;
+            const ruolo = document.getElementById('ruolo').value;
+            let bonusAttivi = 0;
             const checkAcademy = document.getElementById('usa-gara-academy'); 
             const checkStd = document.getElementById('usa-gara-std'); 
 
-            if (checkAcademy && checkAcademy.checked) totale += globale_bonusGaraAcademy;
-            if (checkStd && checkStd.checked) totale += globale_bonusGaraStd;
+            let valBonusGara = 0;
+            let valBonusAcademy = 0;
 
+            if (checkAcademy && checkAcademy.checked) {
+                bonusAttivi += globale_bonusGaraAcademy;
+                valBonusAcademy = globale_bonusGaraAcademy;
+            }
+            if (checkStd && checkStd.checked) {
+                bonusAttivi += globale_bonusGaraStd;
+                valBonusGara = globale_bonusGaraStd;
+            }
+
+            // Aggiorna le righe di riepilogo giallo dei bonus
+            document.getElementById('dir-bonus-gara').innerText = valBonusGara.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('dir-bonus-academy').innerText = valBonusAcademy.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            // I gettoni diretti a schermo sono la somma della produzione base + gli eventuali bonus attivati con le spunte
+            let totDirettoVisibile = globale_totDiretta_Base + bonusAttivi;
+            document.getElementById('tot-diretta').innerText = totDirettoVisibile.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+
+            let totale = totDirettoVisibile + globale_totIndiretta + globale_contributo;
             document.getElementById('totale-guadagno').innerText = totale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         }
 
         cambiaRuolo(); 
     </script>
-</body>
-</html>
