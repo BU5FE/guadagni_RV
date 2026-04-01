@@ -32,25 +32,26 @@
         .box-proiezione { background: #edf7f1; border: 1px solid #c8e6c9; border-radius: 4px; padding: 20px; }
         .box-proiezione ul { padding-left: 20px; margin: 10px 0; }
         .box-proiezione li { margin-bottom: 8px; font-size: 1rem; }
-        .coordinator-only { display: block; }
         .highlight { font-weight: bold; color: #006037; }
         .success { color: #2e7d32; font-weight: bold; }
         .valore { font-weight: bold; color: #333; }
+        .coordinator-only { display: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="logo-container">
-            <img src="LOGO FUTURENERGY.PNG" alt="Logo FuturENERGY">
+            <img src="logo-futurenergy.png" alt="Logo FuturENERGY">
         </div>
 
         <h1>Simulatore Provvigioni 2026</h1>
 
         <div class="form-group" style="max-width: 400px; margin: 0 auto 30px auto; text-align: center;">
             <label style="font-size: 1.1rem;">PROFILO ATTIVO</label>
-            <select id="ruolo" style="font-weight: bold; font-size: 1.1rem; text-align: center;" disabled>
-                <option value="coordinator" selected>Sales Coordinator</option>
+            <select id="ruolo" style="font-weight: bold; font-size: 1.1rem; text-align: center;" onchange="cambiaRuolo()">
+                <option value="account" selected>Sales Account</option>
+                <option value="coordinator">Sales Coordinator</option>
             </select>
         </div>
 
@@ -109,7 +110,7 @@
                 </div>
             </div>
 
-            <div class="coordinator-only">
+            <div id="colonna-rete" class="coordinator-only">
                 <h3>PRODUZIONE RETE (INDIRETTA)</h3>
                 
                 <div class="form-group">
@@ -186,25 +187,25 @@
             
             <div class="box-info">
                 <p><span>Gettoni Diretti Base:</span> <span id="tot-diretta" class="valore">0,00 €</span></p>
-                <p><span>Gettoni Indiretti Totali:</span> <span id="tot-indiretta" class="valore">0,00 €</span></p>
-                <p style="font-size: 0.9rem; color: #666; padding-left: 15px;">
+                <p class="coordinator-only"><span>Gettoni Indiretti Totali:</span> <span id="tot-indiretta" class="valore">0,00 €</span></p>
+                <p class="coordinator-only" style="font-size: 0.9rem; color: #666; padding-left: 15px;">
                     <span>• di cui Luce/Gas Indiretti:</span> <span id="ind-ee-gas">0,00 €</span>
                 </p>
-                <p style="font-size: 0.9rem; color: #666; padding-left: 15px;">
+                <p class="coordinator-only" style="font-size: 0.9rem; color: #666; padding-left: 15px;">
                     <span>• di cui Sky/Prodotti/Verisure:</span> <span id="ind-altri">0,00 €</span>
                 </p>
-                <p><span>Contributo Mensile sul Volume:</span> <span id="tot-contributo" class="valore">0,00 €</span></p>
-                <p style="font-size: 0.9rem; color: #666; padding-left: 15px;">
+                <p class="coordinator-only"><span>Contributo Mensile sul Volume:</span> <span id="tot-contributo" class="valore">0,00 €</span></p>
+                <p class="coordinator-only" style="font-size: 0.9rem; color: #666; padding-left: 15px;">
                     <span>• Volume Totale Calcolato:</span> <span id="volume-calcolato">0.000 GWh</span>
                 </p>
             </div>
 
             <div class="box-proiezione">
                 <h4>Sviluppo e Proiezione del Mese</h4>
-                <p>Fatturato Ricorrente Indiretto Generato (Luce + Gas): <strong><span id="ric-ind-ee-gas">0,00</span> € al mese</strong></p>
+                <p class="coordinator-only">Fatturato Ricorrente Indiretto Generato (Luce + Gas): <strong><span id="ric-ind-ee-gas">0,00</span> € al mese</strong></p>
                 <ul>
                     <li><strong>Mese 1 e 2:</strong> Incassi solo i Gettoni e Contributi fissi = <span id="fat-m1m2" class="highlight">0,00 €</span></li>
-                    <li><strong>Mese 3:</strong> Entra il Ricorrente Indiretto = <span id="fat-m3" class="highlight">0,00 €</span></li>
+                    <li class="coordinator-only"><strong>Mese 3:</strong> Entra il Ricorrente Indiretto = <span id="fat-m3" class="highlight">0,00 €</span></li>
                     <li><strong>Mese 4 (Fine Trimestre):</strong> Scatta il Ricorrente Diretto Personale trimestrale (+<span id="ric-dir-1">0,00</span> €) = <span id="fat-m4" class="success">0,00 €</span></li>
                     <li><strong>Mese 7 (Fine Semestre):</strong> Il Ricorrente Diretto raddoppia (+<span id="ric-dir-2">0,00</span> €) = <span id="fat-m7" class="success">0,00 €</span></li>
                 </ul>
@@ -220,7 +221,6 @@
     </div>
 
     <script>
-        // Tabelle Provvigionali fisse
         const tabelle = {
             sky: {
                 "TRIPLE_PLAY": {diretta: 95, indiretta: 9.5},
@@ -250,8 +250,16 @@
         let globale_contributo = 0;
 
         function cambiaRuolo() {
-            document.getElementById('ruolo').value = "coordinator";
-            document.getElementById('label-mandato').innerText = "COORDINATOR";
+            const ruolo = document.getElementById('ruolo').value;
+            const reteOnlyElements = document.querySelectorAll('.coordinator-only');
+            
+            if (ruolo === "coordinator") {
+                document.getElementById('label-mandato').innerText = "COORDINATOR";
+                reteOnlyElements.forEach(el => el.style.display = 'block');
+            } else {
+                document.getElementById('label-mandato').innerText = "SALES ACCOUNT";
+                reteOnlyElements.forEach(el => el.style.display = 'none');
+            }
             document.getElementById('risultati-box').style.display = 'none';
         }
 
@@ -302,7 +310,6 @@
             container.appendChild(div);
         }
 
-        // SCAGLIONI RICORRENTI DIRETTI BUSINESS (Tabelle tratte da Pagina 1 e 2 del PDF)
         function getRicorrenteLuceBus(kwh) {
             if (kwh <= 5000) return 10.00;
             if (kwh <= 10000) return 12.50;
@@ -333,6 +340,7 @@
             globale_totIndiretta = 0;
             globale_contributo = 0;
             
+            const ruolo = document.getElementById('ruolo').value;
             let ricMaturatoMesePersonale = 0;
             let volumeLuceTotale = 0;
             let volumeGasTotale = 0;
@@ -347,7 +355,7 @@
             const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business');
             bLuceInputs.forEach(input => {
                 let v = parseFloat(input.value) || 0;
-                globale_totDiretta_Base += 50; // Valore fittizio di gettone base usato ieri
+                globale_totDiretta_Base += 50; 
                 ricMaturatoMesePersonale += getRicorrenteLuceBus(v); 
                 volumeLuceTotale += v;
             });
@@ -366,7 +374,6 @@
                 volumeGasTotale += v;
             });
 
-            // Sky e Prodotti Diretti
             const skyRighe = document.querySelectorAll('#sky-container .business-item');
             skyRighe.forEach(riga => {
                 const tipo = riga.querySelector('.tipo-sky').value;
@@ -384,69 +391,71 @@
             globale_totDiretta_Base += (parseInt(document.getElementById('c-bus').value) || 0) * 13;
             globale_totDiretta_Base += (parseInt(document.getElementById('verisure-qta').value) || 0) * 75;
 
-            // --- PRODUZIONE RETE (INDIRETTA) ---
             let indEeGas = 0;
             let indAltri = 0;
+            let ricIndMensile = 0;
 
-            const piRes = parseInt(document.getElementById('p-ind-res').value) || 0;
-            const piResKwh = parseFloat(document.getElementById('p-ind-res-kwh').value) || 0;
-            indEeGas += (piRes * 6);
-            volumeLuceTotale += piResKwh;
-            
-            const piResR = parseInt(document.getElementById('p-ind-resr').value) || 0;
-            const piResRKwh = parseFloat(document.getElementById('p-ind-resr-kwh').value) || 0;
-            indEeGas += (piResR * 10);
-            volumeLuceTotale += piResRKwh;
+            // --- PRODUZIONE RETE (Solo per Coordinator) ---
+            if (ruolo === "coordinator") {
+                const piRes = parseInt(document.getElementById('p-ind-res').value) || 0;
+                const piResKwh = parseFloat(document.getElementById('p-ind-res-kwh').value) || 0;
+                indEeGas += (piRes * 6);
+                volumeLuceTotale += piResKwh;
+                
+                const piResR = parseInt(document.getElementById('p-ind-resr').value) || 0;
+                const piResRKwh = parseFloat(document.getElementById('p-ind-resr-kwh').value) || 0;
+                indEeGas += (piResR * 10);
+                volumeLuceTotale += piResRKwh;
 
-            const piBusPezzi = parseInt(document.getElementById('p-ind-bus-pezzi').value) || 0;
-            const piBusKwh = parseFloat(document.getElementById('p-ind-bus-kwh').value) || 0;
-            volumeLuceTotale += piBusKwh;
-            indEeGas += (piBusPezzi * 15); 
+                const piBusPezzi = parseInt(document.getElementById('p-ind-bus-pezzi').value) || 0;
+                const piBusKwh = parseFloat(document.getElementById('p-ind-bus-kwh').value) || 0;
+                volumeLuceTotale += piBusKwh;
+                indEeGas += (piBusPezzi * 15); 
 
-            const giRes = parseInt(document.getElementById('g-ind-res').value) || 0;
-            const giResSmc = parseFloat(document.getElementById('g-ind-res-smc').value) || 0;
-            indEeGas += (giRes * 6);
-            volumeGasTotale += giResSmc;
+                const giRes = parseInt(document.getElementById('g-ind-res').value) || 0;
+                const giResSmc = parseFloat(document.getElementById('g-ind-res-smc').value) || 0;
+                indEeGas += (giRes * 6);
+                volumeGasTotale += giResSmc;
 
-            const giResR = parseInt(document.getElementById('g-ind-resr').value) || 0;
-            const giResRSmc = parseFloat(document.getElementById('g-ind-resr-smc').value) || 0;
-            indEeGas += (giResR * 10);
-            volumeGasTotale += giResRSmc;
+                const giResR = parseInt(document.getElementById('g-ind-resr').value) || 0;
+                const giResRSmc = parseFloat(document.getElementById('g-ind-resr-smc').value) || 0;
+                indEeGas += (giResR * 10);
+                volumeGasTotale += giResRSmc;
 
-            const giBusPezzi = parseInt(document.getElementById('g-ind-bus-pezzi').value) || 0;
-            const giBusSmc = parseFloat(document.getElementById('g-ind-bus-smc').value) || 0;
-            volumeGasTotale += giBusSmc;
-            indEeGas += (giBusPezzi * 15);
+                const giBusPezzi = parseInt(document.getElementById('g-ind-bus-pezzi').value) || 0;
+                const giBusSmc = parseFloat(document.getElementById('g-ind-bus-smc').value) || 0;
+                volumeGasTotale += giBusSmc;
+                indEeGas += (giBusPezzi * 15);
 
-            const skyIndRighe = document.querySelectorAll('#sky-ind-container .business-item');
-            skyIndRighe.forEach(riga => {
-                const tipo = riga.querySelector('.tipo-sky').value;
-                const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
-                indAltri += qta * tabelle.sky[tipo].indiretta;
-            });
+                const skyIndRighe = document.querySelectorAll('#sky-ind-container .business-item');
+                skyIndRighe.forEach(riga => {
+                    const tipo = riga.querySelector('.tipo-sky').value;
+                    const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
+                    indAltri += qta * tabelle.sky[tipo].indiretta;
+                });
 
-            const prodIndRighe = document.querySelectorAll('#prodotti-ind-container .business-item');
-            prodIndRighe.forEach(riga => {
-                const tipo = riga.querySelector('.tipo-prodotto').value;
-                const valoreCommessa = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
-                indAltri += valoreCommessa * tabelle.prodotti[tipo].indiretta;
-            });
+                const prodIndRighe = document.querySelectorAll('#prodotti-ind-container .business-item');
+                prodIndRighe.forEach(riga => {
+                    const tipo = riga.querySelector('.tipo-prodotto').value;
+                    const valoreCommessa = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
+                    indAltri += valoreCommessa * tabelle.prodotti[tipo].indiretta;
+                });
 
-            indAltri += (parseInt(document.getElementById('verisure-ind-qta').value) || 0) * 8;
+                indAltri += (parseInt(document.getElementById('verisure-ind-qta').value) || 0) * 8;
+                globale_totIndiretta = indEeGas + indAltri;
 
-            globale_totIndiretta = indEeGas + indAltri;
+                ricIndMensile = ((volumeLuceTotale * 0.0005) + (volumeGasTotale * 0.0035)) / 12;
 
-            // Ricorrente Indiretto Standard (0.5€/MW luce e 0.0035€/smc gas)
-            let ricIndMensile = ((volumeLuceTotale * 0.0005) + (volumeGasTotale * 0.0035)) / 12;
+                // Calcolo Volume Globale GWh: 1 SMC = 4 KWh (Regola Coordinator)
+                let volGwh = (volumeLuceTotale + (volumeGasTotale * 4)) / 1000000;
+                
+                if (volGwh >= 2.0) globale_contributo = 1000;
+                else if (volGwh >= 1.5) globale_contributo = 750;
+                else if (volGwh >= 1.0) globale_contributo = 500;
+                else globale_contributo = 0;
 
-            // Calcolo Volume Globale GWh (REGOLE DA MANDATO COORDINATOR: 1 SMC = 4 KWh)
-            let volGwh = (volumeLuceTotale + (volumeGasTotale * 4)) / 1000000;
-            
-            // CONTRIBUTI MENSILI REALI (Da Pagina 6 del PDF)
-            if (volGwh >= 2.0) globale_contributo = 1000;
-            else if (volGwh >= 1.5) globale_contributo = 750;
-            else if (volGwh >= 1.0) globale_contributo = 500;
-            else globale_contributo = 0;
+                document.getElementById('volume-calcolato').innerText = volGwh.toFixed(3) + " GWh";
+            }
 
             // --- OUTPUT ---
             document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toFixed(2).replace('.', ',') + " €";
@@ -456,10 +465,10 @@
             document.getElementById('tot-contributo').innerText = globale_contributo.toFixed(2).replace('.', ',') + " €";
             
             document.getElementById('ric-ind-ee-gas').innerText = ricIndMensile.toFixed(2).replace('.', ',');
-            document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toFixed(2).replace('.', ','); // Annualizzato
-            document.getElementById('volume-calcolato').innerText = volGwh.toFixed(3) + " GWh";
+            document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toFixed(2).replace('.', ','); 
 
             let baseMese = globale_totDiretta_Base + globale_totIndiretta + globale_contributo;
+            document.getElementById('totale-guadagno').innerText = baseMese.toFixed(2).replace('.', ',');
 
             document.getElementById('fat-m1m2').innerText = baseMese.toFixed(2).replace('.', ',') + " €";
             document.getElementById('fat-m3').innerText = (baseMese + ricIndMensile).toFixed(2).replace('.', ',') + " €";
@@ -471,13 +480,10 @@
             document.getElementById('fat-m7').innerText = (baseMese + (ricIndMensile * 5) + (ricTrim * 2)).toFixed(2).replace('.', ',') + " €";
             document.getElementById('ric-dir-2').innerText = (ricTrim * 2).toFixed(2).replace('.', ',');
 
-            document.getElementById('totale-guadagno').innerText = baseMese.toFixed(2).replace('.', ',');
-            
             document.getElementById('risultati-box').style.display = 'block';
             window.scrollTo(0, document.body.scrollHeight);
         }
 
-        // Forza il ruolo all'avvio
         cambiaRuolo();
     </script>
 </body>
