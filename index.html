@@ -54,187 +54,178 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
 
 
     <script>
-    // Tabelle Provvigionali
-    const tabelle = {
-        sky: {
-            "TRIPLE_PLAY": {diretta: 95, indiretta: 9.5},
-            "SKY_WIFI_RID": {diretta: 40, indiretta: 4},
-            "SKY_WIFI_PREPAGATA": {diretta: 30, indiretta: 3},
-            "BUSINESS_BAR": {diretta: 125, indiretta: 12.5},
-            "HOTEL_FINO_A_3_CAMERE": {diretta: 100, indiretta: 10},
-            "HOTEL_ANNUALE": {diretta: 30, indiretta: 3},
-            "HOTEL_STAGIONALE": {diretta: 36, indiretta: 3.6}
-        },
-        prodotti: {
-            "FOTOVOLTAICO": {diretta: 0.05, indiretta: 0.015},
-            "LED_LISTINO_4": {diretta: 0.20, indiretta: 0.03},
-            "LED_LISTINO_3": {diretta: 0.15, indiretta: 0.03},
-            "LED_LISTINO_2": {diretta: 0.10, indiretta: 0.025},
-            "LED_LISTINO_1": {diretta: 0.07, indiretta: 0.02},
-            "CLIMA": {diretta: 0.08, indiretta: 0.02},
-            "COLONNINE_LISTINO_3": {diretta: 0.10, indiretta: 0.025},
-            "COLONNINE_LISTINO_2": {diretta: 0.085, indiretta: 0.02},
-            "COLONNINE_LISTINO_1": {diretta: 0.07, indiretta: 0.015},
-            "EBIKE": {diretta: 0.07, indiretta: 0.02}
+        // Tabelle Provvigionali fisse
+        const tabelle = {
+            sky: {
+                "TRIPLE_PLAY": {diretta: 95, indiretta: 9.5},
+                "SKY_WIFI_RID": {diretta: 40, indiretta: 4},
+                "SKY_WIFI_PREPAGATA": {diretta: 30, indiretta: 3},
+                "BUSINESS_BAR": {diretta: 125, indiretta: 12.5},
+                "HOTEL_FINO_A_3_CAMERE": {diretta: 100, indiretta: 10},
+                "HOTEL_ANNUALE": {diretta: 30, indiretta: 3},
+                "HOTEL_STAGIONALE": {diretta: 36, indiretta: 3.6}
+            },
+            prodotti: {
+                "FOTOVOLTAICO": {diretta: 0.05, indiretta: 0.015},
+                "LED_LISTINO_4": {diretta: 0.20, indiretta: 0.03},
+                "LED_LISTINO_3": {diretta: 0.15, indiretta: 0.03},
+                "LED_LISTINO_2": {diretta: 0.10, indiretta: 0.025},
+                "LED_LISTINO_1": {diretta: 0.07, indiretta: 0.02},
+                "CLIMA": {diretta: 0.08, indiretta: 0.02},
+                "COLONNINE_LISTINO_3": {diretta: 0.10, indiretta: 0.025},
+                "COLONNINE_LISTINO_2": {diretta: 0.085, indiretta: 0.02},
+                "COLONNINE_LISTINO_1": {diretta: 0.07, indiretta: 0.015},
+                "EBIKE": {diretta: 0.07, indiretta: 0.02}
+            }
+        };
+
+        let globale_totDiretta_Base = 0;
+        let globale_totIndiretta = 0;
+        let globale_contributo = 0;
+
+        function cambiaRuolo() {
+            // Bloccato su Coordinator come da accordi di ieri mattina
+            document.getElementById('ruolo').value = "coordinator";
+            document.querySelectorAll('.coordinator-only').forEach(el => el.style.display = 'block');
+            document.querySelectorAll('.account-only').forEach(el => el.style.display = 'none');
+            
+            document.getElementById('label-mandato').innerText = "COORDINATOR";
+            document.getElementById('risultati-box').style.display = 'none';
         }
-    };
 
-    let globale_totDiretta_Base = 0;
-    let globale_totIndiretta = 0;
-    let globale_contributo = 0;
-    let globale_bonusGaraAcademy = 0;
-    let globale_bonusGaraStd = 0;
-
-    function cambiaRuolo() {
-        const ruolo = document.getElementById('ruolo').value;
-        const isCoord = (ruolo === 'coordinator');
-        
-        document.querySelectorAll('.coordinator-only').forEach(el => el.style.display = isCoord ? 'block' : 'none');
-        document.querySelectorAll('.account-only').forEach(el => el.style.display = isCoord ? 'none' : 'block');
-        
-        document.getElementById('label-mandato').innerText = ruolo.toUpperCase();
-        document.getElementById('risultati-box').style.display = 'none';
-    }
-
-    function aggiungiRigaBusiness(id, placeholderText) {
-        const container = document.getElementById(id);
-        const div = document.createElement('div');
-        div.className = 'business-item';
-        div.innerHTML = `
-            <input type="number" class="consumo-business" placeholder="${placeholderText}">
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-        `;
-        container.appendChild(div);
-    }
-
-    function aggiungiRigaSky(id) {
-        const container = document.getElementById(id);
-        const div = document.createElement('div');
-        div.className = 'business-item';
-        
-        let optionsHtml = '';
-        for (const key in tabelle.sky) {
-            optionsHtml += `<option value="${key}">${key.replace(/_/g, ' ')}</option>`;
+        function aggiungiRigaBusiness(id, placeholderText) {
+            const container = document.getElementById(id);
+            const div = document.createElement('div');
+            div.className = 'business-item';
+            div.innerHTML = `
+                <input type="number" class="consumo-business" placeholder="${placeholderText}">
+                <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+            `;
+            container.appendChild(div);
         }
-        
-        div.innerHTML = `
-            <select class="tipo-sky" style="flex: 2;">${optionsHtml}</select>
-            <input type="number" class="qta-sky" value="1" style="flex: 0.5;" placeholder="Q.tà">
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-        `;
-        container.appendChild(div);
-    }
 
-    function aggiungiRigaProdotto(id) {
-        const container = document.getElementById(id);
-        const div = document.createElement('div');
-        div.className = 'business-item';
-        
-        let optionsHtml = '';
-        for (const key in tabelle.prodotti) {
-            optionsHtml += `<option value="${key}">${key.replace(/_/g, ' ')}</option>`;
+        function aggiungiRigaSky(id) {
+            const container = document.getElementById(id);
+            const div = document.createElement('div');
+            div.className = 'business-item';
+            
+            let optionsHtml = '';
+            for (const key in tabelle.sky) {
+                optionsHtml += `<option value="${key}">${key.replace(/_/g, ' ')}</option>`;
+            }
+            
+            div.innerHTML = `
+                <select class="tipo-sky" style="flex: 2;">${optionsHtml}</select>
+                <input type="number" class="qta-sky" value="1" style="flex: 0.5;" placeholder="Q.tà">
+                <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+            `;
+            container.appendChild(div);
         }
-        
-        div.innerHTML = `
-            <select class="tipo-prodotto" style="flex: 2;">${optionsHtml}</select>
-            <input type="number" class="valore-prodotto" style="flex: 1;" placeholder="Valore Commessa €">
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
-        `;
-        container.appendChild(div);
-    }
 
-    function getLuceGettone(kwh, tipo) {
-        const scaglioni = [5000, 10000, 25000, 50000, 100000, 300000, 500000, 700000];
-        const valoriDiretti = [50, 65, 85, 135, 185, 225, 275, 300, 350];
-        const valoriIndiretti = [8, 10, 12, 15, 20, 25, 35, 40, 50];
-        
-        const arrayRiferimento = (tipo === 'diretta') ? valoriDiretti : valoriIndiretti;
-        
-        for (let i = 0; i < scaglioni.length; i++) {
-            if (kwh <= scaglioni[i]) return arrayRiferimento[i];
+        function aggiungiRigaProdotto(id) {
+            const container = document.getElementById(id);
+            const div = document.createElement('div');
+            div.className = 'business-item';
+            
+            let optionsHtml = '';
+            for (const key in tabelle.prodotti) {
+                optionsHtml += `<option value="${key}">${key.replace(/_/g, ' ')}</option>`;
+            }
+            
+            div.innerHTML = `
+                <select class="tipo-prodotto" style="flex: 2;">${optionsHtml}</select>
+                <input type="number" class="valore-prodotto" style="flex: 1;" placeholder="Valore Commessa €">
+                <button class="btn-remove" onclick="this.parentElement.remove()">X</button>
+            `;
+            container.appendChild(div);
         }
-        return arrayRiferimento[arrayRiferimento.length - 1];
-    }
 
-    function getGasGettone(smc, tipo) {
-        const scaglioni = [1500, 5000, 10000, 20000, 30000, 100000, 200000, 300000, 400000];
-        const valoriDiretti = [40, 55, 75, 125, 185, 225, 275, 300, 350, 500];
-        const valoriIndiretti = [8, 9, 10, 15, 20, 25, 35, 40, 50, 60];
-        
-        const arrayRiferimento = (tipo === 'diretta') ? valoriDiretti : valoriIndiretti;
-        
-        for (let i = 0; i < scaglioni.length; i++) {
-            if (smc <= scaglioni[i]) return arrayRiferimento[i];
+        // SCAGLIONI RICORRENTI DIRETTI BUSINESS (Come da documento)
+        function getRicorrenteLuceBus(kwh) {
+            if (kwh <= 5000) return 10.00;
+            if (kwh <= 10000) return 12.50;
+            if (kwh <= 25000) return 15.00;
+            if (kwh <= 50000) return 16.50;
+            if (kwh <= 100000) return 18.50;
+            if (kwh <= 300000) return 22.50;
+            if (kwh <= 500000) return 30.00;
+            if (kwh <= 700000) return 40.00;
+            return 75.00;
         }
-        return arrayRiferimento[arrayRiferimento.length - 1];
-    }
 
-    function calcolaProvvigioni() {
-        const ruolo = document.getElementById('ruolo').value;
-        
-        globale_totDiretta_Base = 0;
-        globale_totIndiretta = 0;
-        globale_contributo = 0;
-        
-        let ricMaturatoMesePersonale = 0;
-        
-        let volumeLuceTotale = 0;
-        let volumeGasTotale = 0;
+        function getRicorrenteGasBus(smc) {
+            if (smc <= 1500) return 5.00;
+            if (smc <= 5000) return 10.00;
+            if (smc <= 10000) return 12.50;
+            if (smc <= 20000) return 15.00;
+            if (smc <= 30000) return 18.50;
+            if (smc <= 100000) return 22.50;
+            if (smc <= 200000) return 30.00;
+            if (smc <= 300000) return 40.00;
+            if (smc <= 400000) return 75.00;
+            return 125.00;
+        }
 
-        const pRes = parseInt(document.getElementById('p-res').value) || 0;
-        const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
-        globale_totDiretta_Base += (pRes * 50) + (pResR * 70);
-        
-        ricMaturatoMesePersonale += (pRes + pResR) * 4;
-        volumeLuceTotale += (pRes + pResR) * 3000;
+        function calcolaProvvigioni() {
+            globale_totDiretta_Base = 0;
+            globale_totIndiretta = 0;
+            globale_contributo = 0;
+            
+            let ricMaturatoMesePersonale = 0;
+            let volumeLuceTotale = 0;
+            let volumeGasTotale = 0;
 
-        const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business');
-        let pezziLuceBus = bLuceInputs.length;
-        bLuceInputs.forEach(input => {
-            let v = parseFloat(input.value) || 0;
-            globale_totDiretta_Base += getLuceGettone(v, 'diretta');
-            volumeLuceTotale += v;
-        });
+            // --- PRODUZIONE DIRETTA ---
+            const pRes = parseInt(document.getElementById('p-res').value) || 0;
+            const pResR = parseInt(document.getElementById('p-res-r').value) || 0;
+            globale_totDiretta_Base += (pRes * 50) + (pResR * 70);
+            ricMaturatoMesePersonale += (pRes + pResR) * 4; // Ricorrente Residenziale Fisso
+            volumeLuceTotale += (pRes + pResR) * 3000; 
 
-        const gRes = parseInt(document.getElementById('g-res').value) || 0;
-        const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
-        globale_totDiretta_Base += (gRes * 50) + (gResR * 70);
-        
-        ricMaturatoMesePersonale += (gRes + gResR) * 4;
-        volumeGasTotale += (gRes + gResR) * 1000;
+            const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business');
+            bLuceInputs.forEach(input => {
+                let v = parseFloat(input.value) || 0;
+                globale_totDiretta_Base += 50; // Gettone base fittizio per calcolo rapido diretta
+                ricMaturatoMesePersonale += getRicorrenteLuceBus(v); // Ricorrente da tabella
+                volumeLuceTotale += v;
+            });
 
-        const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business');
-        let pezziGasBus = bGasInputs.length;
-        bGasInputs.forEach(input => {
-            let v = parseFloat(input.value) || 0;
-            globale_totDiretta_Base += getGasGettone(v, 'diretta');
-            volumeGasTotale += v;
-        });
+            const gRes = parseInt(document.getElementById('g-res').value) || 0;
+            const gResR = parseInt(document.getElementById('g-res-r').value) || 0;
+            globale_totDiretta_Base += (gRes * 50) + (gResR * 70);
+            ricMaturatoMesePersonale += (gRes + gResR) * 4;
+            volumeGasTotale += (gRes + gResR) * 1000;
 
-        const skyRighe = document.querySelectorAll('#sky-container .business-item');
-        skyRighe.forEach(riga => {
-            const tipo = riga.querySelector('.tipo-sky').value;
-            const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
-            globale_totDiretta_Base += qta * tabelle.sky[tipo].diretta;
-        });
+            const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business');
+            bGasInputs.forEach(input => {
+                let v = parseFloat(input.value) || 0;
+                globale_totDiretta_Base += 40; 
+                ricMaturatoMesePersonale += getRicorrenteGasBus(v);
+                volumeGasTotale += v;
+            });
 
-        const prodRighe = document.querySelectorAll('#prodotti-container .business-item');
-        prodRighe.forEach(riga => {
-            const tipo = riga.querySelector('.tipo-prodotto').value;
-            const valoreCommessa = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
-            globale_totDiretta_Base += valoreCommessa * tabelle.prodotti[tipo].diretta;
-        });
+            // Sky e Prodotti Diretti
+            const skyRighe = document.querySelectorAll('#sky-container .business-item');
+            skyRighe.forEach(riga => {
+                const tipo = riga.querySelector('.tipo-sky').value;
+                const qta = parseInt(riga.querySelector('.qta-sky').value) || 0;
+                globale_totDiretta_Base += qta * tabelle.sky[tipo].diretta;
+            });
 
-        const bonusBusRid = parseInt(document.getElementById('c-bus').value) || 0;
-        globale_totDiretta_Base += bonusBusRid * 13;
-        
-        const verisureDir = parseInt(document.getElementById('verisure-qta').value) || 0;
-        globale_totDiretta_Base += verisureDir * 75;
+            const prodRighe = document.querySelectorAll('#prodotti-container .business-item');
+            prodRighe.forEach(riga => {
+                const tipo = riga.querySelector('.tipo-prodotto').value;
+                const valoreCommessa = parseFloat(riga.querySelector('.valore-prodotto').value) || 0;
+                globale_totDiretta_Base += valoreCommessa * tabelle.prodotti[tipo].diretta;
+            });
 
-        let indEeGas = 0;
-        let indAltri = 0;
+            globale_totDiretta_Base += (parseInt(document.getElementById('c-bus').value) || 0) * 13;
+            globale_totDiretta_Base += (parseInt(document.getElementById('verisure-qta').value) || 0) * 75;
 
-        if (ruolo === 'coordinator') {
+            // --- PRODUZIONE RETE (INDIRETTA) ---
+            let indEeGas = 0;
+            let indAltri = 0;
+
             const piRes = parseInt(document.getElementById('p-ind-res').value) || 0;
             const piResKwh = parseFloat(document.getElementById('p-ind-res-kwh').value) || 0;
             indEeGas += (piRes * 6);
@@ -248,10 +239,7 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
             const piBusPezzi = parseInt(document.getElementById('p-ind-bus-pezzi').value) || 0;
             const piBusKwh = parseFloat(document.getElementById('p-ind-bus-kwh').value) || 0;
             volumeLuceTotale += piBusKwh;
-            if (piBusPezzi > 0) {
-                const mediaKwh = piBusKwh / piBusPezzi;
-                indEeGas += (getLuceGettone(mediaKwh, 'indiretta') * piBusPezzi);
-            }
+            indEeGas += (piBusPezzi * 15); // Media sovrascrittura fissa usata ieri mattina
 
             const giRes = parseInt(document.getElementById('g-ind-res').value) || 0;
             const giResSmc = parseFloat(document.getElementById('g-ind-res-smc').value) || 0;
@@ -266,10 +254,7 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
             const giBusPezzi = parseInt(document.getElementById('g-ind-bus-pezzi').value) || 0;
             const giBusSmc = parseFloat(document.getElementById('g-ind-bus-smc').value) || 0;
             volumeGasTotale += giBusSmc;
-            if (giBusPezzi > 0) {
-                const mediaSmc = giBusSmc / giBusPezzi;
-                indEeGas += (getGasGettone(mediaSmc, 'indiretta') * giBusPezzi);
-            }
+            indEeGas += (giBusPezzi * 15);
 
             const skyIndRighe = document.querySelectorAll('#sky-ind-container .business-item');
             skyIndRighe.forEach(riga => {
@@ -285,108 +270,50 @@ input:focus, select:focus { border-color: #006037; outline: none; box-shadow: 0 
                 indAltri += valoreCommessa * tabelle.prodotti[tipo].indiretta;
             });
 
-            const verisureInd = parseInt(document.getElementById('verisure-ind-qta').value) || 0;
-            indAltri += verisureInd * 8;
-        }
+            indAltri += (parseInt(document.getElementById('verisure-ind-qta').value) || 0) * 8;
 
-        globale_totIndiretta = indEeGas + indAltri;
+            globale_totIndiretta = indEeGas + indAltri;
 
-        let ricIndMensile = ((volumeLuceTotale * 0.0005) + (volumeGasTotale * 0.0035)) / 12;
+            // Ricorrente Indiretto Standard (0.5€/MW luce e 0.0035€/smc gas)
+            let ricIndMensile = ((volumeLuceTotale * 0.0005) + (volumeGasTotale * 0.0035)) / 12;
 
-        let volGwh = (volumeLuceTotale + (volumeGasTotale * 4)) / 1000000;
-        
-        if (volGwh >= 4.0) globale_contributo = 4000;
-        else if (volGwh >= 3.0) globale_contributo = 2500;
-        else if (volGwh >= 2.0) globale_contributo = 2000;
-        else if (volGwh >= 1.5) globale_contributo = 1500;
-        else if (volGwh >= 1.0) globale_contributo = 800;
-        else globale_contributo = 0;
-
-        let pezziLuceGasGara = pRes + pResR + pezziLuceBus + gRes + gResR + pezziGasBus;
-        let puntiAcademy = (pRes + pResR + gRes + gResR) * 0.5 + (pezziLuceBus + pezziGasBus) * 1.0;
-
-        if (puntiAcademy >= 25) globale_bonusGaraAcademy = 1000;
-        else if (puntiAcademy >= 18) globale_bonusGaraAcademy = 800;
-        else if (puntiAcademy >= 10) globale_bonusGaraAcademy = 500;
-        else globale_bonusGaraAcademy = 0;
-
-        let percentualeGaraStd = 0;
-        if (pezziLuceGasGara >= 15) percentualeGaraStd = 0.30;
-        else if (pezziLuceGasGara >= 8) percentualeGaraStd = 0.25;
-
-        globale_bonusGaraStd = globale_totDiretta_Base * percentualeGaraStd;
-
-        document.getElementById('pezzi-totali').innerText = pezziLuceGasGara;
-        let labelAcc = document.getElementById('label-acceleratore');
-        if (percentualeGaraStd > 0) {
-            labelAcc.innerText = `Complimenti! Raggiunto Acceleratore Gara Std: +${percentualeGaraStd * 100}% sui gettoni!`;
-            labelAcc.style.color = "#2e7d32";
-        } else {
-            labelAcc.innerText = "Nessun acceleratore scattato (Soglia minima 8 pezzi luce/gas).";
-            labelAcc.style.color = "#cc0000";
-        }
-
-        document.getElementById('punti-academy').innerText = puntiAcademy.toFixed(1);
-        let lblAcademy = document.getElementById('label-academy');
-        if (globale_bonusGaraAcademy > 0) {
-            lblAcademy.innerText = `(Premio sbloccato: ${globale_bonusGaraAcademy}€)`;
-            lblAcademy.style.color = "#2e7d32";
-        } else {
-            lblAcademy.innerText = "(Nessun premio sbloccato)";
-            lblAcademy.style.color = "#666";
-        }
-
-        document.getElementById('valore-academy-box').innerText = globale_bonusGaraAcademy.toFixed(2).replace('.', ',') + " €";
-        document.getElementById('valore-gara-box').innerText = globale_bonusGaraStd.toFixed(2).replace('.', ',') + " €";
-
-        document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toFixed(2).replace('.', ',') + " €";
-        document.getElementById('tot-indiretta').innerText = globale_totIndiretta.toFixed(2).replace('.', ',') + " €";
-        document.getElementById('ind-ee-gas').innerText = indEeGas.toFixed(2).replace('.', ',') + " €";
-        document.getElementById('ind-altri').innerText = indAltri.toFixed(2).replace('.', ',') + " €";
-        document.getElementById('tot-contributo').innerText = globale_contributo.toFixed(2).replace('.', ',') + " €";
-        
-        document.getElementById('ric-ind-ee-gas').innerText = ricIndMensile.toFixed(2).replace('.', ',');
-        document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 12).toFixed(2).replace('.', ',');
-        document.getElementById('volume-calcolato').innerText = volGwh.toFixed(3) + " GWh";
-
-        let baseMese = globale_totDiretta_Base;
-        if (ruolo === 'coordinator') {
-            baseMese += globale_totIndiretta + globale_contributo;
-        }
-
-        document.getElementById('fat-m1m2').innerText = baseMese.toFixed(2).replace('.', ',') + " €";
-        document.getElementById('fat-m3').innerText = (baseMese + ricIndMensile).toFixed(2).replace('.', ',') + " €";
-        
-        let ricTrim = ricMaturatoMesePersonale * 3;
-        document.getElementById('fat-m4').innerText = (baseMese + (ricIndMensile * 2) + ricTrim).toFixed(2).replace('.', ',') + " €";
-        document.getElementById('ric-dir-1').innerText = ricTrim.toFixed(2).replace('.', ',');
-        
-        document.getElementById('fat-m7').innerText = (baseMese + (ricIndMensile * 5) + (ricTrim * 2)).toFixed(2).replace('.', ',') + " €";
-        document.getElementById('ric-dir-2').innerText = (ricTrim * 2).toFixed(2).replace('.', ',');
-
-        aggiornaTotaleFinale();
-        
-        document.getElementById('risultati-box').style.display = 'block';
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-    function aggiornaTotaleFinale() {
-        let totaleGuadagno = globale_totDiretta_Base;
-        const ruolo = document.getElementById('ruolo').value;
-        
-        if (ruolo === 'coordinator') {
-            totaleGuadagno += globale_totIndiretta + globale_contributo;
-        } else {
-            const usaAcademy = document.getElementById('usa-gara-academy').checked;
-            const usaStd = document.getElementById('usa-gara-std').checked;
+            // Calcolo Volume Globale GWh (REGOLE DA MANDATO: 1 SMC = 4 KWh)
+            let volGwh = (volumeLuceTotale + (volumeGasTotale * 4)) / 1000000;
             
-            if (usaAcademy) totaleGuadagno += globale_bonusGaraAcademy;
-            if (usaStd) totaleGuadagno += globale_bonusGaraStd;
-        }
-        
-        document.getElementById('totale-guadagno').innerText = totaleGuadagno.toFixed(2).replace('.', ',');
-    }
+            // CONTRIBUTI MENSILI REALI (Da Pagina 6 del PDF)
+            if (volGwh >= 2.0) globale_contributo = 1000;
+            else if (volGwh >= 1.5) globale_contributo = 750;
+            else if (volGwh >= 1.0) globale_contributo = 500;
+            else globale_contributo = 0;
 
-    cambiaRuolo();
-        
-</html>
+            // --- OUTPUT ---
+            document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toFixed(2).replace('.', ',') + " €";
+            document.getElementById('tot-indiretta').innerText = globale_totIndiretta.toFixed(2).replace('.', ',') + " €";
+            document.getElementById('ind-ee-gas').innerText = indEeGas.toFixed(2).replace('.', ',') + " €";
+            document.getElementById('ind-altri').innerText = indAltri.toFixed(2).replace('.', ',') + " €";
+            document.getElementById('tot-contributo').innerText = globale_contributo.toFixed(2).replace('.', ',') + " €";
+            
+            document.getElementById('ric-ind-ee-gas').innerText = ricIndMensile.toFixed(2).replace('.', ',');
+            document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toFixed(2).replace('.', ','); // Annualizzato
+            document.getElementById('volume-calcolato').innerText = volGwh.toFixed(3) + " GWh";
+
+            let baseMese = globale_totDiretta_Base + globale_totIndiretta + globale_contributo;
+
+            document.getElementById('fat-m1m2').innerText = baseMese.toFixed(2).replace('.', ',') + " €";
+            document.getElementById('fat-m3').innerText = (baseMese + ricIndMensile).toFixed(2).replace('.', ',') + " €";
+            
+            let ricTrim = ricMaturatoMesePersonale;
+            document.getElementById('fat-m4').innerText = (baseMese + (ricIndMensile * 2) + ricTrim).toFixed(2).replace('.', ',') + " €";
+            document.getElementById('ric-dir-1').innerText = ricTrim.toFixed(2).replace('.', ',');
+            
+            document.getElementById('fat-m7').innerText = (baseMese + (ricIndMensile * 5) + (ricTrim * 2)).toFixed(2).replace('.', ',') + " €";
+            document.getElementById('ric-dir-2').innerText = (ricTrim * 2).toFixed(2).replace('.', ',');
+
+            document.getElementById('totale-guadagno').innerText = baseMese.toFixed(2).replace('.', ',');
+            
+            document.getElementById('risultati-box').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        cambiaRuolo();
+    </script>
