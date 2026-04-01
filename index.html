@@ -26,7 +26,6 @@
         .btn-calcola { width: 100%; padding: 15px; background: #006037; color: white; border: none; border-radius: 4px; font-size: 1.3rem; font-weight: bold; cursor: pointer; margin-top: 30px; transition: background 0.2s; }
         .btn-calcola:hover { background: #004d2c; }
         
-        /* NUOVO STILE ACCORPATO PER IL RIEPILOGO */
         .risultati { margin-top: 40px; border: 2px solid #006037; border-radius: 6px; padding: 25px; background: #fff; display: none; }
         .risultati h2 { color: #006037; text-align: center; margin-top: 0; font-size: 1.8rem; margin-bottom: 20px; }
         .box-riepilogo-unico { background: #fffbe6; border: 1px solid #ffeeba; border-radius: 4px; padding: 20px; margin-bottom: 20px; }
@@ -114,7 +113,7 @@
                 
                 <div class="form-group">
                     <label>Verisure Diretta (Pezzi):</label>
-                    <input type="number" id="verisure-qta" placeholder="Pezzi chiusi">
+                    <input type="number" id="verisure-qta" placeholder="Pezzi chiisu">
                 </div>
             </div>
 
@@ -185,6 +184,11 @@
                     <label>Verisure Indiretta (Pezzi):</label>
                     <input type="number" id="verisure-ind-qta" placeholder="Pezzi chiusi dalla rete">
                 </div>
+
+                <div class="form-group" style="margin-top: 25px; background: #fffbe6; padding: 10px; border: 1px solid #ffeeba; border-radius: 4px;">
+                    <label style="color: #b45309;">Contributo Mensile Ad Hoc (€):</label>
+                    <input type="number" id="contributo-adhoc" placeholder="Es. 1000 (Sostituisce il contributo a scaglioni)" min="0">
+                </div>
             </div>
         </div>
 
@@ -204,7 +208,7 @@
                         <p style="padding-left: 15px;">• Gettoni Indiretti Sky: <span id="ind-sky">0,00</span> €</p>
                         <p style="padding-left: 15px;">• Gettoni Indiretti Prodotti: <span id="ind-prod">0,00</span> €</p>
                         <p style="padding-left: 15px;">• Gettoni Indiretti Verisure: <span id="ind-veri">0,00</span> €</p>
-                        <p style="padding-left: 15px;">• Contributo Mensile: <span id="tot-contributo">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Contributo Mensile <span id="label-tipo-contributo"></span>: <span id="tot-contributo">0,00</span> €</p>
                         
                         <hr>
                         
@@ -283,6 +287,7 @@
             <p><strong>Nota bene:</strong> I calcoli si basano sui parametri del mandato "<span id="label-mandato">Account 2026</span>".</p> 
             <p><i>Si ricorda che per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni dalla data inizio fornitura.</i></p> 
         </div> 
+    </div>
 
 
 
@@ -293,7 +298,7 @@
 
 
 
-        <script> 
+    <script> 
         const tabelle = { 
             sky: { 
                 "TRIPLE_PLAY": {diretta: 95, indiretta: 9.5}, 
@@ -337,6 +342,8 @@
                 labelMandato.innerText = "Coordinator 2026"; 
             } else { 
                 labelMandato.innerText = "Account 2026"; 
+                // Resetta il valore se l'utente passa ad Account
+                document.getElementById('contributo-adhoc').value = '';
             } 
             document.getElementById('risultati-box').style.display = 'none'; 
         } 
@@ -591,13 +598,23 @@
             let volumeTotaleInKwh = volumeKwhLuceTotale + (volumeSmcGasTotale * 4); 
             let volumeTotaleInGwh = volumeTotaleInKwh / 1000000; 
 
+            // LOGICA CONTRIBUTO AD HOC VS SCAGLIONI
+            const adHocVal = parseFloat(document.getElementById('contributo-adhoc').value);
+            const labelTipoContributo = document.getElementById('label-tipo-contributo');
+
             if (ruolo === 'coordinator') { 
-                if (volumeTotaleInGwh >= 4) globale_contributo = 4000;
-                else if (volumeTotaleInGwh >= 3) globale_contributo = 2500;
-                else if (volumeTotaleInGwh >= 2) globale_contributo = 2000;
-                else if (volumeTotaleInGwh >= 1.5) globale_contributo = 1500;
-                else if (volumeTotaleInGwh >= 1) globale_contributo = 800;
-                else globale_contributo = 0;
+                if (!isNaN(adHocVal) && adHocVal >= 0) {
+                    globale_contributo = adHocVal;
+                    labelTipoContributo.innerText = "(Ad Hoc)";
+                } else {
+                    labelTipoContributo.innerText = "(GWh)";
+                    if (volumeTotaleInGwh >= 4) globale_contributo = 4000;
+                    else if (volumeTotaleInGwh >= 3) globale_contributo = 2500;
+                    else if (volumeTotaleInGwh >= 2) globale_contributo = 2000;
+                    else if (volumeTotaleInGwh >= 1.5) globale_contributo = 1500;
+                    else if (volumeTotaleInGwh >= 1) globale_contributo = 800;
+                    else globale_contributo = 0;
+                }
             } 
 
             let pezziTotali = pRes + pResR + pezziLuceBus + gRes + gResR + pezziGasBus; 
@@ -715,4 +732,3 @@
     </script>
 </body>
 </html>
-    </div>
