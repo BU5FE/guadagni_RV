@@ -113,7 +113,7 @@
                 
                 <div class="form-group">
                     <label>Verisure Diretta (Pezzi):</label>
-                    <input type="number" id="verisure-qta" placeholder="Pezzi chiisu">
+                    <input type="number" id="verisure-qta" placeholder="Pezzi chiusi">
                 </div>
             </div>
 
@@ -203,14 +203,15 @@
                     <p><strong>Gettoni Diretti:</strong> <span id="tot-diretta">0,00</span> €</p>
                     
                     <div class="coordinator-only">
-                        <p><strong>Gettoni Indiretti (Squadra + Personale):</strong> <span id="tot-indiretta">0,00</span> €</p>
+                        <p><strong>Gettoni Indiretti (Personale + Squadra):</strong> <span id="tot-indiretta">0,00</span> €</p>
                         <p style="padding-left: 15px;">• Gettoni Indiretti EE/Gas: <span id="ind-ee-gas">0,00</span> €</p>
                         <p style="padding-left: 15px;">• Gettoni Indiretti Sky: <span id="ind-sky">0,00</span> €</p>
                         <p style="padding-left: 15px;">• Gettoni Indiretti Prodotti: <span id="ind-prod">0,00</span> €</p>
                         <p style="padding-left: 15px;">• Gettoni Indiretti Verisure: <span id="ind-veri">0,00</span> €</p>
-                        <p style="padding-left: 15px;">• Contributo Mensile <span id="label-tipo-contributo"></span>: <span id="tot-contributo">0,00</span> €</p>
                         
                         <hr>
+                        
+                        <p><strong>Contributo Mensile <span id="label-tipo-contributo"></span>:</strong> <span id="tot-contributo">0,00</span> €</p>
                         
                         <p style="color: #d97706;"><strong>Ricorrente Mensile Indiretto Generato:</strong> <span id="ric-ind-ee-gas">0,00</span> €</p>
                         <p style="font-size: 0.9rem; color: #666; margin-top: -3px; padding-left: 15px;"><i>(Calcolato su base annua di <span id="ric-ind-annuale">0,00</span> € e diviso per 12. Pagato mensilmente dal 3° mese)</i></p>
@@ -297,7 +298,6 @@
 
 
 
-
     <script> 
         const tabelle = { 
             sky: { 
@@ -342,7 +342,6 @@
                 labelMandato.innerText = "Coordinator 2026"; 
             } else { 
                 labelMandato.innerText = "Account 2026"; 
-                // Resetta il valore se l'utente passa ad Account
                 document.getElementById('contributo-adhoc').value = '';
             } 
             document.getElementById('risultati-box').style.display = 'none'; 
@@ -598,7 +597,6 @@
             let volumeTotaleInKwh = volumeKwhLuceTotale + (volumeSmcGasTotale * 4); 
             let volumeTotaleInGwh = volumeTotaleInKwh / 1000000; 
 
-            // LOGICA CONTRIBUTO AD HOC VS SCAGLIONI
             const adHocVal = parseFloat(document.getElementById('contributo-adhoc').value);
             const labelTipoContributo = document.getElementById('label-tipo-contributo');
 
@@ -687,8 +685,11 @@
             }
 
             document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-            let indMostrato = globale_totIndiretta + globale_contributo;
-            document.getElementById('tot-indiretta').innerText = indMostrato.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+            
+            let indGettoniPuri = globale_totIndiretta; 
+            document.getElementById('tot-indiretta').innerText = indGettoniPuri.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+
+            document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
             document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
