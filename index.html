@@ -25,15 +25,23 @@
         .btn-remove:hover { background: #c62828; color: #fff; }
         .btn-calcola { width: 100%; padding: 15px; background: #006037; color: white; border: none; border-radius: 4px; font-size: 1.3rem; font-weight: bold; cursor: pointer; margin-top: 30px; transition: background 0.2s; }
         .btn-calcola:hover { background: #004d2c; }
+        
+        /* NUOVO STILE ACCORPATO PER IL RIEPILOGO */
         .risultati { margin-top: 40px; border: 2px solid #006037; border-radius: 6px; padding: 25px; background: #fff; display: none; }
-        .risultati h2 { color: #006037; text-align: center; margin-top: 0; font-size: 1.8rem; }
-        .box-proiezione { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: 20px; }
+        .risultati h2 { color: #006037; text-align: center; margin-top: 0; font-size: 1.8rem; margin-bottom: 20px; }
+        .box-riepilogo-unico { background: #fffbe6; border: 1px solid #ffeeba; border-radius: 4px; padding: 20px; margin-bottom: 20px; }
+        .box-riepilogo-unico p { margin: 8px 0; font-size: 1rem; color: #333; }
+        .box-riepilogo-unico hr { border: 0; border-top: 1px solid #ffeeba; margin: 15px 0; }
+        
+        .box-proiezione { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: 20px; margin-bottom: 20px; }
+        .box-proiezione p, .box-proiezione li { font-size: 1rem; }
         .box-gare { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 20px; margin-top: 15px; }
         .box-gare p { margin-bottom: 15px; }
         .box-gare p:last-child { margin-bottom: 0; }
         .gara-item { display: flex; align-items: flex-start; gap: 10px; }
         .gara-item input[type="checkbox"] { width: auto; margin-top: 5px; cursor: pointer; }
         .noticine { font-size: 0.8rem; color: #777; text-align: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+        
         .coordinator-only { display: none; }
         .account-only { display: none; }
     </style>
@@ -184,27 +192,31 @@
         
         <div class="risultati" id="risultati-box"> 
             <h2>Stima fattura 1° Mese: <span id="totale-guadagno">0,00</span> €</h2> 
+            
             <div class="dettaglio"> 
                 
-                <p>Gettoni Diretti: <span id="tot-diretta">0,00</span> €</p> 
-                
-                <div class="coordinator-only" style="background: #fffbe6; padding: 15px; border-radius: 4px; margin-bottom: 15px; border: 1px solid #ffeeba;"> 
-                    <p style="font-size: 1.1rem;"><strong>Gettoni Indiretti (Squadra + Personale): <span id="tot-indiretta">0,00</span> €</strong></p> 
-                    <p style="font-size: 0.9rem;">• Gettoni Indiretti EE/Gas: <span id="ind-ee-gas">0,00</span> €</p> 
-                    <p style="font-size: 0.9rem;">• Gettoni Indiretti Sky: <span id="ind-sky">0,00</span> €</p> 
-                    <p style="font-size: 0.9rem;">• Gettoni Indiretti Prodotti: <span id="ind-prod">0,00</span> €</p> 
-                    <p style="font-size: 0.9rem;">• Gettoni Indiretti Verisure: <span id="ind-veri">0,00</span> €</p> 
-                    <p style="font-size: 0.9rem;">• Contributo Mensile: <span id="tot-contributo">0,00</span> €</p> 
-                    <hr style="border: 0; border-top: 1px solid #ffeeba; margin: 10px 0;">
+                <div class="box-riepilogo-unico">
+                    <p><strong>Gettoni Diretti:</strong> <span id="tot-diretta">0,00</span> €</p>
                     
-                    <p style="font-size: 1rem; color: #d97706;"><strong>• Ricorrente Mensile Indiretto Generato: <span id="ric-ind-ee-gas">0,00</span> €</strong></p>
-                    <p style="font-size: 0.8rem; color: #666; margin-top: -5px;"><i>(Calcolato su base annua di <span id="ric-ind-annuale">0,00</span> € e diviso per 12. Pagato mensilmente dal 3° mese)</i></p>
-                    <p style="font-size: 0.85rem; color: #555; margin-top: 5px;">Volume Totale Mese (Pers. + Rete): <span id="volume-calcolato">0.000</span> GWh</p> 
-                </div> 
+                    <div class="coordinator-only">
+                        <p><strong>Gettoni Indiretti (Squadra + Personale):</strong> <span id="tot-indiretta">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Gettoni Indiretti EE/Gas: <span id="ind-ee-gas">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Gettoni Indiretti Sky: <span id="ind-sky">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Gettoni Indiretti Prodotti: <span id="ind-prod">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Gettoni Indiretti Verisure: <span id="ind-veri">0,00</span> €</p>
+                        <p style="padding-left: 15px;">• Contributo Mensile: <span id="tot-contributo">0,00</span> €</p>
+                        
+                        <hr>
+                        
+                        <p style="color: #d97706;"><strong>Ricorrente Mensile Indiretto Generato:</strong> <span id="ric-ind-ee-gas">0,00</span> €</p>
+                        <p style="font-size: 0.9rem; color: #666; margin-top: -3px; padding-left: 15px;"><i>(Calcolato su base annua di <span id="ric-ind-annuale">0,00</span> € e diviso per 12. Pagato mensilmente dal 3° mese)</i></p>
+                        <p style="color: #555;"><strong>Volume Totale Mese (Pers. + Rete):</strong> <span id="volume-calcolato">0.000</span> GWh</p>
+                    </div>
+                </div>
 
-                <div class="box-proiezione coordinator-only" style="background: #f0fdf4; border: 1px solid #bbf7d0; margin-bottom: 15px;">
+                <div class="box-proiezione coordinator-only">
                     <h4>📅 Simulazione Evoluzione Fatture Mensili</h4>
-                    <p>Mantenendo questa produzione **costante ogni mese**, ecco come variano le tue fatture:</p>
+                    <p>Mantenendo questa produzione <strong>costante ogni mese</strong>, ecco come variano le tue fatture:</p>
                     <ul style="list-style-type: none; padding-left: 5px;">
                         <li style="margin-bottom: 5px;"><strong>Mese 1 e Mese 2:</strong> <span id="fat-m1m2" style="font-weight:bold; color:#15803d;">0,00</span> € <span style="font-size:0.85rem; color:#555;">(Solo Gettoni + Contributo)</span></li>
                         <li style="margin-bottom: 5px;"><strong>Mese 3:</strong> <span id="fat-m3" style="font-weight:bold; color:#15803d;">0,00</span> € <span style="font-size:0.85rem; color:#16a34a;">(+ Ricorrente Indiretto maturato)</span></li>
@@ -271,7 +283,6 @@
             <p><strong>Nota bene:</strong> I calcoli si basano sui parametri del mandato "<span id="label-mandato">Account 2026</span>".</p> 
             <p><i>Si ricorda che per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni dalla data inizio fornitura.</i></p> 
         </div> 
-    </div>
 
 
 
@@ -281,7 +292,8 @@
 
 
 
-    <script> 
+
+        <script> 
         const tabelle = { 
             sky: { 
                 "TRIPLE_PLAY": {diretta: 95, indiretta: 9.5}, 
@@ -422,7 +434,6 @@
             } 
         } 
 
-        // Nuove funzioni per calcolare il ricorrente diretto business in base agli scaglioni del mandato
         function getLuceRicorrenteDiretto(kwh) {
             if (kwh <= 5000) return 10;
             if (kwh <= 10000) return 12.5;
@@ -467,10 +478,7 @@
             const pRes = parseInt(document.getElementById('p-res').value) || 0; 
             const pResR = parseInt(document.getElementById('p-res-r').value) || 0; 
             globale_totDiretta_Base += (pRes * 50) + (pResR * 70); 
-            
-            // Ricorrente Luce Residenziale (4€ a pezzo)
             ricMaturatoMesePersonale += (pRes * 4) + (pResR * 4); 
-            
             volumeKwhLuceTotale += (pRes * 3000) + (pResR * 3000);
 
             const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business'); 
@@ -478,10 +486,7 @@
             bLuceInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
                 globale_totDiretta_Base += getLuceGettone(val, 'diretta'); 
-                
-                // AGGIUNTO: Ricorrente Luce Business
                 ricMaturatoMesePersonale += getLuceRicorrenteDiretto(val);
-                
                 volumeKwhLuceTotale += val; 
             }); 
 
@@ -489,10 +494,7 @@
             const gRes = parseInt(document.getElementById('g-res').value) || 0; 
             const gResR = parseInt(document.getElementById('g-res-r').value) || 0; 
             globale_totDiretta_Base += (gRes * 50) + (gResR * 70); 
-            
-            // Ricorrente Gas Residenziale (4€ a pezzo)
             ricMaturatoMesePersonale += (gRes * 4) + (gResR * 4); 
-            
             volumeSmcGasTotale += (gRes * 1000) + (gResR * 1000);
 
             const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business'); 
@@ -500,10 +502,7 @@
             bGasInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
                 globale_totDiretta_Base += getGasGettone(val, 'diretta'); 
-                
-                // AGGIUNTO: Ricorrente Gas Business
                 ricMaturatoMesePersonale += getGasRicorrenteDiretto(val);
-                
                 volumeSmcGasTotale += val; 
             }); 
 
@@ -584,13 +583,11 @@
                 indVeri = verisureIndirettaPezzi * 8; 
             } 
 
-            // RICORRENTI MATURATI NEL MESE
             let ricIndEeGasAnnuale = (volumeKwhLuceTotale * 0.0005) + (volumeSmcGasTotale * 0.0035);
-            let ricIndEeGasMensile = ricIndEeGasAnnuale / 12; // Ricorrente indiretto (mensile)
+            let ricIndEeGasMensile = ricIndEeGasAnnuale / 12; 
 
             globale_totIndiretta = indEeGasGettoni + indSky + indProd + indVeri; 
 
-            // Volume per scaglioni
             let volumeTotaleInKwh = volumeKwhLuceTotale + (volumeSmcGasTotale * 4); 
             let volumeTotaleInGwh = volumeTotaleInKwh / 1000000; 
 
@@ -633,7 +630,6 @@
                 document.getElementById('usa-gara-std').disabled = (globale_bonusGaraStd === 0); 
             } 
 
-            // Calcolo Base del Mese (Gettoni + Contributo)
             let fatturaGettoniEContributo = globale_totDiretta_Base + globale_totIndiretta + globale_contributo;
 
             if (ruolo === 'coordinator') {
@@ -647,62 +643,36 @@
                 document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
 
-                // CALCOLO CRONOPROGRAMMA FATTURE
-                let quotaTrimestraleDiretta = ricMaturatoMesePersonale; // Ricorrente diretto (trimestrale)
-
-                // Mesi 1 e 2: solo gettoni + contributo
+                let quotaTrimestraleDiretta = ricMaturatoMesePersonale; 
                 let fat_m1m2 = fatturaGettoniEContributo;
-                // Mese 3: si aggiunge il ricorrente indiretto (pari a 1 mese)
                 let fat_m3 = fatturaGettoniEContributo + ricIndEeGasMensile;
-
-                // Mese 4 (Fine 1° Trim): gettoni + ric indiretto cresciuto (2 mesi) + 1° gradino ric diretto
                 let fat_m4 = fatturaGettoniEContributo + (ricIndEeGasMensile * 2) + quotaTrimestraleDiretta;
-                // Mese 5 e 6: Gettoni + Ric indiretto che continua a crescere ma senza ric diretto
-                let fat_m5m6 = fatturaGettoniEContributo + (ricIndEeGasMensile * 4); // Media mese 5 e 6
-
-                // Mese 7 (Fine 2° Trim): si sblocca il 2° gradino del ricorrente diretto (raddoppiato)
+                let fat_m5m6 = fatturaGettoniEContributo + (ricIndEeGasMensile * 4); 
                 let fat_m7 = fatturaGettoniEContributo + (ricIndEeGasMensile * 5) + (quotaTrimestraleDiretta * 2);
                 let fat_m8m9 = fatturaGettoniEContributo + (ricIndEeGasMensile * 7);
-
-                // Mese 10 (Fine 3° Trim): 3° gradino del ricorrente diretto (triplicato)
                 let fat_m10 = fatturaGettoniEContributo + (ricIndEeGasMensile * 8) + (quotaTrimestraleDiretta * 3);
                 let fat_m11m12 = fatturaGettoniEContributo + (ricIndEeGasMensile * 10);
-
-                // Mese 13 (Fine 4° Trim): 4° gradino del ricorrente diretto (quadruplicato)
                 let fat_m13 = fatturaGettoniEContributo + (ricIndEeGasMensile * 11) + (quotaTrimestraleDiretta * 4);
 
                 document.getElementById('fat-m1m2').innerText = fat_m1m2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m3').innerText = fat_m3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
-                // MESE 4
                 document.getElementById('fat-m4').innerText = fat_m4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-dir-1').innerText = quotaTrimestraleDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
                 document.getElementById('fat-m5m6').innerText = fat_m5m6.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
-                // MESE 7
                 document.getElementById('fat-m7').innerText = fat_m7.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-dir-2').innerText = (quotaTrimestraleDiretta * 2).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
                 document.getElementById('fat-m8m9').innerText = fat_m8m9.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
-                // MESE 10
                 document.getElementById('fat-m10').innerText = fat_m10.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-dir-3').innerText = (quotaTrimestraleDiretta * 3).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
                 document.getElementById('fat-m11m12').innerText = fat_m11m12.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
-                // MESE 13
                 document.getElementById('fat-m13').innerText = fat_m13.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-dir-4').innerText = (quotaTrimestraleDiretta * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             }
 
             document.getElementById('tot-diretta').innerText = globale_totDiretta_Base.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-            
             let indMostrato = globale_totIndiretta + globale_contributo;
             document.getElementById('tot-indiretta').innerText = indMostrato.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
-            // RICORRENTE DIRETTO (Invariato per riepilogo)
             document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
@@ -732,7 +702,6 @@
 
         function riconteggiaTotale() {
             let totale = globale_totDiretta_Base + globale_totIndiretta + globale_contributo;
-            
             const checkAcademy = document.getElementById('usa-gara-academy'); 
             const checkStd = document.getElementById('usa-gara-std'); 
 
@@ -746,3 +715,4 @@
     </script>
 </body>
 </html>
+    </div>
