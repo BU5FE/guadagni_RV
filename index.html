@@ -271,7 +271,15 @@
             <p><strong>Nota bene:</strong> I calcoli si basano sui parametri del mandato "<span id="label-mandato">Account 2026</span>".</p> 
             <p><i>Si ricorda che per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni dalla data inizio fornitura.</i></p> 
         </div> 
-    </div> 
+    </div>
+
+
+
+
+
+
+
+
 
     <script> 
         const tabelle = { 
@@ -414,6 +422,32 @@
             } 
         } 
 
+        // Nuove funzioni per calcolare il ricorrente diretto business in base agli scaglioni del mandato
+        function getLuceRicorrenteDiretto(kwh) {
+            if (kwh <= 5000) return 10;
+            if (kwh <= 10000) return 12.5;
+            if (kwh <= 25000) return 15;
+            if (kwh <= 50000) return 16.50;
+            if (kwh <= 100000) return 17.50;
+            if (kwh <= 300000) return 20;
+            if (kwh <= 500000) return 25;
+            if (kwh <= 700000) return 30;
+            return 35;
+        }
+
+        function getGasRicorrenteDiretto(smc) {
+            if (smc <= 1500) return 8;
+            if (smc <= 5000) return 10;
+            if (smc <= 10000) return 12;
+            if (smc <= 20000) return 14;
+            if (smc <= 30000) return 16;
+            if (smc <= 100000) return 20;
+            if (smc <= 200000) return 25;
+            if (smc <= 300000) return 30;
+            if (smc <= 400000) return 35;
+            return 40;
+        }
+
         function calcolaProvvigioni() { 
             const ruolo = document.getElementById('ruolo').value; 
             globale_totDiretta_Base = 0; 
@@ -433,6 +467,8 @@
             const pRes = parseInt(document.getElementById('p-res').value) || 0; 
             const pResR = parseInt(document.getElementById('p-res-r').value) || 0; 
             globale_totDiretta_Base += (pRes * 50) + (pResR * 70); 
+            
+            // Ricorrente Luce Residenziale (4€ a pezzo)
             ricMaturatoMesePersonale += (pRes * 4) + (pResR * 4); 
             
             volumeKwhLuceTotale += (pRes * 3000) + (pResR * 3000);
@@ -442,6 +478,10 @@
             bLuceInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
                 globale_totDiretta_Base += getLuceGettone(val, 'diretta'); 
+                
+                // AGGIUNTO: Ricorrente Luce Business
+                ricMaturatoMesePersonale += getLuceRicorrenteDiretto(val);
+                
                 volumeKwhLuceTotale += val; 
             }); 
 
@@ -449,6 +489,8 @@
             const gRes = parseInt(document.getElementById('g-res').value) || 0; 
             const gResR = parseInt(document.getElementById('g-res-r').value) || 0; 
             globale_totDiretta_Base += (gRes * 50) + (gResR * 70); 
+            
+            // Ricorrente Gas Residenziale (4€ a pezzo)
             ricMaturatoMesePersonale += (gRes * 4) + (gResR * 4); 
             
             volumeSmcGasTotale += (gRes * 1000) + (gResR * 1000);
@@ -458,6 +500,10 @@
             bGasInputs.forEach(input => { 
                 const val = parseFloat(input.value) || 0; 
                 globale_totDiretta_Base += getGasGettone(val, 'diretta'); 
+                
+                // AGGIUNTO: Ricorrente Gas Business
+                ricMaturatoMesePersonale += getGasRicorrenteDiretto(val);
+                
                 volumeSmcGasTotale += val; 
             }); 
 
