@@ -294,15 +294,7 @@
             <p><i>Si ricorda che per i servizi Luce, Gas e Sky si applica la regola dello storno entro 180 giorni dalla data inizio fornitura.</i></p> 
         </div> 
     </div>
-
-
-
-
-
-
-
-
-
+    
     <script> 
         const tabelle = { 
             sky: { 
@@ -521,19 +513,25 @@
                 volumeSmcGasTotale += val; 
             }); 
 
-            // 3. SKY DIRETTO 
-            document.querySelectorAll('#sky-container .business-item').forEach(riga => { 
-                const tipo = riga.querySelector('.tipo-sky').value; 
-                const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
-                s_dirSky += (qta * tabelle.sky[tipo].diretta); 
-            }); 
+            // 3. SKY DIRETTO (CORRETTO CON IF)
+            const skyRighe = document.querySelectorAll('#sky-container .business-item');
+            if (skyRighe.length > 0) {
+                skyRighe.forEach(riga => { 
+                    const tipo = riga.querySelector('.tipo-sky').value; 
+                    const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
+                    if (tabelle.sky[tipo]) s_dirSky += (qta * tabelle.sky[tipo].diretta); 
+                }); 
+            }
 
-            // 4. PRODOTTI DIRETTI 
-            document.querySelectorAll('#prodotti-container .business-item').forEach(riga => { 
-                const tipo = riga.querySelector('.tipo-prodotto').value; 
-                const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0; 
-                s_dirProd += (val * tabelle.prodotti[tipo].diretta); 
-            }); 
+            // 4. PRODOTTI DIRETTI (CORRETTO CON IF)
+            const prodRighe = document.querySelectorAll('#prodotti-container .business-item');
+            if (prodRighe.length > 0) {
+                prodRighe.forEach(riga => { 
+                    const tipo = riga.querySelector('.tipo-prodotto').value; 
+                    const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0; 
+                    if (tabelle.prodotti[tipo]) s_dirProd += (val * tabelle.prodotti[tipo].diretta); 
+                }); 
+            }
 
             // 5. BONUS RID WEB & VERISURE DIRETTA 
             s_dirRid += (parseInt(document.getElementById('c-bus').value) || 0) * 13; 
@@ -584,17 +582,25 @@
                     volumeSmcGasTotale += giBusSmc;
                 }
 
-                document.querySelectorAll('#sky-ind-container .business-item').forEach(riga => { 
-                    const tipo = riga.querySelector('.tipo-sky').value; 
-                    const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
-                    indSky += (qta * tabelle.sky[tipo].indiretta); 
-                }); 
+                // CORREZIONE ANCHE QUI PER SICUREZZA
+                const skyIndRighe = document.querySelectorAll('#sky-ind-container .business-item');
+                if (skyIndRighe.length > 0) {
+                    skyIndRighe.forEach(riga => { 
+                        const tipo = riga.querySelector('.tipo-sky').value; 
+                        const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
+                        if (tabelle.sky[tipo]) indSky += (qta * tabelle.sky[tipo].indiretta); 
+                    }); 
+                }
 
-                document.querySelectorAll('#prodotti-ind-container .business-item').forEach(riga => { 
-                    const tipo = riga.querySelector('.tipo-prodotto').value; 
-                    const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0; 
-                    indProd += (val * tabelle.prodotti[tipo].indiretta); 
-                }); 
+                // CORREZIONE ANCHE QUI PER SICUREZZA
+                const prodIndRighe = document.querySelectorAll('#prodotti-ind-container .business-item');
+                if (prodIndRighe.length > 0) {
+                    prodIndRighe.forEach(riga => { 
+                        const tipo = riga.querySelector('.tipo-prodotto').value; 
+                        const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0; 
+                        if (tabelle.prodotti[tipo]) indProd += (val * tabelle.prodotti[tipo].indiretta); 
+                    }); 
+                }
 
                 let verisureIndirettaPezzi = parseInt(document.getElementById('verisure-ind-qta').value) || 0;
                 indVeri = verisureIndirettaPezzi * 8; 
