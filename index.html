@@ -305,6 +305,8 @@
 
 
 
+
+
     <script> 
         const tabelle = { 
             sky: { 
@@ -720,17 +722,27 @@
             document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
-            // BLOCCO MODIFICATO: Formula ad accumulo per i Trimestri
-            let valoreMeseSingolo = ricMaturatoMesePersonale / 3; 
-            let arrayMesi = new Array(12).fill(0);
-            for (let mese = 2; mese < 12; mese++) {
-                arrayMesi[mese] = valoreMeseSingolo * (mese - 1);
+            // BLOCCO MODIFICATO: Fotografia trimestrale con sfasamento di 2 mesi
+            let valMese = ricMaturatoMesePersonale / 3; 
+            
+            // Simuliamo i 12 mesi di incasso reale (con sfasamento di 2 mesi)
+            let arrayMesiReali = new Array(12).fill(0);
+            for (let i = 2; i < 12; i++) {
+                // Ogni mese in fornitura accumula un "valMese" in più rispetto al precedente
+                arrayMesiReali[i] = valMese * (i - 1);
             }
 
-            let trim1 = arrayMesi[0] + arrayMesi[1] + arrayMesi[2];
-            let trim2 = arrayMesi[3] + arrayMesi[4] + arrayMesi[5];
-            let trim3 = arrayMesi[6] + arrayMesi[7] + arrayMesi[8];
-            let trim4 = arrayMesi[9] + arrayMesi[10] + arrayMesi[11];
+            // Trimestre 1: Somma Mese 1(0) + Mese 2(0) + Mese 3(valMese)
+            let trim1 = arrayMesiReali[0] + arrayMesiReali[1] + arrayMesiReali[2];
+            
+            // Trimestre 2: Somma Mesi 4, 5 e 6
+            let trim2 = arrayMesiReali[3] + arrayMesiReali[4] + arrayMesiReali[5];
+            
+            // Trimestre 3: Somma Mesi 7, 8 e 9
+            let trim3 = arrayMesiReali[6] + arrayMesiReali[7] + arrayMesiReali[8];
+            
+            // Trimestre 4: Somma Mesi 10, 11 e 12
+            let trim4 = arrayMesiReali[9] + arrayMesiReali[10] + arrayMesiReali[11];
 
             document.getElementById('ric-trim1').innerText = trim1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('ric-trim2').innerText = trim2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
