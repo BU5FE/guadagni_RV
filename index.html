@@ -6,11 +6,11 @@
     <title>Calcolatore Provvigioni 2026</title>
     <style>
         :root {
-            --primary: #004B87;
-            --secondary: #00A3E0;
+            --primary: #129E49; /* Verde Energy brillante */
+            --secondary: #2ECC71;
             --dark: #1C2226;
             --light: #F4F7F9;
-            --success: #2ECC71;
+            --success: #129E49;
             --warning: #F39C12;
             --danger: #E74C3C;
         }
@@ -108,11 +108,11 @@
         }
 
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: #003366; }
+        .btn-primary:hover { background: #0b6b31; }
         .btn-secondary { background: var(--secondary); color: white; }
-        .btn-secondary:hover { background: #0081B3; }
-        .btn-success { background: var(--success); color: white; width: 100%; font-size: 1.1rem; padding: 15px; }
-        .btn-success:hover { background: #27AE60; }
+        .btn-secondary:hover { background: #27ae60; }
+        .btn-success { background: var(--primary); color: white; width: 100%; font-size: 1.1rem; padding: 15px; }
+        .btn-success:hover { background: #0b6b31; }
         .btn-danger { background: var(--danger); color: white; padding: 5px 10px; }
         .btn-danger:hover { background: #C0392B; }
 
@@ -145,11 +145,11 @@
         tr:last-child td { border-bottom: none; }
 
         .valore-evidenziato { font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 1.1rem; color: #fff; text-align: right; }
-        .valore-positivo { color: var(--success); }
+        .valore-positivo { color: var(--secondary); }
 
         .totale-finale {
-            background: rgba(46, 204, 113, 0.1);
-            border: 1px solid var(--success);
+            background: rgba(18, 158, 73, 0.1);
+            border: 1px solid var(--primary);
             padding: 20px;
             border-radius: 8px;
             text-align: center;
@@ -160,7 +160,7 @@
             border: none;
             padding: 0;
             margin: 0;
-            color: var(--success);
+            color: var(--secondary);
             font-size: 2rem;
         }
 
@@ -360,8 +360,8 @@
                 <div class="card">
                     <p><b>Nota:</b> È necessario raggiungere la soglia minima di 8 pezzi totali (Luce + Gas) per sbloccare i bonus delle gare.</p>
                     <br>
-                    <p><b>Pezzi inseriti finora:</b> <span id="pezzi-totali" style="color:var(--secondary); font-weight:bold;">0</span></p>
-                    <p><b>Punti Academy calcolati:</b> <span id="punti-academy" style="color:var(--secondary); font-weight:bold;">0</span></p>
+                    <p><b>Pezzi inseriti finora:</b> <span id="pezzi-totali" style="color:var(--primary); font-weight:bold;">0</span></p>
+                    <p><b>Punti Academy calcolati:</b> <span id="punti-academy" style="color:var(--primary); font-weight:bold;">0</span></p>
                     <br>
                     
                     <div class="form-group">
@@ -370,7 +370,7 @@
                             Applica Bonus Gara Standard (+25% o +30%)
                         </label>
                         <p class="sub-text" id="label-acceleratore">Calcolo in base ai pezzi totali.</p>
-                        <p style="color:var(--success); font-weight:bold; text-align:right;">Valore potenziale: € <span id="valore-gara-box">0.00</span></p>
+                        <p style="color:var(--primary); font-weight:bold; text-align:right;">Valore potenziale: € <span id="valore-gara-box">0.00</span></p>
                     </div>
 
                     <div class="form-group" style="border-top: 1px solid #E2E8F0; padding-top: 15px;">
@@ -379,7 +379,7 @@
                             Applica Bonus Gara Academy (Importo fisso)
                         </label>
                         <p class="sub-text">In base ai punti Academy generati (Business = 1pt, Residenziale = 0.5pt).</p>
-                        <p style="color:var(--success); font-weight:bold; text-align:right;">Valore potenziale: € <span id="valore-academy-box">0.00</span></p>
+                        <p style="color:var(--primary); font-weight:bold; text-align:right;">Valore potenziale: € <span id="valore-academy-box">0.00</span></p>
                     </div>
                 </div>
             </div>
@@ -508,6 +508,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 
 
@@ -691,7 +694,7 @@
             volumeSmcGasTotale += val; 
         }); 
 
-        // 3. SKY DIRETTO (FIXATO: Calcola solo se hai aggiunto righe!)
+        // 3. SKY DIRETTO (Calcola solo se hai aggiunto righe!)
         const skyRighe = document.querySelectorAll('#sky-container .business-item');
         skyRighe.forEach(riga => { 
             const tipo = riga.querySelector('.tipo-sky').value; 
@@ -699,7 +702,7 @@
             if (tabelle.sky[tipo]) s_dirSky += (qta * tabelle.sky[tipo].diretta); 
         }); 
 
-        // 4. PRODOTTI DIRETTI (FIXATO: Calcola solo se hai aggiunto righe!)
+        // 4. PRODOTTI DIRETTI (Calcola solo se hai aggiunto righe!)
         const prodRighe = document.querySelectorAll('#prodotti-container .business-item');
         prodRighe.forEach(riga => { 
             const tipo = riga.querySelector('.tipo-prodotto').value; 
