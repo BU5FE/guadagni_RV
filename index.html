@@ -295,6 +295,16 @@
         </div> 
     </div>
     
+
+
+
+
+
+
+
+
+
+
     <script> 
         const tabelle = { 
             sky: { 
@@ -710,10 +720,22 @@
             document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
-            document.getElementById('ric-trim1').innerText = (ricMaturatoMesePersonale / 3).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-            document.getElementById('ric-trim2').innerText = (ricMaturatoMesePersonale * 3).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-            document.getElementById('ric-trim3').innerText = (ricMaturatoMesePersonale * 6).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-            document.getElementById('ric-trim4').innerText = (ricMaturatoMesePersonale * 9).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+            // BLOCCO MODIFICATO: Formula ad accumulo per i Trimestri
+            let valoreMeseSingolo = ricMaturatoMesePersonale / 3; 
+            let arrayMesi = new Array(12).fill(0);
+            for (let mese = 2; mese < 12; mese++) {
+                arrayMesi[mese] = valoreMeseSingolo * (mese - 1);
+            }
+
+            let trim1 = arrayMesi[0] + arrayMesi[1] + arrayMesi[2];
+            let trim2 = arrayMesi[3] + arrayMesi[4] + arrayMesi[5];
+            let trim3 = arrayMesi[6] + arrayMesi[7] + arrayMesi[8];
+            let trim4 = arrayMesi[9] + arrayMesi[10] + arrayMesi[11];
+
+            document.getElementById('ric-trim1').innerText = trim1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+            document.getElementById('ric-trim2').innerText = trim2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+            document.getElementById('ric-trim3').innerText = trim3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+            document.getElementById('ric-trim4').innerText = trim4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
             riconteggiaTotale(); 
             document.getElementById('risultati-box').style.display = 'block'; 
