@@ -419,7 +419,6 @@
         return arr[arr.length - 1];
     } 
 
-    // --- FUNZIONI RICORRENTE TRIMESTRALE PURO ---
     function getLuceRicorrenteDiretto(kwh) {
         const soglie = [5000, 10000, 25000, 50000, 100000, 300000, 500000, 700000];
         const valori = [10, 12.5, 15, 16.5, 17.5, 20, 25, 30, 35]; 
@@ -443,12 +442,10 @@
         globale_totDiretta_Base = 0; 
         globale_totIndiretta = 0; 
         globale_contributo = 0; 
-        globale_bonusGaraStd = 0; 
-        globale_bonusGaraAcademy = 0; 
         
         s_dirEeGas = 0; s_dirSky = 0; s_dirProd = 0; s_dirVeri = 0; s_dirRid = 0;
         
-        let ricGettoneMeseSingolo = 0; 
+        let ricMeseSingolo = 0; 
         let volumeKwhLuceTotale = 0; 
         let volumeSmcGasTotale = 0; 
         
@@ -456,14 +453,14 @@
         const pRes = parseInt(document.getElementById('p-res').value) || 0; 
         const pResR = parseInt(document.getElementById('p-res-r').value) || 0; 
         s_dirEeGas += (pRes * 50) + (pResR * 70); 
-        ricGettoneMeseSingolo += (pRes * 4) + (pResR * 4); // 4€ a trimestre per pezzo
+        ricMeseSingolo += (pRes * 4) + (pResR * 4); // Matura 4€ a trimestre per pezzo
         volumeKwhLuceTotale += (pRes * 3000) + (pResR * 3000);
 
         const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business'); 
         bLuceInputs.forEach(input => { 
             const val = parseFloat(input.value) || 0; 
             s_dirEeGas += getLuceGettone(val, 'diretta'); 
-            ricGettoneMeseSingolo += getLuceRicorrenteDiretto(val);
+            ricMeseSingolo += getLuceRicorrenteDiretto(val);
             volumeKwhLuceTotale += val; 
         }); 
 
@@ -471,14 +468,14 @@
         const gRes = parseInt(document.getElementById('g-res').value) || 0; 
         const gResR = parseInt(document.getElementById('g-res-r').value) || 0; 
         s_dirEeGas += (gRes * 50) + (gResR * 70); 
-        ricGettoneMeseSingolo += (gRes * 4) + (gResR * 4); // 4€ a trimestre per pezzo
+        ricMeseSingolo += (gRes * 4) + (gResR * 4); 
         volumeSmcGasTotale += (gRes * 1000) + (gResR * 1000);
 
         const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business'); 
         bGasInputs.forEach(input => { 
             const val = parseFloat(input.value) || 0; 
             s_dirEeGas += getGasGettone(val, 'diretta'); 
-            ricGettoneMeseSingolo += getGasRicorrenteDiretto(val);
+            ricMeseSingolo += getGasRicorrenteDiretto(val);
             volumeSmcGasTotale += val; 
         }); 
 
@@ -556,7 +553,7 @@
         } 
 
         globale_totIndiretta = indEeGasGettoni + indSky + indProd + indVeri; 
-        
+
         // --- CONTRIBUTO COORDINATOR ---
         let volumeTotaleInGwh = (volumeKwhLuceTotale + (volumeSmcGasTotale * 4)) / 1000000; 
         const adHocVal = parseFloat(document.getElementById('contributo-adhoc').value);
@@ -604,15 +601,25 @@
             document.getElementById('usa-gara-std').disabled = (globale_bonusGaraStd === 0); 
         } 
 
-        // --- CALCOLO PROIEZIONI RICORRENTE CON SLITTAMENTO (2 MESI) ---
-        let quotaMensile = ricGettoneMeseSingolo / 3; 
+        // --- CALCOLO PROIEZIONI RICORRENTE (MOLTIPLICAZIONE PURA) ---
+        // Se 1 POD = 4€ a trimestre, un singolo mese di fornitura vale 4/3.
+        // T1 = 1 mese di fornitura = (Tot Ricorrente * 1) / 3
+        // T2 = 6 mesi di fornitura accumulati = (Tot Ricorrente * 6) / 3
+        // T3 = 15 mesi di fornitura accumulati = (Tot Ricorrente * 15) / 3
+        // T4 = 24 mesi di fornitura accumulati = (Tot Ricorrente * 24) / 3
         
-        const ricT1 = quotaMensile;                     // Fine 1° Trim: 1 mese di fornitura del Mese 1
-        const ricT2 = quotaMensile * 6;                 // Fine 2° Trim: (3 mesi Mese 1) + (2 mesi Mese 2) + (1 mese Mese 3)
-        const ricT3 = quotaMensile * 15;                // Fine 3° Trim: 6 mesi prima + 3 nuovi mesi per Mese 1, 2, 3
-        const ricT4 = quotaMensile * 24;                // Fine 4° Trim: Accumulo progressivo a regime
+        const ricT1 = (ricMeseSingolo * 1) / 3;
+        const ricT2 = (ricMeseSingolo * 6) / 3;
+        const ricT3 = (ricMeseSingolo * 15) / 3;
+        const ricT4 = (ricMeseSingolo * 24) / 3;
 
-        // Visualizzazione campi Coordinator
+        // Popolamento dei Trimestri nel box
+        document.getElementById('ric-dir-1').innerText = ricT1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('ric-dir-2').innerText = ricT2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('ric-dir-3').innerText = ricT3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('ric-dir-4').innerText = ricT4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+        // Coordinators
         if (ruolo === 'coordinator') {
             document.getElementById('ind-ee-gas').innerText = indEeGasGettoni.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('ind-sky').innerText = indSky.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -622,12 +629,6 @@
             document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
         }
 
-        // Assegnazione valori reali nei box del Ricorrente sui Trimestri
-        document.getElementById('ric-dir-1').innerText = ricT1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('ric-dir-2').innerText = ricT2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('ric-dir-3').innerText = ricT3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        document.getElementById('ric-dir-4').innerText = ricT4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
         // Campi Generali Risultati
         document.getElementById('dir-ee-gas').innerText = s_dirEeGas.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('dir-sky').innerText = s_dirSky.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -635,9 +636,8 @@
         document.getElementById('dir-veri').innerText = s_dirVeri.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         document.getElementById('dir-rid').innerText = s_dirRid.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
-        // Questo calcola quanto incasseresti "a regime" dopo un anno per singolo mese lavorato
-        document.getElementById('tot-ric-stimata').innerText = ricGettoneMeseSingolo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
-        document.getElementById('tot-ric-annuale').innerText = (ricGettoneMeseSingolo * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+        document.getElementById('tot-ric-stimata').innerText = ricMeseSingolo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
+        document.getElementById('tot-ric-annuale').innerText = (ricMeseSingolo * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
         riconteggiaTotale(); 
         document.getElementById('risultati-box').style.display = 'block'; 
