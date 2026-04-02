@@ -331,7 +331,7 @@
         let globale_contributo = 0; 
         let globale_bonusGaraStd = 0; 
         let globale_bonusGaraAcademy = 0; 
-        
+         
         let s_dirEeGas = 0, s_dirSky = 0, s_dirProd = 0, s_dirVeri = 0, s_dirRid = 0;
 
         function cambiaRuolo() { 
@@ -339,10 +339,10 @@
             const elementiCoordinator = document.querySelectorAll('.coordinator-only'); 
             const elementiAccount = document.querySelectorAll('.account-only'); 
             const labelMandato = document.getElementById('label-mandato'); 
-            
+             
             elementiCoordinator.forEach(el => el.style.display = (ruolo === 'coordinator') ? 'block' : 'none'); 
             elementiAccount.forEach(el => el.style.display = (ruolo === 'account') ? 'block' : 'none'); 
-            
+             
             if (ruolo === 'coordinator') { 
                 labelMandato.innerText = "Coordinator 2026"; 
             } else { 
@@ -401,7 +401,7 @@
                 if (kwh <= 10000) return 65; 
                 if (kwh <= 25000) return 85; 
                 if (kwh <= 50000) return 135; 
-                if (kwh <= 10000) return 185; 
+                if (kwh <= 100000) return 185; 
                 if (kwh <= 300000) return 225; 
                 if (kwh <= 500000) return 275; 
                 if (kwh <= 700000) return 300; 
@@ -477,13 +477,13 @@
             globale_contributo = 0; 
             globale_bonusGaraStd = 0; 
             globale_bonusGaraAcademy = 0; 
-            
+             
             s_dirEeGas = 0; s_dirSky = 0; s_dirProd = 0; s_dirVeri = 0; s_dirRid = 0;
-            
+             
             let ricMaturatoMesePersonale = 0; 
             let volumeKwhLuceTotale = 0; 
             let volumeSmcGasTotale = 0; 
-            
+             
             document.getElementById('usa-gara-academy').checked = false; 
             document.getElementById('usa-gara-std').checked = false; 
 
@@ -656,6 +656,19 @@
 
             let fatturaGettoniEContributo = globale_totDiretta_Base + globale_totIndiretta + globale_contributo;
 
+            // --- CALCOLO RICORRENTE TRIMESTRALE AD ACCUMULO MASSIVO (VALE PER TUTTI) ---
+            let quotaMensileDiretta = ricMaturatoMesePersonale; 
+            let fat_m1m2 = fatturaGettoniEContributo;
+            let fat_m3 = fatturaGettoniEContributo + ricIndEeGasMensile;
+            
+            let fat_m4 = fatturaGettoniEContributo + (ricIndEeGasMensile * 2) + (quotaMensileDiretta * 3);
+            let fat_m5m6 = fatturaGettoniEContributo + (ricIndEeGasMensile * 4); 
+            let fat_m7 = fatturaGettoniEContributo + (ricIndEeGasMensile * 5) + (quotaMensileDiretta * 6);
+            let fat_m8m9 = fatturaGettoniEContributo + (ricIndEeGasMensile * 7);
+            let fat_m10 = fatturaGettoniEContributo + (ricIndEeGasMensile * 8) + (quotaMensileDiretta * 9);
+            let fat_m11m12 = fatturaGettoniEContributo + (ricIndEeGasMensile * 10);
+            let fat_m13 = fatturaGettoniEContributo + (ricIndEeGasMensile * 11) + (quotaMensileDiretta * 12);
+
             if (ruolo === 'coordinator') {
                 document.getElementById('ind-ee-gas').innerText = indEeGasGettoni.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-ind-ee-gas').innerText = ricIndEeGasMensile.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -666,32 +679,22 @@
                 document.getElementById('ind-veri').innerText = indVeri.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
-
-                let quotaTrimestraleDiretta = ricMaturatoMesePersonale; 
-                let fat_m1m2 = fatturaGettoniEContributo;
-                let fat_m3 = fatturaGettoniEContributo + ricIndEeGasMensile;
-                let fat_m4 = fatturaGettoniEContributo + (ricIndEeGasMensile * 2) + quotaTrimestraleDiretta;
-                let fat_m5m6 = fatturaGettoniEContributo + (ricIndEeGasMensile * 4); 
-                let fat_m7 = fatturaGettoniEContributo + (ricIndEeGasMensile * 5) + (quotaTrimestraleDiretta * 2);
-                let fat_m8m9 = fatturaGettoniEContributo + (ricIndEeGasMensile * 7);
-                let fat_m10 = fatturaGettoniEContributo + (ricIndEeGasMensile * 8) + (quotaTrimestraleDiretta * 3);
-                let fat_m11m12 = fatturaGettoniEContributo + (ricIndEeGasMensile * 10);
-                let fat_m13 = fatturaGettoniEContributo + (ricIndEeGasMensile * 11) + (quotaTrimestraleDiretta * 4);
-
-                document.getElementById('fat-m1m2').innerText = fat_m1m2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('fat-m3').innerText = fat_m3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('fat-m4').innerText = fat_m4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-dir-1').innerText = quotaTrimestraleDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('fat-m5m6').innerText = fat_m5m6.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('fat-m7').innerText = fat_m7.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-dir-2').innerText = (quotaTrimestraleDiretta * 2).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('fat-m8m9').innerText = fat_m8m9.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('fat-m10').innerText = fat_m10.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-dir-3').innerText = (quotaTrimestraleDiretta * 3).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('fat-m11m12').innerText = fat_m11m12.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('fat-m13').innerText = fat_m13.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-dir-4').innerText = (quotaTrimestraleDiretta * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             }
+
+            // Popolamento proiezioni visibile anche per il Sales Account
+            document.getElementById('fat-m1m2').innerText = fat_m1m2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('fat-m3').innerText = fat_m3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('fat-m4').innerText = fat_m4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('ric-dir-1').innerText = (quotaMensileDiretta * 3).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('fat-m5m6').innerText = fat_m5m6.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('fat-m7').innerText = fat_m7.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('ric-dir-2').innerText = (quotaMensileDiretta * 6).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('fat-m8m9').innerText = fat_m8m9.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('fat-m10').innerText = fat_m10.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('ric-dir-3').innerText = (quotaMensileDiretta * 9).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('fat-m11m12').innerText = fat_m11m12.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('fat-m13').innerText = fat_m13.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('ric-dir-4').innerText = (quotaMensileDiretta * 12).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
             document.getElementById('dir-ee-gas').innerText = s_dirEeGas.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('dir-sky').innerText = s_dirSky.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -724,7 +727,7 @@
             const checkStd = document.getElementById('usa-gara-std'); 
             if (checkStd.checked) checkAcademy.checked = false; 
             riconteggiaTotale();
-        }
+        } 
 
         function riconteggiaTotale() {
             const ruolo = document.getElementById('ruolo').value;
