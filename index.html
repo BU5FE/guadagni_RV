@@ -2,157 +2,513 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Calcolatore Provvigioni Completo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Provvigioni 2026</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1, h2, h3 { color: #2c3e50; }
-        .sezione { border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
-        label { font-weight: bold; display: block; margin-bottom: 5px; }
-        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 100%; box-sizing: border-box; margin-bottom: 15px; }
-        .row { display: flex; gap: 15px; }
-        .col { flex: 1; }
-        button { background-color: #2980b9; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; }
-        button:hover { background-color: #3498db; }
-        .business-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
-        .btn-remove { background-color: #e74c3c; width: auto; padding: 10px; }
-        .btn-add { background-color: #27ae60; width: auto; margin-bottom: 15px; }
-        .risultati-box { background: #2c3e50; color: white; padding: 20px; border-radius: 10px; margin-top: 25px; display: none; }
-        .risultati-box h2 { color: #ecf0f1; border-bottom: 1px solid #7f8c8d; padding-bottom: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; color: #333; border-radius: 5px; overflow: hidden; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #34495e; color: white; }
-        .trimestri-table th { background-color: #16a085; }
-        .totale-finale { font-size: 22px; font-weight: bold; color: #2ecc71; text-align: right; margin-top: 15px; }
+        :root {
+            --primary: #004B87;
+            --secondary: #00A3E0;
+            --dark: #1C2226;
+            --light: #F4F7F9;
+            --success: #2ECC71;
+            --warning: #F39C12;
+            --danger: #E74C3C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 20px;
+        }
+
+        h1 { color: var(--primary); margin-bottom: 10px; }
+        h2 { color: var(--primary); margin: 20px 0 10px 0; font-size: 1.4rem; border-left: 4px solid var(--secondary); padding-left: 10px; }
+        h3 { color: var(--dark); margin: 15px 0 5px 0; font-size: 1.1rem; }
+
+        .role-selector {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        select, input {
+            padding: 10px;
+            border: 1px solid #CBD5E0;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .role-selector select { width: auto; min-width: 200px; font-weight: bold; color: var(--primary); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .card {
+            background: #fff;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; color: #4A5568; }
+
+        .business-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            background: var(--light);
+            padding: 10px;
+            border-radius: 6px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #003366; }
+        .btn-secondary { background: var(--secondary); color: white; }
+        .btn-secondary:hover { background: #0081B3; }
+        .btn-success { background: var(--success); color: white; width: 100%; font-size: 1.1rem; padding: 15px; }
+        .btn-success:hover { background: #27AE60; }
+        .btn-danger { background: var(--danger); color: white; padding: 5px 10px; }
+        .btn-danger:hover { background: #C0392B; }
+
+        .btn-add { background: #E2E8F0; color: #4A5568; margin-top: 5px; }
+        .btn-add:hover { background: #CBD5E0; }
+
+        .risultati-box {
+            margin-top: 30px;
+            background: var(--dark);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .risultati-box h2 { color: white; border-left-color: var(--secondary); }
+        .risultati-box h3 { color: #A0AEC0; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { background: rgba(0,0,0,0.2); font-weight: 600; color: var(--secondary); }
+        tr:last-child td { border-bottom: none; }
+
+        .valore-evidenziato { font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 1.1rem; color: #fff; text-align: right; }
+        .valore-positivo { color: var(--success); }
+
+        .totale-finale {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid var(--success);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .totale-finale h2 {
+            border: none;
+            padding: 0;
+            margin: 0;
+            color: var(--success);
+            font-size: 2rem;
+        }
+
+        .sub-text { font-size: 0.8rem; color: #718096; font-style: italic; }
+
+        /* Stile specifico per tabelle trimestri (Verde) */
+        .trimestri-table th { color: #2ECC71 !important; }
+
+        /* Classi dinamiche visibilità */
+        .coordinator-only { display: none; }
+        .account-only { display: block; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Calcolatore Provvigioni <span id="label-mandato">Account 2026</span></h1>
-    
-    <div class="sezione">
-        <label for="ruolo">Seleziona Ruolo:</label>
+    <header>
+        <h1>Calcolatore Provvigioni 2026</h1>
+        <p id="label-mandato" style="font-weight:bold; color:var(--primary);">Account 2026</p>
+    </header>
+
+    <div class="role-selector">
+        <label for="ruolo">Seleziona il tuo ruolo per vedere i parametri dedicati:</label>
         <select id="ruolo" onchange="cambiaRuolo()">
             <option value="account">Account</option>
             <option value="coordinator">Coordinator</option>
         </select>
     </div>
 
-    <div class="sezione">
-        <h2>Produzione Diretta (Mese Singolo)</h2>
-        <div class="row">
-            <div class="col">
-                <label for="p-res">POD Residenziali:</label>
-                <input type="number" id="p-res" value="0" min="0">
+    <div class="grid-2">
+        <div>
+            <h2>1. Produzione Diretta (Mese Singolo)</h2>
+            
+            <div class="card">
+                <h3>Luce Residenziale</h3>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="p-res">POD Residenziali (Pezzi):</label>
+                        <input type="number" id="p-res" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="p-res-r">POD Residenziali R+ (Pezzi):</label>
+                        <input type="number" id="p-res-r" value="0" min="0">
+                    </div>
+                </div>
+
+                <h3>Luce Business (Micro e PMI)</h3>
+                <div id="p-bus-container"></div>
+                <button class="btn btn-add" onclick="aggiungiRigaBusiness('p-bus-container', 'kWh annui stimati')">+ Aggiungi POD Business</button>
             </div>
-            <div class="col">
-                <label for="p-res-r">POD Residenziali R+:</label>
-                <input type="number" id="p-res-r" value="0" min="0">
+
+            <div class="card">
+                <h3>Gas Residenziale</h3>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="g-res">PDR Residenziali (Pezzi):</label>
+                        <input type="number" id="g-res" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="g-res-r">PDR Residenziali R+ (Pezzi):</label>
+                        <input type="number" id="g-res-r" value="0" min="0">
+                    </div>
+                </div>
+
+                <h3>Gas Business (Micro e PMI)</h3>
+                <div id="g-bus-container"></div>
+                <button class="btn btn-add" onclick="aggiungiRigaBusiness('g-bus-container', 'Smc annui stimati')">+ Aggiungi PDR Business</button>
+            </div>
+
+            <div class="card">
+                <h3>Servizi e Altri Prodotti</h3>
+                
+                <div class="form-group">
+                    <label for="c-bus">Contratti Luce/Gas Business andati a buon fine con RID:</label>
+                    <input type="number" id="c-bus" value="0" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="verisure-qta">Pezzi Verisure venduti:</label>
+                    <input type="number" id="verisure-qta" value="0" min="0">
+                </div>
+
+                <h3>Sky Diretto</h3>
+                <div id="sky-container"></div>
+                <button class="btn btn-add" onclick="aggiungiRigaSky('sky-container')">+ Aggiungi Prodotto Sky</button>
+
+                <h3>Prodotti Partner Diretti (Fotovoltaico, Led, Clima, ecc.)</h3>
+                <div id="prodotti-container"></div>
+                <button class="btn btn-add" onclick="aggiungiRigaProdotto('prodotti-container')">+ Aggiungi Prodotto Partner</button>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <label for="g-res">PDR Residenziali:</label>
-                <input type="number" id="g-res" value="0" min="0">
+
+        <div>
+            <div class="coordinator-only">
+                <h2>2. Produzione Indiretta (Rete)</h2>
+                
+                <div class="card">
+                    <h3>Luce Rete</h3>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="p-ind-res">POD Residenziali Rete:</label>
+                            <input type="number" id="p-ind-res" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="p-ind-res-kwh">Totale kWh Res. Rete:</label>
+                            <input type="number" id="p-ind-res-kwh" value="0" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="p-ind-resr">POD Res. R+ Rete:</label>
+                            <input type="number" id="p-ind-resr" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="p-ind-resr-kwh">Totale kWh R+ Rete:</label>
+                            <input type="number" id="p-ind-resr-kwh" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="p-ind-bus-pezzi">POD Bus. Rete (Pezzi):</label>
+                            <input type="number" id="p-ind-bus-pezzi" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="p-ind-bus-kwh">Totale kWh Bus. Rete:</label>
+                            <input type="number" id="p-ind-bus-kwh" value="0" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Gas Rete</h3>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="g-ind-res">PDR Residenziali Rete:</label>
+                            <input type="number" id="g-ind-res" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="g-ind-res-smc">Totale Smc Res. Rete:</label>
+                            <input type="number" id="g-ind-res-smc" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="g-ind-resr">PDR Res. R+ Rete:</label>
+                            <input type="number" id="g-ind-resr" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="g-ind-resr-smc">Totale Smc R+ Rete:</label>
+                            <input type="number" id="g-ind-resr-smc" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="g-ind-bus-pezzi">PDR Bus. Rete (Pezzi):</label>
+                            <input type="number" id="g-ind-bus-pezzi" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="g-ind-bus-smc">Totale Smc Bus. Rete:</label>
+                            <input type="number" id="g-ind-bus-smc" value="0" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Altri Prodotti Rete</h3>
+                    <div class="form-group">
+                        <label for="verisure-ind-qta">Pezzi Verisure Rete:</label>
+                        <input type="number" id="verisure-ind-qta" value="0" min="0">
+                    </div>
+
+                    <h3>Sky Rete</h3>
+                    <div id="sky-ind-container"></div>
+                    <button class="btn btn-add" onclick="aggiungiRigaSky('sky-ind-container')">+ Aggiungi Sky Rete</button>
+
+                    <h3>Prodotti Partner Rete</h3>
+                    <div id="prodotti-ind-container"></div>
+                    <button class="btn btn-add" onclick="aggiungiRigaProdotto('prodotti-ind-container')">+ Aggiungi Prodotto Rete</button>
+                </div>
+
+                <div class="card">
+                    <h3>Contributo Fisso Mensile Coordinator</h3>
+                    <p class="sub-text">In base ai GWh totali generati nel mese o inserimento ad hoc.</p>
+                    <div class="form-group">
+                        <label for="contributo-adhoc">Inserisci Contributo Ad Hoc (€) [Opzionale]:</label>
+                        <input type="number" id="contributo-adhoc" placeholder="Es. 1500 (Lascia vuoto per calcolo basato su GWh)">
+                    </div>
+                </div>
             </div>
-            <div class="col">
-                <label for="g-res-r">PDR Residenziali R+:</label>
-                <input type="number" id="g-res-r" value="0" min="0">
+
+            <div class="account-only">
+                <h2>2. Acceleratori e Gare (Account)</h2>
+                <div class="card">
+                    <p><b>Nota:</b> È necessario raggiungere la soglia minima di 8 pezzi totali (Luce + Gas) per sbloccare i bonus delle gare.</p>
+                    <br>
+                    <p><b>Pezzi inseriti finora:</b> <span id="pezzi-totali" style="color:var(--secondary); font-weight:bold;">0</span></p>
+                    <p><b>Punti Academy calcolati:</b> <span id="punti-academy" style="color:var(--secondary); font-weight:bold;">0</span></p>
+                    <br>
+                    
+                    <div class="form-group">
+                        <label style="display:flex; align-items:center; gap:10px;">
+                            <input type="checkbox" id="usa-gara-std" style="width:auto;" onchange="riconteggiaTotale()"> 
+                            Applica Bonus Gara Standard (+25% o +30%)
+                        </label>
+                        <p class="sub-text" id="label-acceleratore">Calcolo in base ai pezzi totali.</p>
+                        <p style="color:var(--success); font-weight:bold; text-align:right;">Valore potenziale: € <span id="valore-gara-box">0.00</span></p>
+                    </div>
+
+                    <div class="form-group" style="border-top: 1px solid #E2E8F0; padding-top: 15px;">
+                        <label style="display:flex; align-items:center; gap:10px;">
+                            <input type="checkbox" id="usa-gara-academy" style="width:auto;" onchange="riconteggiaTotale()"> 
+                            Applica Bonus Gara Academy (Importo fisso)
+                        </label>
+                        <p class="sub-text">In base ai punti Academy generati (Business = 1pt, Residenziale = 0.5pt).</p>
+                        <p style="color:var(--success); font-weight:bold; text-align:right;">Valore potenziale: € <span id="valore-academy-box">0.00</span></p>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <label>POD Business (Luce):</label>
-        <div id="p-bus-container"></div>
-        <button class="btn-add" onclick="aggiungiRigaBusiness('p-bus-container', 'Inserisci kWh annui')">+ Aggiungi POD Business</button>
-        
-        <label>PDR Business (Gas):</label>
-        <div id="g-bus-container"></div>
-        <button class="btn-add" onclick="aggiungiRigaBusiness('g-bus-container', 'Inserisci Smc annui')">+ Aggiungi PDR Business</button>
-
-        <label>Sky Diretto:</label>
-        <div id="sky-container"></div>
-        <button class="btn-add" onclick="aggiungiRigaSky('sky-container')">+ Aggiungi Sky Diretto</button>
-
-        <label>Prodotti Partner Diretti:</label>
-        <div id="prodotti-container"></div>
-        <button class="btn-add" onclick="aggiungiRigaProdotto('prodotti-container')">+ Aggiungi Prodotto Diretto</button>
-
-        <label for="c-bus">Contratti Luce/Gas Business con RID:</label>
-        <input type="number" id="c-bus" value="0" min="0">
-        
-        <label for="verisure-qta">Pezzi Verisure:</label>
-        <input type="number" id="verisure-qta" value="0" min="0">
     </div>
 
-    <div class="sezione coordinator-only" style="display:none;">
-        <h2>Produzione Indiretta (Rete)</h2>
-        <div class="row">
-            <div class="col">
-                <label for="p-ind-res">POD Res. Rete:</label>
-                <input type="number" id="p-ind-res" value="0">
-            </div>
-            <div class="col">
-                <label for="p-ind-res-kwh">Totale kWh Res. Rete:</label>
-                <input type="number" id="p-ind-res-kwh" value="0">
-            </div>
-        </div>
-        
-        <label>Sky Rete:</label>
-        <div id="sky-ind-container"></div>
-        <button class="btn-add" onclick="aggiungiRigaSky('sky-ind-container')">+ Aggiungi Sky Rete</button>
-
-        <label>Prodotti Partner Rete:</label>
-        <div id="prodotti-ind-container"></div>
-        <button class="btn-add" onclick="aggiungiRigaProdotto('prodotti-ind-container')">+ Aggiungi Prodotto Rete</button>
-
-        <label for="contributo-adhoc">Contributo Ad Hoc (€) [Opzionale]:</label>
-        <input type="number" id="contributo-adhoc" placeholder="Lascia vuoto per calcolo automatico GWh">
+    <div style="margin: 30px 0;">
+        <button class="btn btn-success" onclick="calcolaProvvigioni()">CALCOLA LE MIE PROVVIGIONI</button>
     </div>
-
-    <div class="sezione account-only">
-        <h2>Bonus e Gare</h2>
-        <p><b id="label-acceleratore">Pezzi minimi per sbloccare i bonus: 8.</b></p>
-        <label><input type="checkbox" id="usa-gara-std" onchange="riconteggiaTotale()"> Applica Bonus Gara Standard</label>
-        <label><input type="checkbox" id="usa-gara-academy" onchange="riconteggiaTotale()"> Applica Bonus Academy</label>
-    </div>
-
-    <button onclick="calcolaProvvigioni()">CALCOLA PROVVIGIONI</button>
 
     <div id="risultati-box" class="risultati-box">
-        <h2>Riepilogo Competenze</h2>
+        <h2>Riepilogo Competenze Simulate</h2>
         
         <h3>Gettoni Una Tantum (Maturati sul mese calcolato)</h3>
         <table>
-            <tr><th>Voce</th><th>Importo</th></tr>
-            <tr><td>Luce e Gas Diretto</td><td id="dir-ee-gas">0,00 €</td></tr>
-            <tr><td>Sky Diretto</td><td id="dir-sky">0,00 €</td></tr>
-            <tr><td>Prodotti Partner Diretto</td><td id="dir-prod">0,00 €</td></tr>
-            <tr><td>Bonus RID Diretto</td><td id="dir-rid">0,00 €</td></tr>
-            <tr><td>Verisure Diretto</td><td id="dir-veri">0,00 €</td></tr>
-            <tr class="account-only"><td>Bonus Gara (+25%/+30%)</td><td id="dir-bonus-gara">0,00 €</td></tr>
-            <tr class="account-only"><td>Bonus Academy Fisso</td><td id="dir-bonus-academy">0,00 €</td></tr>
-            <tr class="coordinator-only"><td>Gettoni Indiretti (Rete)</td><td id="ind-ee-gas">0,00 €</td></tr>
-            <tr class="coordinator-only"><td>Contributo Mensile <span id="label-tipo-contributo"></span></td><td id="tot-contributo">0,00 €</td></tr>
+            <thead>
+                <tr>
+                    <th>Voce di Guadagno</th>
+                    <th style="text-align:right;">Importo Maturato</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Luce e Gas Diretto (Gettoni base)</td>
+                    <td id="dir-ee-gas" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                <tr>
+                    <td>Sky Diretto (Gettoni)</td>
+                    <td id="dir-sky" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                <tr>
+                    <td>Prodotti Partner Diretto (Extra Energia)</td>
+                    <td id="dir-prod" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                <tr>
+                    <td>Verisure Diretto (Gettoni)</td>
+                    <td id="dir-veri" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                <tr>
+                    <td>Bonus RID Diretto Business</td>
+                    <td id="dir-rid" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                
+                <tr class="account-only">
+                    <td>Bonus Gara (+25% / +30%)</td>
+                    <td id="dir-bonus-gara" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                <tr class="account-only">
+                    <td>Bonus Gara Academy (Fisso a raggiungimento)</td>
+                    <td id="dir-bonus-academy" class="valore-evidenziato">0,00 €</td>
+                </tr>
+
+                <tr class="coordinator-only">
+                    <td>Gettoni Indiretti (Rete Luce/Gas)</td>
+                    <td id="ind-ee-gas" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                <tr class="coordinator-only">
+                    <td>Gettoni Indiretti Sky Rete</td>
+                    <td id="ind-sky" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                <tr class="coordinator-only">
+                    <td>Gettoni Indiretti Prodotti Partner Rete</td>
+                    <td id="ind-prod" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                <tr class="coordinator-only">
+                    <td>Gettoni Indiretti Verisure Rete</td>
+                    <td id="ind-veri" class="valore-evidenziato">0,00 €</td>
+                </tr>
+                <tr class="coordinator-only">
+                    <td>Contributo Mensile Coordinator <span id="label-tipo-contributo"></span></td>
+                    <td id="tot-contributo" class="valore-evidenziato">0,00 €</td>
+                </tr>
+            </tbody>
         </table>
 
-        <h3>Proiezione Erogazione Ricorrente Diretto (Slittamento 2 Mesi)</h3>
-        <p><i>Il calcolo simula il mantenimento della stessa produzione inserita sopra per tutti i mesi dell'anno.</i></p>
+        <p class="coordinator-only" style="font-size:0.9rem; color:#CBD5E0; margin-bottom:15px;">Volume totale calcolato per il mese: <b id="volume-calcolato">0</b> GWh</p>
+        
+        <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+            <p style="text-align:right; font-size:1.1rem;">Totale Gettoni Erogati Subito: <span id="tot-diretta" style="color:var(--secondary); font-weight:bold;">0,00 €</span></p>
+        </div>
+
+        <br>
+        <h3 style="color:#2ECC71;">Proiezione Erogazione Ricorrente Diretto (Slittamento 2 Mesi)</h3>
+        <p style="font-size:0.85rem; color:#A0AEC0;">Il calcolo simula il mantenimento della stessa produzione inserita sopra per tutti i mesi dell'anno.</p>
+        
         <table class="trimestri-table">
-            <tr><th>Periodo</th><th>Descrizione Erogazione</th><th>Importo Erogato</th></tr>
-            <tr><td><b>Fine 1° Trimestre</b></td><td>Mese 3 (Solo 1 mese di fornitura dei contratti del Mese 1)</td><td id="ric-dir-1">0,00 €</td></tr>
-            <tr><td><b>Fine 2° Trimestre</b></td><td>Mesi 4, 5, 6 (Accumulo di 6 mesi complessivi di fornitura)</td><td id="ric-dir-2">0,00 €</td></tr>
-            <tr><td><b>Fine 3° Trimestre</b></td><td>Mesi 7, 8, 9 (Accumulo di 15 mesi complessivi di fornitura)</td><td id="ric-dir-3">0,00 €</td></tr>
-            <tr><td><b>Fine 4° Trimestre</b></td><td>Mesi 10, 11, 12 (Accumulo di 24 mesi complessivi di fornitura)</td><td id="ric-dir-4">0,00 €</td></tr>
+            <thead>
+                <tr>
+                    <th>Periodo di Erogazione</th>
+                    <th>Descrizione Dinamica</th>
+                    <th style="text-align:right;">Importo Erogato</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>Fine 1° Trimestre</b></td>
+                    <td>Viene pagato il Mese 3 (Contiene solo 1 mese di fornitura dei contratti fatti nel Mese 1)</td>
+                    <td id="ric-dir-1" class="valore-evidenziato valore-positivo">0,00 €</td>
+                </tr>
+                <tr>
+                    <td><b>Fine 2° Trimestre</b></td>
+                    <td>Vengono pagati i Mesi 4, 5, 6 (Accumulo di 6 mesi complessivi di fornitura)</td>
+                    <td id="ric-dir-2" class="valore-evidenziato valore-positivo">0,00 €</td>
+                </tr>
+                <tr>
+                    <td><b>Fine 3° Trimestre</b></td>
+                    <td>Vengono pagati i Mesi 7, 8, 9 (Accumulo di 15 mesi complessivi di fornitura)</td>
+                    <td id="ric-dir-3" class="valore-evidenziato valore-positivo">0,00 €</td>
+                </tr>
+                <tr>
+                    <td><b>Fine 4° Trimestre</b></td>
+                    <td>Vengono pagati i Mesi 10, 11, 12 (Accumulo di 24 mesi complessivi di fornitura)</td>
+                    <td id="ric-dir-4" class="valore-evidenziato valore-positivo">0,00 €</td>
+                </tr>
+            </tbody>
         </table>
         
-        <p>Valore ricorrente generato da un singolo mese di produzione: <b id="tot-ric-stimata">0,00 €</b> al trimestre (<b id="tot-ric-annuale">0,00 €</b> all'anno).</p>
+        <p style="font-size:0.9rem; color:#CBD5E0; margin-top:10px;">
+            Valore stimato del portafoglio ricorrente generato da un singolo mese di produzione: <b id="tot-ric-stimata">0,00 €</b> a trimestre (<b id="tot-ric-annuale">0,00 €</b> all'anno).
+        </p>
 
         <div class="totale-finale">
-            Totale Competenze Mese Singolo (Gettoni + Contributi): <span id="totale-guadagno">0,00 €</span>
+            <p style="color:#fff; font-size:1rem; margin-bottom:5px;">Totale Competenze Stimate Mese Singolo (Gettoni + Contributi Coordinator)</p>
+            <h2>€ <span id="totale-guadagno">0.00</span></h2>
+            <p class="sub-text" style="color:#A0AEC0; margin-top:5px;">I valori sono al lordo di tasse ed eventuali storni.</p>
         </div>
     </div>
 </div>
+
 
 
 
@@ -195,6 +551,8 @@
     let globale_contributo = 0; 
     let globale_bonusGaraStd = 0; 
     let globale_bonusGaraAcademy = 0; 
+    
+    let s_dirEeGas = 0, s_dirSky = 0, s_dirProd = 0, s_dirVeri = 0, s_dirRid = 0;
 
     function cambiaRuolo() { 
         const ruolo = document.getElementById('ruolo').value; 
@@ -205,7 +563,12 @@
         elementiCoordinator.forEach(el => el.style.display = (ruolo === 'coordinator') ? 'block' : 'none'); 
         elementiAccount.forEach(el => el.style.display = (ruolo === 'account') ? 'block' : 'none'); 
         
-        labelMandato.innerText = (ruolo === 'coordinator') ? "Coordinator 2026" : "Account 2026";
+        if (ruolo === 'coordinator') { 
+            labelMandato.innerText = "Coordinator 2026"; 
+        } else { 
+            labelMandato.innerText = "Account 2026"; 
+            document.getElementById('contributo-adhoc').value = '';
+        } 
         document.getElementById('risultati-box').style.display = 'none'; 
     } 
 
@@ -215,7 +578,7 @@
         riga.className = 'business-item'; 
         riga.innerHTML = ` 
             <input type="number" class="consumo-business" placeholder="${placeholderText}" min="0"> 
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button> 
+            <button class="btn btn-danger" onclick="this.parentElement.remove()">X</button> 
         `; 
         container.appendChild(riga); 
     } 
@@ -231,7 +594,7 @@
         riga.innerHTML = ` 
             <select class="tipo-sky" style="flex: 2;">${opzioni}</select> 
             <input type="number" class="qta-sky" placeholder="Q.tà" min="1" value="1" style="flex: 1;"> 
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button> 
+            <button class="btn btn-danger" onclick="this.parentElement.remove()">X</button> 
         `; 
         container.appendChild(riga); 
     } 
@@ -247,23 +610,29 @@
         riga.innerHTML = ` 
             <select class="tipo-prodotto" style="flex: 2;">${opzioni}</select> 
             <input type="number" class="valore-prodotto" placeholder="Valore €" min="0" style="flex: 1.5;"> 
-            <button class="btn-remove" onclick="this.parentElement.remove()">X</button> 
+            <button class="btn btn-danger" onclick="this.parentElement.remove()">X</button> 
         `; 
         container.appendChild(riga); 
     } 
 
-    function getLuceGettone(kwh) { 
+    function getLuceGettone(kwh, tipo) { 
         const soglie = [5000, 10000, 25000, 50000, 100000, 300000, 500000, 700000];
         const valDiretta = [50, 65, 85, 135, 185, 225, 275, 300, 350];
-        for(let i=0; i<soglie.length; i++) { if(kwh <= soglie[i]) return valDiretta[i]; }
-        return valDiretta[valDiretta.length - 1];
+        const valIndiretta = [8, 10, 12, 15, 20, 25, 35, 40, 50];
+        
+        let arr = (tipo === 'diretta') ? valDiretta : valIndiretta;
+        for(let i=0; i<soglie.length; i++) { if(kwh <= soglie[i]) return arr[i]; }
+        return arr[arr.length - 1];
     } 
 
-    function getGasGettone(smc) { 
+    function getGasGettone(smc, tipo) { 
         const soglie = [1500, 5000, 10000, 20000, 30000, 100000, 200000, 300000, 400000];
         const valDiretta = [40, 55, 75, 125, 185, 225, 275, 300, 350, 500];
-        for(let i=0; i<soglie.length; i++) { if(smc <= soglie[i]) return valDiretta[i]; }
-        return valDiretta[valDiretta.length - 1];
+        const valIndiretta = [8, 9, 10, 15, 20, 25, 35, 40, 50, 60];
+        
+        let arr = (tipo === 'diretta') ? valDiretta : valIndiretta;
+        for(let i=0; i<soglie.length; i++) { if(smc <= soglie[i]) return arr[i]; }
+        return arr[arr.length - 1];
     } 
 
     function getLuceRicorrenteDiretto(kwh) {
@@ -282,8 +651,12 @@
 
     function calcolaProvvigioni() { 
         const ruolo = document.getElementById('ruolo').value; 
+        globale_totDiretta_Base = 0; 
+        globale_totIndiretta = 0; 
+        globale_contributo = 0; 
         
-        let s_dirEeGas = 0, s_dirSky = 0, s_dirProd = 0, s_dirVeri = 0, s_dirRid = 0;
+        s_dirEeGas = 0; s_dirSky = 0; s_dirProd = 0; s_dirVeri = 0; s_dirRid = 0;
+        
         let ricMeseSingolo = 0; 
         let volumeKwhLuceTotale = 0; 
         let volumeSmcGasTotale = 0; 
@@ -298,7 +671,7 @@
         const bLuceInputs = document.querySelectorAll('#p-bus-container .consumo-business'); 
         bLuceInputs.forEach(input => { 
             const val = parseFloat(input.value) || 0; 
-            s_dirEeGas += getLuceGettone(val); 
+            s_dirEeGas += getLuceGettone(val, 'diretta'); 
             ricMeseSingolo += getLuceRicorrenteDiretto(val);
             volumeKwhLuceTotale += val; 
         }); 
@@ -313,45 +686,88 @@
         const bGasInputs = document.querySelectorAll('#g-bus-container .consumo-business'); 
         bGasInputs.forEach(input => { 
             const val = parseFloat(input.value) || 0; 
-            s_dirEeGas += getGasGettone(val); 
+            s_dirEeGas += getGasGettone(val, 'diretta'); 
             ricMeseSingolo += getGasRicorrenteDiretto(val);
             volumeSmcGasTotale += val; 
         }); 
 
-        // 3. SKY DIRETTO (Corretto: legge solo se esistono righe create!)
+        // 3. SKY DIRETTO (FIXATO: Calcola solo se hai aggiunto righe!)
         const skyRighe = document.querySelectorAll('#sky-container .business-item');
-        if(skyRighe.length > 0) {
-            skyRighe.forEach(riga => { 
-                const tipo = riga.querySelector('.tipo-sky').value; 
-                const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
-                if(tabelle.sky[tipo]) s_dirSky += (qta * tabelle.sky[tipo].diretta); 
-            });
-        }
+        skyRighe.forEach(riga => { 
+            const tipo = riga.querySelector('.tipo-sky').value; 
+            const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
+            if (tabelle.sky[tipo]) s_dirSky += (qta * tabelle.sky[tipo].diretta); 
+        }); 
 
-        // 4. PRODOTTI DIRETTI (Corretto!)
+        // 4. PRODOTTI DIRETTI (FIXATO: Calcola solo se hai aggiunto righe!)
         const prodRighe = document.querySelectorAll('#prodotti-container .business-item');
-        if(prodRighe.length > 0) {
-            prodRighe.forEach(riga => { 
-                const tipo = riga.querySelector('.tipo-prodotto').value; 
-                const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0; 
-                if(tabelle.prodotti[tipo]) s_dirProd += (val * tabelle.prodotti[tipo].diretta); 
-            });
-        }
+        prodRighe.forEach(riga => { 
+            const tipo = riga.querySelector('.tipo-prodotto').value; 
+            const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0; 
+            if (tabelle.prodotti[tipo]) s_dirProd += (val * tabelle.prodotti[tipo].diretta); 
+        }); 
 
+        // 5. BONUS RID & VERISURE 
         s_dirRid += (parseInt(document.getElementById('c-bus').value) || 0) * 13; 
         s_dirVeri += (parseInt(document.getElementById('verisure-qta').value) || 0) * 75; 
 
         globale_totDiretta_Base = s_dirEeGas + s_dirSky + s_dirProd + s_dirVeri + s_dirRid;
 
         // --- RETE (Solo Coordinator) --- 
-        let indEeGasGettoni = 0; 
+        let indEeGasGettoni = 0, indSky = 0, indProd = 0, indVeri = 0; 
+
         if (ruolo === 'coordinator') { 
             const piRes = parseInt(document.getElementById('p-ind-res').value) || 0; 
             const piResKwh = parseFloat(document.getElementById('p-ind-res-kwh').value) || 0; 
             indEeGasGettoni += (piRes * 6); 
             volumeKwhLuceTotale += piResKwh; 
+
+            const piResR = parseInt(document.getElementById('p-ind-resr').value) || 0; 
+            const piResRKwh = parseFloat(document.getElementById('p-ind-resr-kwh').value) || 0; 
+            indEeGasGettoni += (piResR * 10); 
+            volumeKwhLuceTotale += piResRKwh; 
+
+            const piBusPezzi = parseInt(document.getElementById('p-ind-bus-pezzi').value) || 0;
+            const piBusKwh = parseFloat(document.getElementById('p-ind-bus-kwh').value) || 0;
+            if (piBusPezzi > 0) {
+                indEeGasGettoni += (getLuceGettone(piBusKwh / piBusPezzi, 'indiretta') * piBusPezzi);
+                volumeKwhLuceTotale += piBusKwh;
+            }
+
+            const giRes = parseInt(document.getElementById('g-ind-res').value) || 0; 
+            const giResSmc = parseFloat(document.getElementById('g-ind-res-smc').value) || 0; 
+            indEeGasGettoni += (giRes * 6); 
+            volumeSmcGasTotale += giResSmc; 
+
+            const giResR = parseInt(document.getElementById('g-ind-resr').value) || 0; 
+            const giResRSmc = parseFloat(document.getElementById('g-ind-resr-smc').value) || 0; 
+            indEeGasGettoni += (giResR * 10); 
+            volumeSmcGasTotale += giResRSmc; 
+
+            const giBusPezzi = parseInt(document.getElementById('g-ind-bus-pezzi').value) || 0;
+            const giBusSmc = parseFloat(document.getElementById('g-ind-bus-smc').value) || 0;
+            if (giBusPezzi > 0) {
+                indEeGasGettoni += (getGasGettone(giBusSmc / giBusPezzi, 'indiretta') * giBusPezzi);
+                volumeSmcGasTotale += giBusSmc;
+            }
+
+            const skyIndRighe = document.querySelectorAll('#sky-ind-container .business-item');
+            skyIndRighe.forEach(riga => { 
+                const tipo = riga.querySelector('.tipo-sky').value; 
+                const qta = parseInt(riga.querySelector('.qta-sky').value) || 0; 
+                if (tabelle.sky[tipo]) indSky += (qta * tabelle.sky[tipo].indiretta); 
+            }); 
+
+            const prodIndRighe = document.querySelectorAll('#prodotti-ind-container .business-item');
+            prodIndRighe.forEach(riga => { 
+                const tipo = riga.querySelector('.tipo-prodotto').value; 
+                const val = parseFloat(riga.querySelector('.valore-prodotto').value) || 0; 
+                if (tabelle.prodotti[tipo]) indProd += (val * tabelle.prodotti[tipo].indiretta); 
+            }); 
+            indVeri = (parseInt(document.getElementById('verisure-ind-qta').value) || 0) * 8; 
         } 
-        globale_totIndiretta = indEeGasGettoni; 
+
+        globale_totIndiretta = indEeGasGettoni + indSky + indProd + indVeri; 
 
         // --- CONTRIBUTO COORDINATOR ---
         let volumeTotaleInGwh = (volumeKwhLuceTotale + (volumeSmcGasTotale * 4)) / 1000000; 
@@ -362,13 +778,19 @@
                 document.getElementById('label-tipo-contributo').innerText = "(Ad Hoc)";
             } else {
                 document.getElementById('label-tipo-contributo').innerText = "(GWh)";
-                if (volumeTotaleInGwh >= 1) globale_contributo = 800;
+                if (volumeTotaleInGwh >= 4) globale_contributo = 4000;
+                else if (volumeTotaleInGwh >= 3) globale_contributo = 2500;
+                else if (volumeTotaleInGwh >= 2) globale_contributo = 2000;
+                else if (volumeTotaleInGwh >= 1.5) globale_contributo = 1500;
+                else if (volumeTotaleInGwh >= 1) globale_contributo = 800;
                 else globale_contributo = 0;
             }
         } 
 
         // --- BONUS ACCOUNT ---
         let pezziTotali = pRes + pResR + bLuceInputs.length + gRes + gResR + bGasInputs.length; 
+        let puntiAcademy = (bLuceInputs.length + bGasInputs.length) + ((pRes + pResR + gRes + gResR) * 0.5); 
+
         if (ruolo === 'account') { 
             if (pezziTotali >= 15) {
                 globale_bonusGaraStd = globale_totDiretta_Base * 0.30;
@@ -378,39 +800,57 @@
                 document.getElementById('label-acceleratore').innerText = "Ottimo! Livello 1: +25% di Bonus.";
             } else {
                 globale_bonusGaraStd = 0;
-                document.getElementById('label-acceleratore').innerText = "Sotto soglia (min. 8 pezzi per sbloccare).";
+                document.getElementById('label-acceleratore').innerText = "Sotto soglia (min. 8 pezzi).";
             }
-            globale_bonusGaraAcademy = (pezziTotali >= 10) ? 500 : 0;
+
+            if (puntiAcademy >= 25) globale_bonusGaraAcademy = 1000;
+            else if (puntiAcademy >= 18) globale_bonusGaraAcademy = 800;
+            else if (puntiAcademy >= 10) globale_bonusGaraAcademy = 500;
+            else globale_bonusGaraAcademy = 0;
+
+            document.getElementById('pezzi-totali').innerText = pezziTotali; 
+            document.getElementById('punti-academy').innerText = puntiAcademy; 
+            document.getElementById('valore-academy-box').innerText = globale_bonusGaraAcademy.toFixed(2); 
+            document.getElementById('valore-gara-box').innerText = globale_bonusGaraStd.toFixed(2); 
+            document.getElementById('usa-gara-academy').disabled = (globale_bonusGaraAcademy === 0); 
+            document.getElementById('usa-gara-std').disabled = (globale_bonusGaraStd === 0); 
         } 
 
-        // --- CALCOLO PROIEZIONI RICORRENTE TRIMESTRALE ---
+        // --- CALCOLO PROIEZIONI RICORRENTE ---
         const ricT1 = (ricMeseSingolo * 1) / 3;
         const ricT2 = (ricMeseSingolo * 6) / 3;
         const ricT3 = (ricMeseSingolo * 15) / 3;
         const ricT4 = (ricMeseSingolo * 24) / 3;
 
-        // Scrittura Risultati
-        document.getElementById('dir-ee-gas').innerText = s_dirEeGas.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
-        document.getElementById('dir-sky').innerText = s_dirSky.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
-        document.getElementById('dir-prod').innerText = s_dirProd.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
-        document.getElementById('dir-rid').innerText = s_dirRid.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
-        document.getElementById('dir-veri').innerText = s_dirVeri.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
-        
-        if (ruolo === 'coordinator') {
-            document.getElementById('ind-ee-gas').innerText = indEeGasGettoni.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
-            document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
-        }
-
+        // Popolamento dei Trimestri nel box
         document.getElementById('ric-dir-1').innerText = ricT1.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
         document.getElementById('ric-dir-2').innerText = ricT2.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
         document.getElementById('ric-dir-3').innerText = ricT3.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
         document.getElementById('ric-dir-4').innerText = ricT4.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+
+        // Coordinators
+        if (ruolo === 'coordinator') {
+            document.getElementById('ind-ee-gas').innerText = indEeGasGettoni.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+            document.getElementById('ind-sky').innerText = indSky.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+            document.getElementById('ind-prod').innerText = indProd.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+            document.getElementById('ind-veri').innerText = indVeri.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+            document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+            document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
+        }
+
+        // Campi Generali Risultati
+        document.getElementById('dir-ee-gas').innerText = s_dirEeGas.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+        document.getElementById('dir-sky').innerText = s_dirSky.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+        document.getElementById('dir-prod').innerText = s_dirProd.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+        document.getElementById('dir-veri').innerText = s_dirVeri.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+        document.getElementById('dir-rid').innerText = s_dirRid.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
         
         document.getElementById('tot-ric-stimata').innerText = ricMeseSingolo.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €"; 
         document.getElementById('tot-ric-annuale').innerText = (ricMeseSingolo * 4).toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €"; 
 
         riconteggiaTotale(); 
         document.getElementById('risultati-box').style.display = 'block'; 
+        document.getElementById('risultati-box').scrollIntoView({ behavior: 'smooth' }); 
     } 
 
     function riconteggiaTotale() {
@@ -426,10 +866,11 @@
         document.getElementById('dir-bonus-academy').innerText = valAcademy.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
         
         let totD = globale_totDiretta_Base + bonus;
-        document.getElementById('totale-guadagno').innerText = (totD + globale_totIndiretta + globale_contributo).toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €";
+        document.getElementById('tot-diretta').innerText = totD.toLocaleString('it-IT', {minimumFractionDigits: 2}) + " €"; 
+        document.getElementById('totale-guadagno').innerText = (totD + globale_totIndiretta + globale_contributo).toLocaleString('it-IT', {minimumFractionDigits: 2});
     }
-    
-    cambiaRuolo();
+
+    cambiaRuolo(); 
 </script>
 </body>
 </html>
