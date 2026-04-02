@@ -307,6 +307,7 @@
 
 
 
+
     <script> 
         const tabelle = { 
             sky: { 
@@ -525,7 +526,7 @@
                 volumeSmcGasTotale += val; 
             }); 
 
-            // 3. SKY DIRETTO (CORRETTO CON IF)
+            // 3. SKY DIRETTO
             const skyRighe = document.querySelectorAll('#sky-container .business-item');
             if (skyRighe.length > 0) {
                 skyRighe.forEach(riga => { 
@@ -535,7 +536,7 @@
                 }); 
             }
 
-            // 4. PRODOTTI DIRETTI (CORRETTO CON IF)
+            // 4. PRODOTTI DIRETTI
             const prodRighe = document.querySelectorAll('#prodotti-container .business-item');
             if (prodRighe.length > 0) {
                 prodRighe.forEach(riga => { 
@@ -594,7 +595,6 @@
                     volumeSmcGasTotale += giBusSmc;
                 }
 
-                // CORREZIONE ANCHE QUI PER SICUREZZA
                 const skyIndRighe = document.querySelectorAll('#sky-ind-container .business-item');
                 if (skyIndRighe.length > 0) {
                     skyIndRighe.forEach(riga => { 
@@ -604,7 +604,6 @@
                     }); 
                 }
 
-                // CORREZIONE ANCHE QUI PER SICUREZZA
                 const prodIndRighe = document.querySelectorAll('#prodotti-ind-container .business-item');
                 if (prodIndRighe.length > 0) {
                     prodIndRighe.forEach(riga => { 
@@ -676,6 +675,19 @@
 
             let fatturaGettoniEContributo = globale_totDiretta_Base + globale_totIndiretta + globale_contributo;
 
+            // BLOCCO CALCOLO MESI REALI (Necessario qui per usarlo anche nel Coordinator)
+            let valMese = ricMaturatoMesePersonale / 3; 
+            let arrayMesiReali = new Array(12).fill(0);
+            for (let i = 2; i < 12; i++) {
+                arrayMesiReali[i] = valMese * (i - 1);
+            }
+            
+            // Calcolo esatto dei 4 trimestri reali come richiesto dalla tua azienda
+            let trim1 = arrayMesiReali[0] + arrayMesiReali[1] + arrayMesiReali[2];
+            let trim2 = arrayMesiReali[3] + arrayMesiReali[4] + arrayMesiReali[5];
+            let trim3 = arrayMesiReali[6] + arrayMesiReali[7] + arrayMesiReali[8];
+            let trim4 = arrayMesiReali[9] + arrayMesiReali[10] + arrayMesiReali[11];
+
             if (ruolo === 'coordinator') {
                 document.getElementById('ind-ee-gas').innerText = indEeGasGettoni.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('ric-ind-ee-gas').innerText = ricIndEeGasMensile.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -687,30 +699,41 @@
                 document.getElementById('tot-contributo').innerText = globale_contributo.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('volume-calcolato').innerText = volumeTotaleInGwh.toFixed(3);
 
-                let quotaTrimestraleDiretta = ricMaturatoMesePersonale; 
+                // MODIFICA COORDINATOR: allineamento con la logica della fotografia trimestrale
                 let fat_m1m2 = fatturaGettoniEContributo;
                 let fat_m3 = fatturaGettoniEContributo + ricIndEeGasMensile;
-                let fat_m4 = fatturaGettoniEContributo + (ricIndEeGasMensile * 2) + quotaTrimestraleDiretta;
+                
+                // Mese 4: scatta il pagamento del 1° Trimestre (trim1)
+                let fat_m4 = fatturaGettoniEContributo + (ricIndEeGasMensile * 2) + trim1;
+                
                 let fat_m5m6 = fatturaGettoniEContributo + (ricIndEeGasMensile * 4); 
-                let fat_m7 = fatturaGettoniEContributo + (ricIndEeGasMensile * 5) + (quotaTrimestraleDiretta * 2);
+                
+                // Mese 7: scatta il pagamento del 2° Trimestre (trim2)
+                let fat_m7 = fatturaGettoniEContributo + (ricIndEeGasMensile * 5) + trim2;
+                
                 let fat_m8m9 = fatturaGettoniEContributo + (ricIndEeGasMensile * 7);
-                let fat_m10 = fatturaGettoniEContributo + (ricIndEeGasMensile * 8) + (quotaTrimestraleDiretta * 3);
+                
+                // Mese 10: scatta il pagamento del 3° Trimestre (trim3)
+                let fat_m10 = fatturaGettoniEContributo + (ricIndEeGasMensile * 8) + trim3;
+                
                 let fat_m11m12 = fatturaGettoniEContributo + (ricIndEeGasMensile * 10);
-                let fat_m13 = fatturaGettoniEContributo + (ricIndEeGasMensile * 11) + (quotaTrimestraleDiretta * 4);
+                
+                // Mese 13: scatta il pagamento del 4° Trimestre (trim4)
+                let fat_m13 = fatturaGettoniEContributo + (ricIndEeGasMensile * 11) + trim4;
 
                 document.getElementById('fat-m1m2').innerText = fat_m1m2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m3').innerText = fat_m3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m4').innerText = fat_m4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-dir-1').innerText = quotaTrimestraleDiretta.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-dir-1').innerText = trim1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m5m6').innerText = fat_m5m6.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m7').innerText = fat_m7.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-dir-2').innerText = (quotaTrimestraleDiretta * 2).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-dir-2').innerText = trim2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m8m9').innerText = fat_m8m9.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m10').innerText = fat_m10.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-dir-3').innerText = (quotaTrimestraleDiretta * 3).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-dir-3').innerText = trim3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m11m12').innerText = fat_m11m12.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 document.getElementById('fat-m13').innerText = fat_m13.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('ric-dir-4').innerText = (quotaTrimestraleDiretta * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('ric-dir-4').innerText = trim4.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             }
 
             document.getElementById('dir-ee-gas').innerText = s_dirEeGas.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -722,28 +745,7 @@
             document.getElementById('tot-ric-stimata').innerText = ricMaturatoMesePersonale.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('tot-ric-annuale').innerText = (ricMaturatoMesePersonale * 4).toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
 
-            // BLOCCO MODIFICATO: Fotografia trimestrale con sfasamento di 2 mesi
-            let valMese = ricMaturatoMesePersonale / 3; 
-            
-            // Simuliamo i 12 mesi di incasso reale (con sfasamento di 2 mesi)
-            let arrayMesiReali = new Array(12).fill(0);
-            for (let i = 2; i < 12; i++) {
-                // Ogni mese in fornitura accumula un "valMese" in più rispetto al precedente
-                arrayMesiReali[i] = valMese * (i - 1);
-            }
-
-            // Trimestre 1: Somma Mese 1(0) + Mese 2(0) + Mese 3(valMese)
-            let trim1 = arrayMesiReali[0] + arrayMesiReali[1] + arrayMesiReali[2];
-            
-            // Trimestre 2: Somma Mesi 4, 5 e 6
-            let trim2 = arrayMesiReali[3] + arrayMesiReali[4] + arrayMesiReali[5];
-            
-            // Trimestre 3: Somma Mesi 7, 8 e 9
-            let trim3 = arrayMesiReali[6] + arrayMesiReali[7] + arrayMesiReali[8];
-            
-            // Trimestre 4: Somma Mesi 10, 11 e 12
-            let trim4 = arrayMesiReali[9] + arrayMesiReali[10] + arrayMesiReali[11];
-
+            // Assegnazione valori ai campi HTML dei Trimestri
             document.getElementById('ric-trim1').innerText = trim1.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('ric-trim2').innerText = trim2.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
             document.getElementById('ric-trim3').innerText = trim3.toLocaleString('it-IT', {minimumFractionDigits: 2, maximumFractionDigits: 2}); 
